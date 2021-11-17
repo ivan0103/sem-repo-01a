@@ -3,9 +3,15 @@
 .gradle
 build/
 gradle-app.setting
-!gradle/wrapper/gradle-wrapper.jar
+!microservice1/gradle/wrapper/gradle-wrapper.jar
 **/build/
 .gradletasknamecache
+
+
+**/.gradle
+**/gradle-app.setting
+**/!microservice1/gradle/wrapper/gradle-wrapper.jar
+**/.gradletasknamecache
 
 ### Java ###
 # Compiled class file
