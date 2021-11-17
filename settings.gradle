@@ -1,1 +1,3 @@
 rootProject.name = 'sem-repo-01a'
+
+include("microservice1", "microservice2")
