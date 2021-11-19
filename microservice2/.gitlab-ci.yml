@@ -23,4 +23,6 @@ microservice2-PMD:
 microservice2-test:
   stage: test
   script:
-    gradle :microservice2:test
+    - gradle :microservice2:test
+    - cat microservice2/build/reports/jacoco/html/index.html | grep -Po "Total.*?([0-9]{1,3})%"
+  coverage: /([0-9]{1,3})%/
