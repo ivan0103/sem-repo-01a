@@ -1,2 +1,3 @@
 include:
   - microservice1/.gitlab-ci.yml
+  - microservice2/.gitlab-ci.yml

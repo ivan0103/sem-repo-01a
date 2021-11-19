@@ -5,22 +5,22 @@ stages:
   - staticAnalysis
   - test
 
-build:
+microservice2-build:
   stage: build
   script:
-    gradle build
+    gradle :microservice2:build
 
-checkStyle:
+microservice2-checkStyle:
   stage: staticAnalysis
   script:
-    gradle checkstyleMain checkStyleTest
+    gradle :microservice2:checkstyleMain :microservice2:checkStyleTest
 
-PMD:
+microservice2-PMD:
   stage: staticAnalysis
   script:
-      gradle pmdMain pmdTest
+      gradle :microservice2:pmdMain :microservice2:pmdTest
 
-test:
+microservice2-test:
   stage: test
   script:
-    gradle test
+    gradle :microservice2:test
