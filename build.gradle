@@ -1,6 +1,15 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        //Needed only for SNAPSHOT versions
+        //maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+    }
+    dependencies {
+        classpath 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.5.2'
+    }
+}
+
 plugins {
-    id 'org.springframework.boot' version '2.3.5.RELEASE'
-    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
     id 'java'
     // Test coverage
     id 'jacoco'
@@ -12,11 +21,14 @@ plugins {
     id 'pmd'
 
     // PITest
-    id 'info.solidsoft.pitest' version '1.5.2'
+    id 'info.solidsoft.pitest' version '1.5.2' apply false
 }
 
-allprojects {
 
+allprojects {
+    repositories {
+        mavenCentral()
+    }
     buildscript {
         repositories {
             mavenCentral()
@@ -25,23 +37,25 @@ allprojects {
         }
 
     }
+    apply plugin: 'java'
+    apply plugin: 'jacoco'
+    apply plugin: 'checkstyle'
+
+    group = 'nl.tudelft.sem'
+    sourceCompatibility = 11
+    targetCompatibility = 11
+}
+
+subprojects {
     repositories {
         mavenCentral()
     }
 
-    group = 'nl.tudelft.sem'
-}
-
-
-subprojects {
-    apply plugin: 'java'
-    apply plugin: 'jacoco'
-    apply plugin: 'checkstyle'
     test {
         useJUnitPlatform()
         jacoco {
             enabled = true
-            includes = ['nl.tudelft.sem.*']
+            //includes = ['nl.tudelft.sem.*']
             excludes = []
         }
     }
@@ -65,9 +79,13 @@ subprojects {
 
     checkstyle {
         toolVersion "8.37"
-        configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
+        configFile = rootProject.file('config/checkstyle/checkstyle.xml')
     }
 
+    apply plugin: 'pmd'
+    pmd {
+        incrementalAnalysis = true
+    }
 
     apply plugin: 'info.solidsoft.pitest'
     pitest {
@@ -80,4 +98,5 @@ subprojects {
         outputFormats = ['XML', 'HTML']
         timestampedReports = false
     }
+
 }
