@@ -1,7 +1,7 @@
 # CSE2115 - Project
 
 ### Running 
-`gradle bootRun`
+`gradle :microservice_name:bootRun`
 
 ### Testing
 ```shell
@@ -10,22 +10,22 @@ gradle test
 
 To generate a coverage report:
 ```shell
-gradle jacocoTestCoverageVerification
+gradle :microservice_name:jacocoTestCoverageVerification
 ```
 
 
 And
 ```shell
-gradle jacocoTestReport
+gradle :microservice_name:jacocoTestReport
 ```
-The coverage report is generated in: build/reports/jacoco/test/html, which does not get pushed to the repo. Open index.html in your browser to see the report. 
+The coverage report is generated in: build/reports/jacoco/test/html and then parsed to get coverage on gitlab.
 
 ### Static analysis
 ```shell
-gradle checkStyleMain
-gradle checkStyleTest
-gradle pmdMain
-gradle pmdTest
+gradle :microservice_name:checkStyleMain
+gradle :microservice_name:checkStyleTest
+gradle :microservice_name:pmdMain
+gradle :microservice_name:pmdTest
 ```
 
 ### Notes
