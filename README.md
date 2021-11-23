@@ -27,6 +27,10 @@ gradle :microservice_name:checkStyleTest
 gradle :microservice_name:pmdMain
 gradle :microservice_name:pmdTest
 ```
+Every task can also be run for all microservices with:
+```shell
+gradle task
+```
 
 ### Notes
 - You should have a local .gitignore file to make sure that any OS-specific and IDE-specific files do not get pushed to the repo (e.g. .idea). These files do not belong in the .gitignore on the repo.
