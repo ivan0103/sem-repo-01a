@@ -1,0 +1,28 @@
+image: gradle:6.7-jdk15
+
+stages:
+  - build
+  - staticAnalysis
+  - test
+
+generic-service-post-build:
+  stage: build
+  script:
+    gradle :generic-service-post:build
+
+generic-service-post-checkStyle:
+  stage: staticAnalysis
+  script:
+    gradle :generic-service-post:checkstyleMain :generic-service-post:checkStyleTest
+
+generic-service-post-PMD:
+  stage: staticAnalysis
+  script:
+      gradle :generic-service-post:pmdMain :generic-service-post:pmdTest
+
+generic-service-post-test:
+  stage: test
+  script:
+    - gradle :generic-service-post:test :generic-service-post:jacocoTestReport :generic-service-post:pitest
+    - cat generic-service-post/build/reports/jacoco/test/html/index.html | grep -Po "Total.*?([0-9]{1,3})%"
+  coverage: /([0-9]{1,3})%/
