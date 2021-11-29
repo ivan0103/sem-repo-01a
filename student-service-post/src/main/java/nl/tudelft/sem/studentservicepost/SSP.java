@@ -1,13 +1,13 @@
-package nl.tudelft.sem.genericservicepost;
+package nl.tudelft.sem.studentservicepost;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Microservice2 {
+public class SSP {
 
     public static void main(String[] args) {
-        SpringApplication.run(Microservice2.class, args);
+        SpringApplication.run(SSP.class, args);
     }
 
 }
