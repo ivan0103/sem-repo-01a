@@ -1,3 +1,5 @@
 include:
-  - microservice1/.gitlab-ci.yml
-  - microservice2/.gitlab-ci.yml
+  - users/.gitlab-ci.yml
+  - contracts/.gitlab-ci.yml
+  - user-service-post/.gitlab-ci.yml
+  - generic-service-post/.gitlab-ci.yml

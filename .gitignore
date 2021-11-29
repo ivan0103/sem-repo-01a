@@ -5,6 +5,7 @@ build/
 gradle-app.setting
 !microservice1/gradle/wrapper/gradle-wrapper.jar
 **/build/
+**/build/.grade/
 .gradletasknamecache
 
 
