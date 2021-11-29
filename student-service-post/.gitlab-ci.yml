@@ -23,6 +23,6 @@ student-service-post-PMD:
 student-service-post-test:
   stage: test
   script:
-    - gradle :student-service-post:test :student-service-post:jacocoTestReport
+    - gradle :student-service-post:test :student-service-post:jacocoTestReport :student-service-post:pitest
     - cat student-service-post/build/reports/jacoco/test/html/index.html | grep -Po "Total.*?([0-9]{1,3})%"
   coverage: /([0-9]{1,3})%/

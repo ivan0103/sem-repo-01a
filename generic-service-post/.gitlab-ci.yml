@@ -23,6 +23,6 @@ generic-service-post-PMD:
 generic-service-post-test:
   stage: test
   script:
-    - gradle :generic-service-post:test :generic-service-post:jacocoTestReport
+    - gradle :generic-service-post:test :generic-service-post:jacocoTestReport :generic-service-post:pitest
     - cat generic-service-post/build/reports/jacoco/test/html/index.html | grep -Po "Total.*?([0-9]{1,3})%"
   coverage: /([0-9]{1,3})%/
