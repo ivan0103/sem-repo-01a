@@ -23,6 +23,6 @@ contracts-PMD:
 contracts-test:
   stage: test
   script:
-    - gradle :contracts:test :contracts:jacocoTestReport
+    - gradle :contracts:test :contracts:jacocoTestReport :contracts:pitest
     - cat contracts/build/reports/jacoco/test/html/index.html | grep -Po "Total.*?([0-9]{1,3})%"
   coverage: /([0-9]{1,3})%/
