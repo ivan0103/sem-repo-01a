@@ -14,7 +14,7 @@ public class GenericPost {
     private long id;
 
     @Column(name = "author_id")
-    private String autor;
+    private String author;
 
     @Column(name = "hours_per_week")
     private int hoursPerWeek;
@@ -35,12 +35,12 @@ public class GenericPost {
         this.id = id;
     }
 
-    public String getAutor() {
-        return autor;
+    public String getAuthor() {
+        return author;
     }
 
-    public void setAutor(String autor) {
-        this.autor = autor;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public int getHoursPerWeek() {
