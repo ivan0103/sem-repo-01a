@@ -4,8 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 
-@SpringBootTest(classes = {Contracts.class})
-public class ContractsTest {
+@SpringBootTest(classes = {ContractsApp.class})
+public class ContractsAppTest {
 
     @Test
     public void contextLoads() {
