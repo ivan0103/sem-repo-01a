@@ -1,4 +1,4 @@
-package nl.tudelft.sem.microservice2;
+package nl.tudelft.sem.contracts;
 
 public class Example {
     private String name;

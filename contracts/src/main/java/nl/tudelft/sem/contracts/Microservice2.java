@@ -1,4 +1,4 @@
-package nl.tudelft.sem.microservice2;
+package nl.tudelft.sem.contracts;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
