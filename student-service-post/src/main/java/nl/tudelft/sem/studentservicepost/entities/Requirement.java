@@ -18,7 +18,7 @@ public class Requirement {
 
     @Id
     @Column(name = "requirement")
-    private String requirement;
+    private String requirementString;
 
     @ManyToMany(mappedBy = "requirementsSet")
     private Set<CompanyOffer> companyOfferSet = new HashSet<>();

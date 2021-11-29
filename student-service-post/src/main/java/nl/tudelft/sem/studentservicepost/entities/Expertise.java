@@ -21,7 +21,7 @@ public class Expertise{
 
     @Id
     @Column(name = "expertise")
-    private String expertise;
+    private String expertiseString;
 
     @ManyToMany(mappedBy = "expertiseSet")
     private Set<Post> postSet= new HashSet<>();
