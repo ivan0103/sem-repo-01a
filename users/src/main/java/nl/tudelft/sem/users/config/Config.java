@@ -25,11 +25,9 @@ public class Config {
                                             FeedbackRepository feedbackRepository) {
 
         return args -> {
-            Feedback feedback = new Feedback(1L, "Chad", null, 10);
+            Feedback feedback = new Feedback(1L, "Chad", 10);
             List<Feedback> feedbacks = List.of(feedback);
             User user = new User("netID_Mate!", "name", 10.0f, feedbacks, Role.student);
-            feedbacks.get(0).setUser(user);
-            feedback.setUser(user);
 
             feedbackRepository.save(feedback);
             userRepository.save(user);
