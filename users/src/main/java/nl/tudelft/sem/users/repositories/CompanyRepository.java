@@ -1,10 +1,10 @@
 package nl.tudelft.sem.users.repositories;
 
-import nl.tudelft.sem.users.entities.User;
+import nl.tudelft.sem.users.entities.Company;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, String> {
+public interface CompanyRepository extends JpaRepository<Company, String> {
 
 }

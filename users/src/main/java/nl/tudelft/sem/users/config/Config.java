@@ -1,11 +1,12 @@
 package nl.tudelft.sem.users.config;
 
 import java.util.List;
+import nl.tudelft.sem.users.entities.Company;
 import nl.tudelft.sem.users.entities.Feedback;
-import nl.tudelft.sem.users.entities.Role;
-import nl.tudelft.sem.users.entities.User;
+import nl.tudelft.sem.users.entities.Student;
+import nl.tudelft.sem.users.repositories.CompanyRepository;
 import nl.tudelft.sem.users.repositories.FeedbackRepository;
-import nl.tudelft.sem.users.repositories.UserRepository;
+import nl.tudelft.sem.users.repositories.StudentRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,16 +22,19 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 public class Config {
 
     @Bean("userCommandLineRunner")
-    CommandLineRunner userCommandLineRunner(UserRepository userRepository,
+    CommandLineRunner userCommandLineRunner(CompanyRepository companyRepository,
+                                            StudentRepository studentRepository,
                                             FeedbackRepository feedbackRepository) {
 
         return args -> {
             Feedback feedback = new Feedback(1L, "Chad", 10);
             List<Feedback> feedbacks = List.of(feedback);
-            User user = new User("netID_Mate!", "name", 10.0f, feedbacks, Role.student);
+            Student student = new Student("netID_Mate!", "name", 10.0f, feedbacks);
+            Company company = new Company("exploitEmployees", 10.0f, feedbacks);
 
             feedbackRepository.save(feedback);
-            userRepository.save(user);
+            companyRepository.save(company);
+            studentRepository.save(student);
         };
     }
 }
