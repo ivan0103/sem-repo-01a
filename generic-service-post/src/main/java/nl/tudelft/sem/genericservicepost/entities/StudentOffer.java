@@ -13,7 +13,7 @@ public class StudentOffer {
 
     @OneToOne
     @Column(name = "student_id")
-    private User student;
+    private String studentId;
 
     @ManyToOne
     @JoinColumn(name = "generic_post_id", referencedColumnName = "generic_post_id")
@@ -27,11 +27,11 @@ public class StudentOffer {
         this.id = id;
     }
 
-    public User getStudent() {
-        return student;
+    public String getStudentId() {
+        return studentId;
     }
 
-    public void setStudent(User student) {
-        this.student = student;
+    public void setStudent(String student) {
+        this.studentId = student;
     }
 }
