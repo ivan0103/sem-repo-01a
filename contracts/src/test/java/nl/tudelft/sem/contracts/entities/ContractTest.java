@@ -2,29 +2,30 @@ package nl.tudelft.sem.contracts.entities;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 import java.time.LocalDate;
 import java.time.LocalTime;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class ContractTest {
-    Contract contract;
+    transient Contract contract;
+
+    private static final String student = "student";
+    private static final String company = "company";
 
     @BeforeEach
     void setUpContractTest() {
         contract = new Contract(
                 1,
                 2,
-                "student",
-                "company",
-                LocalTime.of(6,0),
+                student,
+                company,
+                LocalTime.of(6, 0),
                 14.5F,
                 LocalDate.of(2020, 6, 1),
                 LocalDate.of(2020, 9, 1)
-                );
+        );
     }
 
     @AfterEach
@@ -34,7 +35,7 @@ public class ContractTest {
                 2,
                 "student",
                 "company",
-                LocalTime.of(6,0),
+                LocalTime.of(6, 0),
                 14.5F,
                 LocalDate.of(2020, 6, 1),
                 LocalDate.of(2020, 9, 1)
@@ -48,13 +49,13 @@ public class ContractTest {
 
     @Test
     public void getFreelancerIdTest() {
-        long freelancerId =contract.getFreelancerId();
+        long freelancerId = contract.getFreelancerId();
         assertThat(freelancerId).isEqualTo(1);
     }
 
     @Test
     public void getCompanyIdTest() {
-        long companyId =contract.getCompanyId();
+        long companyId = contract.getCompanyId();
         assertThat(companyId).isEqualTo(2);
     }
 
@@ -66,14 +67,14 @@ public class ContractTest {
 
     @Test
     public void getCompanyNameTest() {
-        String companyName =contract.getCompanyName();
+        String companyName = contract.getCompanyName();
         assertThat(companyName).isEqualTo("company");
     }
 
     @Test
     public void getHoursPerWeekTest() {
-        LocalTime hoursPerWeek =contract.getHoursPerWeek();
-        assertThat(hoursPerWeek).isEqualTo(LocalTime.of(6,0));
+        LocalTime hoursPerWeek = contract.getHoursPerWeek();
+        assertThat(hoursPerWeek).isEqualTo(LocalTime.of(6, 0));
     }
 
     @Test
@@ -97,14 +98,14 @@ public class ContractTest {
     @Test
     public void setFreelancerIdTest() {
         contract.setFreelancerId(3);
-        long freelancerId =contract.getFreelancerId();
+        long freelancerId = contract.getFreelancerId();
         assertThat(freelancerId).isEqualTo(3);
     }
 
     @Test
     public void setCompanyIdTest() {
         contract.setCompanyId(4);
-        long companyId =contract.getCompanyId();
+        long companyId = contract.getCompanyId();
         assertThat(companyId).isEqualTo(4);
     }
 
@@ -118,15 +119,15 @@ public class ContractTest {
     @Test
     public void setCompanyNameTest() {
         contract.setCompanyName("company1");
-        String companyName =contract.getCompanyName();
+        String companyName = contract.getCompanyName();
         assertThat(companyName).isEqualTo("company1");
     }
 
     @Test
     public void setHoursPerWeekTest() {
-        contract.setHoursPerWeek(LocalTime.of(6,30));
-        LocalTime hoursPerWeek =contract.getHoursPerWeek();
-        assertThat(hoursPerWeek).isEqualTo(LocalTime.of(6,30));
+        contract.setHoursPerWeek(LocalTime.of(6, 30));
+        LocalTime hoursPerWeek = contract.getHoursPerWeek();
+        assertThat(hoursPerWeek).isEqualTo(LocalTime.of(6, 30));
     }
 
     @Test
@@ -155,9 +156,9 @@ public class ContractTest {
         Contract contract1 = new Contract(
                 1,
                 2,
-                "student",
-                "company",
-                LocalTime.of(6,0),
+                student,
+                company,
+                LocalTime.of(6, 0),
                 14.5F,
                 LocalDate.of(2020, 6, 1),
                 LocalDate.of(2020, 9, 1)
@@ -168,6 +169,6 @@ public class ContractTest {
 
     @Test
     public void equalTrue() {
-        assertThat(contract.equals(contract)).isTrue();
+        assertThat(contract).isEqualTo(contract);
     }
 }

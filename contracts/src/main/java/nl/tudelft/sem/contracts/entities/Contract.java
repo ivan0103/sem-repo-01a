@@ -1,8 +1,9 @@
 package nl.tudelft.sem.contracts.entities;
 
-import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import javax.persistence.*;
+
 
 @Entity
 @Table(name = "contract")
@@ -49,6 +50,18 @@ public class Contract {
     private LocalDate endDate;
 
 
+    /**
+     * Instantiates a new Contract.
+     *
+     * @param freelancerId   the freelancer id
+     * @param companyId      the company id
+     * @param freelancerName the freelancer name
+     * @param companyName    the company name
+     * @param hoursPerWeek   the hours per week
+     * @param payPerWeek     the pay per week
+     * @param startDate      the start date
+     * @param endDate        the end date
+     */
     public Contract(long freelancerId, long companyId, String freelancerName,
                     String companyName, LocalTime hoursPerWeek, float payPerWeek,
                     LocalDate startDate, LocalDate endDate) {
