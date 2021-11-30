@@ -12,6 +12,7 @@ public class UserService {
 
     /**
      * Constructor of UserService - It instantiates a new UserService object.
+     *
      * @param userRepository repository injected with data from the database
      */
 

@@ -1,7 +1,6 @@
 package nl.tudelft.sem.users.entities;
 
 import java.util.Objects;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -37,6 +36,15 @@ public class Feedback {
     public Feedback() {
 
     }
+
+    /**
+     * Constructor for feedback.
+     *
+     * @param id the id of the feedback
+     * @param text the actual feedback
+     * @param user the feedback giver
+     * @param rating the rating of the feedback
+     */
 
     public Feedback(Long id, String text, User user, Integer rating) {
         this.id = id;
@@ -79,10 +87,17 @@ public class Feedback {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Feedback feedback = (Feedback) o;
-        return Objects.equals(id, feedback.id) && Objects.equals(text, feedback.text) && Objects.equals(user, feedback.user) && Objects.equals(rating, feedback.rating);
+        return Objects.equals(id, feedback.id)
+                && Objects.equals(text, feedback.text)
+                && Objects.equals(user, feedback.user)
+                && Objects.equals(rating, feedback.rating);
     }
 
     @Override
@@ -92,11 +107,11 @@ public class Feedback {
 
     @Override
     public String toString() {
-        return "Feedback{" +
-                "id=" + id +
-                ", text='" + text + '\'' +
-                ", user=" + user +
-                ", rating=" + rating +
-                '}';
+        return "Feedback{"
+                + "id=" + id
+                + ", text='" + text + '\''
+                + ", user=" + user
+                + ", rating=" + rating
+                + '}';
     }
 }

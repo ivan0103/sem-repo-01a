@@ -13,6 +13,7 @@ public class UserController {
 
     /**
      * This method sets up all the necessary services and is called when the server is started.
+     *
      * @param userService the user service
      */
 
