@@ -7,8 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity(name = "feedback")
@@ -24,13 +24,13 @@ public class Feedback {
             generator = "user_sequence")
 
     @Column(name = "id")
-    private Long id;
+    private transient Long id;
 
     @Column(name = "text")
     private String text;
 
     @OneToOne
-    private User user;
+    private transient User user;
 
     @Column(name = "rating")
     private Integer rating;

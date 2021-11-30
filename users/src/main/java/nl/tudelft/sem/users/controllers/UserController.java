@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "users")
 public class UserController {
 
-    private final UserService userService;
+    private final transient UserService userService;
 
     /**
      * This method sets up all the necessary services and is called when the server is started.

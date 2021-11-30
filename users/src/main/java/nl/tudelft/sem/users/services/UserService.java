@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
 
-    private final UserRepository userRepository;
+    private final transient UserRepository userRepository;
 
     /**
      * Constructor of UserService - It instantiates a new UserService object.
