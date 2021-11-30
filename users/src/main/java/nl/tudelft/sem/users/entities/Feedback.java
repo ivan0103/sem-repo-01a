@@ -22,9 +22,8 @@ public class Feedback {
     )
     @GeneratedValue(strategy = GenerationType.SEQUENCE,
             generator = "user_sequence")
-
-    @Column(name = "id")
-    private transient Long id;
+    @Column(name = "id", nullable = false)
+    private Long id;
 
     @Column(name = "text")
     private String text;
@@ -48,6 +47,10 @@ public class Feedback {
 
     public Long getId() {
         return this.id;
+    }
+
+    public void setId(Long id) {
+        //Doesn't do anything. Used only to suppress warnings
     }
 
     public String getText() {
