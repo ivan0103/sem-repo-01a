@@ -1,5 +1,7 @@
 package nl.tudelft.sem.genericservicepost.entities;
 
+import org.h2.engine.User;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -14,7 +16,7 @@ public class GenericPost {
     private long id;
 
     @Column(name = "author_id")
-    private String author;
+    private User author;
 
     @Column(name = "hours_per_week")
     private int hoursPerWeek;
@@ -35,11 +37,11 @@ public class GenericPost {
         this.id = id;
     }
 
-    public String getAuthor() {
+    public User getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(User author) {
         this.author = author;
     }
 
