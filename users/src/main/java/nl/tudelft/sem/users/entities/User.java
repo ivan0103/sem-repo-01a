@@ -25,6 +25,9 @@ public class User {
     @OneToMany
     private List<Feedback> feedback;
 
+    @Column(name = "role")
+    private Role role;
+
     /**
      * Default constructor.
      */
@@ -40,13 +43,15 @@ public class User {
      * @param name name of the user
      * @param rating rating of the user
      * @param feedback list of feedback received by the user from other users
+     * @param role role of the user
      */
 
-    public User(String netID, String name, Float rating, List<Feedback> feedback) {
+    public User(String netID, String name, Float rating, List<Feedback> feedback, Role role) {
         this.netID = netID;
         this.name = name;
         this.rating = rating;
         this.feedback = feedback;
+        this.role = role;
     }
 
     /**
@@ -130,6 +135,26 @@ public class User {
     }
 
     /**
+     * Getter for role.
+     *
+     * @return role of the user
+     */
+
+    public Role getRole() {
+        return role;
+    }
+
+    /**
+     * Setter for role.
+     *
+     * @param role the new role
+     */
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    /**
      * Equals method - checks whether the users are the same or not.
      *
      * @param o the object used to compare the user
@@ -148,7 +173,8 @@ public class User {
         User user = (User) o;
         return Objects.equals(name, user.name)
                 && Objects.equals(rating, user.rating)
-                && Objects.equals(feedback, user.feedback);
+                && Objects.equals(feedback, user.feedback)
+                && Objects.equals(role, user.role);
     }
 
     /**
@@ -159,7 +185,7 @@ public class User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(netID, name, rating, feedback);
+        return Objects.hash(netID, name, rating, feedback, role);
     }
 
     /**
@@ -175,6 +201,7 @@ public class User {
                 + ", name='" + name + '\''
                 + ", rating=" + rating
                 + ", feedback=" + feedback
+                + ", role=" + role
                 + '}';
     }
 }

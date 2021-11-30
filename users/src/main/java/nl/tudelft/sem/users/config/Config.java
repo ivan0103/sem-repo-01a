@@ -2,6 +2,7 @@ package nl.tudelft.sem.users.config;
 
 import java.util.List;
 import nl.tudelft.sem.users.entities.Feedback;
+import nl.tudelft.sem.users.entities.Role;
 import nl.tudelft.sem.users.entities.User;
 import nl.tudelft.sem.users.repositories.FeedbackRepository;
 import nl.tudelft.sem.users.repositories.UserRepository;
@@ -26,7 +27,7 @@ public class Config {
         return args -> {
             Feedback feedback = new Feedback(1L, "Chad", null, 10);
             List<Feedback> feedbacks = List.of(feedback);
-            User user = new User("netID_Mate!", "name", 10.0f, feedbacks);
+            User user = new User("netID_Mate!", "name", 10.0f, feedbacks, Role.student);
             feedbacks.get(0).setUser(user);
             feedback.setUser(user);
 
