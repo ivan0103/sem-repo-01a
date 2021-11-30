@@ -14,11 +14,13 @@ student-service-post-checkStyle:
   stage: staticAnalysis
   script:
     gradle :student-service-post:checkstyleMain :student-service-post:checkStyleTest
+  allow_failure: true
 
 student-service-post-PMD:
   stage: staticAnalysis
   script:
       gradle :student-service-post:pmdMain :student-service-post:pmdTest
+  allow_failure: true
 
 student-service-post-test:
   stage: test

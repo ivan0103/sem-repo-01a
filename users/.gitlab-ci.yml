@@ -14,11 +14,13 @@ users-checkStyle:
   stage: staticAnalysis
   script:
     gradle :users:checkstyleMain :users:checkStyleTest
+  allow_failure: true
 
 users-PMD:
   stage: staticAnalysis
   script:
       gradle :users:pmdMain :users:pmdTest
+  allow_failure: true
 
 users-test:
   stage: test
