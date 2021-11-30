@@ -21,6 +21,9 @@ public class CompanyOffer {
     @Column(name = "offer_id")
     private Long id;
 
+    @Column(name = "company_id")
+    private String companyId;
+
     @ManyToMany
     @JoinTable(
             name = "offer_requirement",
