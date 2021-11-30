@@ -13,7 +13,7 @@ public class Post {
     private Long id;
 
     @Column(name = "author_id")
-    private Long author;
+    private String author;
 
     @Column(name = "price_per_hour")
     private Float pricePerHour;
