@@ -22,6 +22,8 @@ public class Feedback {
     )
     @GeneratedValue(strategy = GenerationType.SEQUENCE,
             generator = "user_sequence")
+
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "text")
