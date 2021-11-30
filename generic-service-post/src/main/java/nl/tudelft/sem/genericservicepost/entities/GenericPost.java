@@ -24,6 +24,12 @@ public class GenericPost {
     @Column(name = "duration")
     private int duration;
 
+    @ManyToMany
+    @JoinTable(
+            name = "generic_post_expertise",
+            joinColumns = {@JoinColumn(name = "generic_post_id")},
+            inverseJoinColumns = {@JoinColumn(name = "expertise")}
+    )
     private Set<Expertise> expertiseSet = new HashSet<>();
 
     @OneToMany
