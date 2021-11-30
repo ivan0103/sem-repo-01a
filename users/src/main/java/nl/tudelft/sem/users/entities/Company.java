@@ -7,9 +7,13 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity(name = "company")
 @Table
+@Getter
+@Setter
 public class Company extends User {
     @Id
     @Column(name = "name", nullable = false)
