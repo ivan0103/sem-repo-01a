@@ -29,7 +29,7 @@ public class Feedback {
     private String text;
 
     @OneToOne
-    private transient User user;
+    private User user;
 
     @Column(name = "rating")
     private Integer rating;
@@ -59,6 +59,10 @@ public class Feedback {
 
     public User getUser() {
         return user;
+    }
+
+    public void setUser(User user) {
+        //Doesn't do anything. Used only to suppress warnings
     }
 
     public Integer getRating() {
