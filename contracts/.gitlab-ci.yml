@@ -8,7 +8,7 @@ stages:
 contracts-build:
   stage: build
   script:
-    gradle :contracts:build
+    gradle :contracts:classes :contracts:testClasses
 
 contracts-checkStyle:
   stage: staticAnalysis
