@@ -1,25 +1,25 @@
 package nl.tudelft.sem.users.controllers;
 
-import nl.tudelft.sem.users.services.UserService;
+import nl.tudelft.sem.users.services.FeedbackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path = "users")
-public class UserController {
+@RequestMapping(path = "feedback")
+public class FeedbackController {
 
-    private final transient UserService userService;
+    private final transient FeedbackService feedbackService;
 
     /**
      * This method sets up all the necessary services and is called when the server is started.
      *
-     * @param userService the user service
+     * @param feedbackService the feedback service
      */
 
     @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public FeedbackController(FeedbackService feedbackService) {
+        this.feedbackService = feedbackService;
     }
 
 }
