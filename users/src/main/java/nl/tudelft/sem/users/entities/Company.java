@@ -4,28 +4,13 @@ import java.util.List;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
 
 @Entity(name = "company")
 @Table
-@Getter
-@Setter
 public class Company extends User {
-    @Id
-    @Column(name = "name", nullable = false)
-    private String name;
-
-    @Column(name = "rating")
-    private Float rating;
-
-    @OneToMany
-    private List<Feedback> feedback;
-
-    private transient String netID;
+    @Column(name = "role")
+    private String role;
 
     /**
      * Default constructor.
@@ -44,11 +29,28 @@ public class Company extends User {
      */
 
     public Company(String name, Float rating, List<Feedback> feedback) {
-        super("", name, rating, feedback);
-        this.netID = "";
-        this.name = name;
-        this.rating = rating;
-        this.feedback = feedback;
+        super(name, name, rating, feedback);
+        this.role = "company";
+    }
+
+    /**
+     * Getter for role.
+     *
+     * @return the role of the company
+     */
+
+    public String getRole() {
+        return role;
+    }
+
+    /**
+     * Setter for role.
+     *
+     * @param role the new role of the company
+     */
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     /**
@@ -61,7 +63,8 @@ public class Company extends User {
 
     @Override
     public boolean equals(Object o) {
-        return super.equals(o) && getClass() == o.getClass();
+        return super.equals(o) && getClass() == o.getClass()
+                && Objects.equals(role, ((Company) o).role);
     }
 
     /**
@@ -72,7 +75,8 @@ public class Company extends User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(netID, name, rating, feedback);
+        return Objects.hash(this.getNetID(), this.getName(),
+                this.getRating(), this.getFeedback(), role);
     }
 
     /**
@@ -84,9 +88,9 @@ public class Company extends User {
     @Override
     public String toString() {
         return "Company{"
-                + ", name='" + name + '\''
-                + ", rating=" + rating
-                + ", feedback=" + feedback
+                + ", name='" + this.getName() + '\''
+                + ", rating=" + this.getRating()
+                + ", feedback=" + this.getFeedback()
                 + '}';
     }
 }

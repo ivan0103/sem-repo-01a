@@ -2,12 +2,30 @@ package nl.tudelft.sem.users.entities;
 
 import java.util.List;
 import java.util.Objects;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 
+@Entity(name = "user")
+@Table
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class User {
+    @Id
+    @Column(name = "netID", nullable = false)
     private String netID;
+
+    @Column(name = "name", nullable = false)
     private String name;
+
+    @Column(name = "rating")
     private Float rating;
+
+    @OneToMany
     private List<Feedback> feedback;
 
     /**

@@ -4,30 +4,14 @@ import java.util.List;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
 
 
 @Entity(name = "student")
 @Table
-@Getter
-@Setter
 public class Student extends User {
-    @Id
-    @Column(name = "netID", nullable = false)
-    private String netID;
-
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "rating")
-    private Float rating;
-
-    @OneToMany
-    private List<Feedback> feedback;
+    @Column(name = "role")
+    private String role;
 
     /**
      * Default constructor.
@@ -48,10 +32,27 @@ public class Student extends User {
 
     public Student(String netID, String name, Float rating, List<Feedback> feedback) {
         super(netID, name, rating, feedback);
-        this.netID = netID;
-        this.name = name;
-        this.rating = rating;
-        this.feedback = feedback;
+        this.role = "student";
+    }
+
+    /**
+     * Getter for role.
+     *
+     * @return the role of the student
+     */
+
+    public String getRole() {
+        return role;
+    }
+
+    /**
+     * Setter for role.
+     *
+     * @param role the new role of the student
+     */
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     /**
@@ -64,7 +65,8 @@ public class Student extends User {
 
     @Override
     public boolean equals(Object o) {
-        return super.equals(o) && getClass() == o.getClass();
+        return super.equals(o) && getClass() == o.getClass()
+                && Objects.equals(role, ((Student) o).role);
     }
 
     /**
@@ -75,7 +77,8 @@ public class Student extends User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(netID, name, rating, feedback);
+        return Objects.hash(this.getNetID(), this.getName(),
+                this.getRating(), this.getFeedback(), role);
     }
 
     /**
@@ -87,10 +90,10 @@ public class Student extends User {
     @Override
     public String toString() {
         return "Student{"
-                + ", netID='" + netID + '\''
-                + ", name='" + name + '\''
-                + ", rating=" + rating
-                + ", feedback=" + feedback
+                + ", netID='" + this.getNetID() + '\''
+                + ", name='" + this.getName() + '\''
+                + ", rating=" + this.getRating()
+                + ", feedback=" + this.getFeedback()
                 + '}';
     }
 }

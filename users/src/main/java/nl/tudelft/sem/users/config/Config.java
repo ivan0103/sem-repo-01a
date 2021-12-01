@@ -27,14 +27,19 @@ public class Config {
                                             FeedbackRepository feedbackRepository) {
 
         return args -> {
-            Feedback feedback = new Feedback(1L, "Chad", 10);
-            List<Feedback> feedbacks = List.of(feedback);
-            Student student = new Student("netID_Mate!", "name", 10.0f, feedbacks);
-            Company company = new Company("exploitEmployees", 10.0f, feedbacks);
+            Feedback feedbackStudent = new Feedback(1L, "Chad", 10);
+            Feedback feedbackCompany = new Feedback(2L, "Not Chad", 0);
+            feedbackRepository.save(feedbackStudent);
+            feedbackRepository.save(feedbackCompany);
 
-            feedbackRepository.save(feedback);
-            companyRepository.save(company);
+            List<Feedback> feedbacksStudent = List.of(feedbackStudent);
+            List<Feedback> feedbacksCompany = List.of(feedbackCompany);
+
+            Student student = new Student("netID_Mate!", "name", 10.0f, feedbacksStudent);
             studentRepository.save(student);
+
+            Company company = new Company("exploitEmployees", 10.0f, feedbacksCompany);
+            companyRepository.save(company);
         };
     }
 }
