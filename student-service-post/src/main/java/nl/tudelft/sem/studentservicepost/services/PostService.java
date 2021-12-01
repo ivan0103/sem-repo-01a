@@ -21,7 +21,6 @@ public class PostService {
      * @return the saved post
      */
     public Post createPost(Post post) {
-        // TODO save in database, do whatever else needs to be done
         post.setId(null);
         Post returned = postRepository.save(post);
         System.out.println(returned);
