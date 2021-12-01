@@ -26,6 +26,10 @@ public class Expertise {
     public Expertise() {
     }
 
+    public Expertise(String string) {
+        this.expertiseString = string;
+    }
+
     public String getExpertiseString() {
         return expertiseString;
     }

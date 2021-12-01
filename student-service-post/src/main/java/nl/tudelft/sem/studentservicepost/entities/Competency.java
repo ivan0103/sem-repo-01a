@@ -3,8 +3,10 @@ package nl.tudelft.sem.studentservicepost.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
@@ -25,6 +27,10 @@ public class Competency {
     private Set<Post> postSet = new HashSet<>();
 
     public Competency() {
+    }
+
+    public Competency(String string) {
+        this.competencyString = string;
     }
 
     public String getCompetencyString() {

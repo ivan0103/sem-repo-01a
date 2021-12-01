@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -47,7 +49,7 @@ public class Post {
 
     @NotEmpty(message = "At least 1 expertise must be provided!")
     @Valid
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
         name = "post_expertise",
         joinColumns = {@JoinColumn(name = "post_id")},
@@ -57,7 +59,7 @@ public class Post {
 
     @NotEmpty(message = "At least 1 competency must be provided!")
     @Valid
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
         name = "post_competency",
         joinColumns = {@JoinColumn(name = "post_id")},
@@ -125,12 +127,29 @@ public class Post {
     @Override
     public String toString() {
         return "Post{"
-                + "id=" + id
-                + ", author='" + author + '\''
-                + ", pricePerHour=" + pricePerHour
-                + ", expertiseSet=" + expertiseSet
-                + ", competencySet=" + competencySet
-                + ", companyOfferSet=" + companyOfferSet
-                + '}';
+            + "id=" + id
+            + ", author='" + author + '\''
+            + ", pricePerHour=" + pricePerHour
+            + ", expertiseSet=" + expertiseSet
+            + ", competencySet=" + competencySet
+            + ", companyOfferSet=" + companyOfferSet
+            + '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Post post = (Post) o;
+        return Objects.equals(author, post.author)
+            && Objects.equals(pricePerHour, post.pricePerHour)
+            && Objects.equals(expertiseSet, post.expertiseSet)
+            && Objects.equals(competencySet, post.competencySet)
+            && Objects.equals(companyOfferSet, post.companyOfferSet);
+    }
+
 }
