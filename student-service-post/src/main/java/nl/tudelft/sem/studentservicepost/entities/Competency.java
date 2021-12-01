@@ -2,6 +2,7 @@ package nl.tudelft.sem.studentservicepost.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -23,7 +24,8 @@ public class Competency {
     private String competencyString;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "competencySet")
+    @ManyToMany(mappedBy = "competencySet", fetch = FetchType.LAZY,
+        cascade = {CascadeType.MERGE})
     private Set<Post> postSet = new HashSet<>();
 
     public Competency() {
@@ -47,6 +49,23 @@ public class Competency {
 
     public void setPostSet(Set<Post> postSet) {
         this.postSet = postSet;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Competency that = (Competency) o;
+        return Objects.equals(competencyString, that.competencyString);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(competencyString);
     }
 
     @Override
