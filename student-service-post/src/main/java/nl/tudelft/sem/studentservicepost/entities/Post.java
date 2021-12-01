@@ -152,4 +152,8 @@ public class Post {
             && Objects.equals(companyOfferSet, post.companyOfferSet);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(author, pricePerHour, expertiseSet, competencySet, companyOfferSet);
+    }
 }

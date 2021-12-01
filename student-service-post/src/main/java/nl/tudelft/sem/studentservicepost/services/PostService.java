@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class PostService {
 
     @Autowired
-    PostRepository postRepository;
+    transient PostRepository postRepository;
 
     /**
      * Create post and save in database.

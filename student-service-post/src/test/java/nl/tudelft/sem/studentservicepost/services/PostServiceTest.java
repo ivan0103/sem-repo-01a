@@ -17,10 +17,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class PostServiceTest {
 
-    Post post;
+    transient Post post;
 
     @Autowired
-    PostService postService;
+    transient PostService postService;
 
     @BeforeEach
     void setup() {
