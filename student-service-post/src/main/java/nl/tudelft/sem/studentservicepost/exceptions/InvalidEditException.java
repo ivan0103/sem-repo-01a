@@ -5,5 +5,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.NOT_MODIFIED, reason = "NetID can't be edited")
 
-public class InvalidEditException extends RuntimeException{
+public class InvalidEditException extends RuntimeException {
+
+    public static final long serialVersionUID = 2L;
+
 }
