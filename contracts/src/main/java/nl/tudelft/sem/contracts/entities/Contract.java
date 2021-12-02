@@ -56,6 +56,9 @@ public class Contract {
     @Column(name = "endDate")
     private LocalDate endDate;
 
+    @Column(name = "agreementDate")
+    private LocalDate agreementDate;
+
 
     /**
      * Instantiates a new Contract.
@@ -81,6 +84,10 @@ public class Contract {
         this.payPerWeek = payPerWeek;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.agreementDate = LocalDate.now();
+    }
+    public long getId() {
+        return id;
     }
 
     public long getFreelancerId() {
@@ -147,6 +154,8 @@ public class Contract {
         this.endDate = endDate;
     }
 
-
+    public LocalDate getAgreementDate() {
+        return agreementDate;
+    }
 
 }

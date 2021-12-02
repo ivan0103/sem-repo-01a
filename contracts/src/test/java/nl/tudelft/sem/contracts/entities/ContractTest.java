@@ -171,4 +171,10 @@ public class ContractTest {
     public void equalTrue() {
         assertThat(contract).isEqualTo(contract);
     }
+
+    @Test
+    public void getAgreementDate() {
+        assertThat(contract.getAgreementDate()).isEqualTo(LocalDate.now());
+    }
+
 }
