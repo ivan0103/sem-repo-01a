@@ -49,8 +49,8 @@ public class CompanyController implements UserController<Company> {
      * @return the company we look for or null
      */
 
-    @GetMapping(path = "{netID}")
-    public Company getOneUser(@PathVariable(value = "netID") String netID) {
+    @GetMapping(path = "{" + valueId + "}")
+    public Company getOneUser(@PathVariable(value = valueId) String netID) {
         return companyService.getOneUser(netID);
     }
 
@@ -63,8 +63,8 @@ public class CompanyController implements UserController<Company> {
      */
 
     @PostMapping(path = "{" + valueId + "}/{" + valueName + "}")
-    public Company addUser(@PathVariable(value = "netID") String netID,
-                           @PathVariable(value = "name") String name) {
+    public Company addUser(@PathVariable(value = valueId) String netID,
+                           @PathVariable(value = valueName) String name) {
 
         return companyService.addUser(netID, name);
     }
@@ -79,7 +79,7 @@ public class CompanyController implements UserController<Company> {
      */
 
     @PostMapping(path = "{" + valueId + "}/{text}/{rating}")
-    public Feedback addFeedback(@PathVariable(value = "netID") String netID,
+    public Feedback addFeedback(@PathVariable(value = valueId) String netID,
                                 @PathVariable(value = "text") String text,
                                 @PathVariable(value = "rating") Integer rating) {
 
@@ -94,7 +94,7 @@ public class CompanyController implements UserController<Company> {
      */
 
     @DeleteMapping(path = "{" + valueId + "}")
-    public Company deleteUser(@PathVariable(value = "netID") String netID) {
+    public Company deleteUser(@PathVariable(value = valueId) String netID) {
         return companyService.deleteUser(netID);
     }
 
@@ -110,8 +110,8 @@ public class CompanyController implements UserController<Company> {
     @PutMapping(path = {"{" + valueId + "}/{" + valueName + "}",
             "{" + valueId + "}/{" + valueName + "}/{newNetID}"})
 
-    public Company updateUser(@PathVariable(value = "netID") String netID,
-                              @PathVariable(value = "name") String name,
+    public Company updateUser(@PathVariable(value = valueId) String netID,
+                              @PathVariable(value = valueName) String name,
                               @PathVariable(value = "newNetID", required = false) String newNetID) {
 
         return companyService.updateUser(netID, name, newNetID);
