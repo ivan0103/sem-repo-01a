@@ -28,24 +28,18 @@ public class ContractController {
     }
 
     @PostMapping("/create")
-    Contract create(@RequestParam long freelancerId,
-                         @RequestParam long companyId,
-                         @RequestParam String freelancerName,
-                         @RequestParam String companyName,
-                         @RequestParam LocalTime hoursPerWeek,
-                         @RequestParam float payPerWeek,
-                         @RequestParam LocalDate startDate,
-                         @RequestParam LocalDate endDate) throws Exception {
+    Contract create(@RequestParam Contract contract) throws Exception {
+        return contractService.create(contract);
+    }
 
-        return contractService.create(
-                freelancerId,
-                companyId,
-                freelancerName,
-                companyName,
-                hoursPerWeek,
-                payPerWeek,
-                startDate,
-                endDate);
+    @PostMapping("/getContract")
+    Contract getContract(@RequestParam long contractId) throws Exception {
+        Contract contract = contractService.getContract(contractId);
+        if (contract == null) {
+            throw new Exception("Invalid contract id.");
+        }
+
+        return contract;
     }
 
     @PostMapping("/getPdf")

@@ -158,4 +158,14 @@ public class Contract {
         return agreementDate;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if ( o instanceof Contract){
+            Contract that = (Contract) o;
+
+            return (this.id == that.getId());
+        }
+        return false;
+    }
+
 }

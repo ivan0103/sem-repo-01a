@@ -18,18 +18,7 @@ public class ContractService {
         this.contractRepository = contractRepository;
     }
 
-    public Contract create(long freelancerId, long companyId, String freelancerName,
-                           String companyName, LocalTime hoursPerWeek, float payPerWeek,
-                           LocalDate startDate, LocalDate endDate) {
-        Contract contract = new Contract(
-                freelancerId,
-                companyId,
-                freelancerName,
-                companyName,
-                hoursPerWeek,
-                payPerWeek,
-                startDate,
-                endDate);
+    public Contract create(Contract contract) {
         return contractRepository.save(contract);
     }
 
