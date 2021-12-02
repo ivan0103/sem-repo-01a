@@ -8,6 +8,7 @@ import java.util.HashSet;
 import nl.tudelft.sem.studentservicepost.entities.Competency;
 import nl.tudelft.sem.studentservicepost.entities.Expertise;
 import nl.tudelft.sem.studentservicepost.entities.Post;
+import nl.tudelft.sem.studentservicepost.exceptions.InvalidEditException;
 import nl.tudelft.sem.studentservicepost.exceptions.PostNotFoundException;
 import nl.tudelft.sem.studentservicepost.repositories.CompetencyRepository;
 import nl.tudelft.sem.studentservicepost.repositories.ExpertiseRepository;
@@ -91,6 +92,23 @@ class PostServiceTest {
 
         assertThatThrownBy(() -> postService.editPost(tmp))
             .isInstanceOf(PostNotFoundException.class);
+
+
+    }
+
+    @Test
+    void editPostFailingNetId() {
+        Post tmp = postService.createPost(post);
+
+        Competency newCompetency = new Competency("comp2");
+
+        tmp.setPricePerHour(new BigDecimal("42.00"));
+        tmp.getCompetencySet().add(newCompetency);
+
+        tmp.setAuthor("anotherguy");
+
+        assertThatThrownBy(() -> postService.editPost(tmp))
+            .isInstanceOf(InvalidEditException.class);
 
 
     }
