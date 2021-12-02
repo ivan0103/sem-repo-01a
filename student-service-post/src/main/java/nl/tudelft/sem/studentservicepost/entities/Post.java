@@ -49,7 +49,7 @@ public class Post {
 
     @NotEmpty(message = "At least 1 expertise must be provided!")
     @Valid
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
         name = "post_expertise",
         joinColumns = {@JoinColumn(name = "post_id")},
@@ -59,7 +59,7 @@ public class Post {
 
     @NotEmpty(message = "At least 1 competency must be provided!")
     @Valid
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
         name = "post_competency",
         joinColumns = {@JoinColumn(name = "post_id")},
