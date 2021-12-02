@@ -32,7 +32,7 @@ public class Competency {
     private String competencyString;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "competencySet", fetch = FetchType.LAZY,
+    @ManyToMany(mappedBy = "competencySet", fetch = FetchType.EAGER,
         cascade = {CascadeType.MERGE})
     private Set<Post> postSet = new HashSet<>();
 
