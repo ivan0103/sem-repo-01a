@@ -21,19 +21,13 @@ import org.hibernate.annotations.NaturalId;
 public class Competency {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
-    @Column(name = "competency_id")
-    private Long id;
-
     @Column(name = "competency")
     @NotNull
     @Size(min = 0, max = 20)
     private String competencyString;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "competencySet", fetch = FetchType.LAZY,
-        cascade = {CascadeType.MERGE})
+    @ManyToMany(mappedBy = "competencySet", fetch = FetchType.EAGER)
     private Set<Post> postSet = new HashSet<>();
 
     public Competency() {
@@ -41,14 +35,6 @@ public class Competency {
 
     public Competency(String string) {
         this.competencyString = string;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getCompetencyString() {

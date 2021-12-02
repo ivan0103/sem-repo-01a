@@ -1,14 +1,18 @@
 package nl.tudelft.sem.studentservicepost.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
 import nl.tudelft.sem.studentservicepost.entities.Competency;
 import nl.tudelft.sem.studentservicepost.entities.Expertise;
 import nl.tudelft.sem.studentservicepost.entities.Post;
+import nl.tudelft.sem.studentservicepost.exceptions.InvalidEditException;
+import nl.tudelft.sem.studentservicepost.exceptions.PostNotFoundException;
 import nl.tudelft.sem.studentservicepost.repositories.CompetencyRepository;
 import nl.tudelft.sem.studentservicepost.repositories.ExpertiseRepository;
+import nl.tudelft.sem.studentservicepost.repositories.PostRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +28,9 @@ class PostServiceTest {
 
     @Autowired
     transient PostService postService;
+
+    @Autowired
+    transient PostRepository postRepository;
 
     @BeforeEach
     void setup() {
@@ -53,5 +60,56 @@ class PostServiceTest {
         postService.createPost(post);
         Post tmp2 = postService.createPost(post1);
         assertThat(tmp2).isEqualTo(post1);
+    }
+
+    @Test
+    void editPost() {
+        Post tmp = postService.createPost(post);
+
+        Competency newCompetency = new Competency("comp2");
+
+        tmp.setPricePerHour(new BigDecimal("42.00"));
+        tmp.getCompetencySet().add(newCompetency);
+
+        Post edited = postService.editPost(tmp);
+
+        Post retrieved = postRepository.getPostById(tmp.getId());
+
+        assertThat(edited).isEqualTo(retrieved);
+
+        assertThat(edited.getPricePerHour()).isEqualTo(new BigDecimal("42.00"));
+
+        assertThat(edited.getCompetencySet()).hasSize(2).containsOnlyOnce(newCompetency);
+
+    }
+
+    @Test
+    void editNonExistentPost() {
+        Long realId = postService.createPost(post).getId();
+
+        Post tmp = new Post();
+        tmp.setId(realId + 10L); // set id to something different from existing post
+
+        assertThatThrownBy(() -> postService.editPost(tmp))
+            .isInstanceOf(PostNotFoundException.class);
+
+
+    }
+
+    @Test
+    void editPostFailingNetId() {
+        Post tmp = postService.createPost(post);
+
+        Competency newCompetency = new Competency("comp2");
+
+        tmp.setPricePerHour(new BigDecimal("42.00"));
+        tmp.getCompetencySet().add(newCompetency);
+
+        tmp.setAuthor("anotherguy");
+
+        assertThatThrownBy(() -> postService.editPost(tmp))
+            .isInstanceOf(InvalidEditException.class);
+
+
     }
 }

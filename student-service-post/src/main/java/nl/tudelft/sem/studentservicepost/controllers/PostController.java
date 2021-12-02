@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +28,12 @@ public class PostController {
     public ResponseEntity<Post> createPost(@Valid @RequestBody Post post) {
         Post savedPost = postService.createPost(post);
         return new ResponseEntity<Post>(savedPost, HttpStatus.CREATED);
+    }
+
+    @PatchMapping(value = "/edit", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Post> editPost(@Valid @RequestBody Post post) {
+        Post editedPost = postService.editPost(post);
+        return new ResponseEntity<>(editedPost, HttpStatus.ACCEPTED);
     }
 
 

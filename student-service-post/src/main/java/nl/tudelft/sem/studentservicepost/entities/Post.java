@@ -9,6 +9,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -32,7 +33,7 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY, value = "id")
     @Column(name = "post_id")
     private Long id;
 
@@ -49,7 +50,7 @@ public class Post {
 
     @NotEmpty(message = "At least 1 expertise must be provided!")
     @Valid
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
         name = "post_expertise",
         joinColumns = {@JoinColumn(name = "post_id")},
@@ -59,7 +60,7 @@ public class Post {
 
     @NotEmpty(message = "At least 1 competency must be provided!")
     @Valid
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
         name = "post_competency",
         joinColumns = {@JoinColumn(name = "post_id")},
