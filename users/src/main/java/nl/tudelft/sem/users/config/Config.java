@@ -27,8 +27,8 @@ public class Config {
                                             FeedbackRepository feedbackRepository) {
 
         return args -> {
-            Feedback feedbackStudent = new Feedback(1L, "Chad", 10);
-            Feedback feedbackCompany = new Feedback(2L, "Not Chad", 0);
+            Feedback feedbackStudent = new Feedback("Chad", 10);
+            Feedback feedbackCompany = new Feedback("Not Chad", 0);
             feedbackRepository.save(feedbackStudent);
             feedbackRepository.save(feedbackCompany);
 
