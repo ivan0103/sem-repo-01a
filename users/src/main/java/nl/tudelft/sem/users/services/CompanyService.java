@@ -3,6 +3,8 @@ package nl.tudelft.sem.users.services;
 import java.util.ArrayList;
 import java.util.List;
 import nl.tudelft.sem.users.entities.Company;
+import nl.tudelft.sem.users.entities.Feedback;
+import nl.tudelft.sem.users.entities.Student;
 import nl.tudelft.sem.users.repositories.CompanyRepository;
 import nl.tudelft.sem.users.repositories.FeedbackRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,5 +77,29 @@ public class CompanyService implements UserService<Company> {
         Company company = new Company(name, 0.0f, new ArrayList<>());
         companyRepository.save(company);
         return company;
+    }
+
+    /**
+     * Creates a new feedback.
+     *
+     * @param netID id of the company
+     * @param text text of the feedback
+     * @param rating rating of the feedback
+     * @return a new feedback
+     */
+
+    @Override
+    public Feedback addFeedback(String netID, String text, Integer rating) {
+        if (companyRepository.findById(netID).isEmpty()) {
+            return null;
+        }
+
+        Feedback feedback = new Feedback(text, rating);
+        feedbackRepository.save(feedback);
+        Company company = companyRepository.findById(netID).get();
+        company.addFeedback(feedback);
+        companyRepository.save(company);
+
+        return feedback;
     }
 }

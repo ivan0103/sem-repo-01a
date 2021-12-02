@@ -2,6 +2,8 @@ package nl.tudelft.sem.users.services;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import nl.tudelft.sem.users.entities.Feedback;
 import nl.tudelft.sem.users.entities.Student;
 import nl.tudelft.sem.users.repositories.FeedbackRepository;
 import nl.tudelft.sem.users.repositories.StudentRepository;
@@ -75,5 +77,29 @@ public class StudentService implements UserService<Student> {
         Student student = new Student(netID, name, 0.0f, new ArrayList<>());
         studentRepository.save(student);
         return student;
+    }
+
+    /**
+     * Creates a new feedback.
+     *
+     * @param netID id of the student
+     * @param text text of the feedback
+     * @param rating rating of the feedback
+     * @return a new feedback
+     */
+
+    @Override
+    public Feedback addFeedback(String netID, String text, Integer rating) {
+        if (studentRepository.findById(netID).isEmpty()) {
+            return null;
+        }
+
+        Feedback feedback = new Feedback(text, rating);
+        feedbackRepository.save(feedback);
+        Student student = studentRepository.findById(netID).get();
+        student.addFeedback(feedback);
+        studentRepository.save(student);
+
+        return feedback;
     }
 }

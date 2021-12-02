@@ -3,6 +3,8 @@ package nl.tudelft.sem.users.controllers;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
+
+import nl.tudelft.sem.users.entities.Feedback;
 import nl.tudelft.sem.users.entities.Student;
 import nl.tudelft.sem.users.services.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +67,23 @@ public class StudentController implements UserController<Student> {
                            @PathVariable(value = "name") String name) {
 
         return studentService.addUser(netID, name);
+    }
+
+    /**
+     * Post mapping for adding feedback.
+     *
+     * @param netID the id of the student
+     * @param text the text of the feedback
+     * @param rating the rating of the feedback
+     * @return a new feedback
+     */
+
+    @PostMapping(path = "{netID}/{text}/{rating}")
+    public Feedback addFeedback(@PathVariable(value = "netID") String netID,
+                                @PathVariable(value = "text") String text,
+                                @PathVariable(value = "rating") Integer rating) {
+
+        return studentService.addFeedback(netID, text, rating);
     }
 
 }

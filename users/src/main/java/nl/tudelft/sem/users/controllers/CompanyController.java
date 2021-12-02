@@ -2,6 +2,7 @@ package nl.tudelft.sem.users.controllers;
 
 import java.util.List;
 import nl.tudelft.sem.users.entities.Company;
+import nl.tudelft.sem.users.entities.Feedback;
 import nl.tudelft.sem.users.services.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -64,5 +65,22 @@ public class CompanyController implements UserController<Company> {
                            @PathVariable(value = "name") String name) {
 
         return companyService.addUser(netID, name);
+    }
+
+    /**
+     * Post mapping for adding feedback.
+     *
+     * @param netID the id of the company
+     * @param text the text of the feedback
+     * @param rating the rating of the feedback
+     * @return a new feedback
+     */
+
+    @PostMapping(path = "{netID}/{text}/{rating}")
+    public Feedback addFeedback(@PathVariable(value = "netID") String netID,
+                                @PathVariable(value = "text") String text,
+                                @PathVariable(value = "rating") Integer rating) {
+
+        return companyService.addFeedback(netID, text, rating);
     }
 }

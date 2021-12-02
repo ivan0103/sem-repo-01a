@@ -133,6 +133,16 @@ public abstract class User {
     }
 
     /**
+     * Adds a new feedback to the list of feedback.
+     *
+     * @param feedback the new feedback to be added
+     */
+
+    public void addFeedback(Feedback feedback) {
+        this.feedback.add(feedback);
+    }
+
+    /**
      * Equals method - checks whether the users are the same or not.
      *
      * @param o the object used to compare the user
