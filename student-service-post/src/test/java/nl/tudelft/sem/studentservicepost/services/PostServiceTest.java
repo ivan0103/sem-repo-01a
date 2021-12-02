@@ -4,19 +4,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
 import nl.tudelft.sem.studentservicepost.entities.Competency;
 import nl.tudelft.sem.studentservicepost.entities.Expertise;
 import nl.tudelft.sem.studentservicepost.entities.Post;
 import nl.tudelft.sem.studentservicepost.exceptions.InvalidEditException;
 import nl.tudelft.sem.studentservicepost.exceptions.PostNotFoundException;
-import nl.tudelft.sem.studentservicepost.repositories.CompetencyRepository;
-import nl.tudelft.sem.studentservicepost.repositories.ExpertiseRepository;
 import nl.tudelft.sem.studentservicepost.repositories.PostRepository;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
