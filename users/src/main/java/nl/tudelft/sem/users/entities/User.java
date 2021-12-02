@@ -26,7 +26,7 @@ public abstract class User {
     private Float rating;
 
     @OneToMany
-    private List<Feedback> feedback;
+    private List<Feedback> feedbacks;
 
     /**
      * Default constructor.
@@ -42,14 +42,14 @@ public abstract class User {
      * @param netID netId of the user - acts as primary key
      * @param name name of the user
      * @param rating rating of the user
-     * @param feedback list of feedback received by the user from other users
+     * @param feedbacks list of feedbacks received by the user from other users
      */
 
-    public User(String netID, String name, Float rating, List<Feedback> feedback) {
+    public User(String netID, String name, Float rating, List<Feedback> feedbacks) {
         this.netID = netID;
         this.name = name;
         this.rating = rating;
-        this.feedback = feedback;
+        this.feedbacks = feedbacks;
     }
 
     /**
@@ -113,23 +113,23 @@ public abstract class User {
     }
 
     /**
-     * Getter for the feedback provided by other users.
+     * Getter for the feedbacks provided by other users.
      *
      * @return a list of feedbacks
      */
 
-    public List<Feedback> getFeedback() {
-        return feedback;
+    public List<Feedback> getFeedbacks() {
+        return feedbacks;
     }
 
     /**
      * Setter for the feedback list.
      *
-     * @param feedback a new list of feedbacks
+     * @param feedbacks a new list of feedbacks
      */
 
-    public void setFeedback(List<Feedback> feedback) {
-        this.feedback = feedback;
+    public void setFeedbacks(List<Feedback> feedbacks) {
+        this.feedbacks = feedbacks;
     }
 
     /**
@@ -139,7 +139,7 @@ public abstract class User {
      */
 
     public void addFeedback(Feedback feedback) {
-        this.feedback.add(feedback);
+        this.feedbacks.add(feedback);
     }
 
     /**
@@ -161,7 +161,7 @@ public abstract class User {
         User user = (User) o;
         return Objects.equals(name, user.name)
                 && Objects.equals(rating, user.rating)
-                && Objects.equals(feedback, user.feedback);
+                && Objects.equals(feedbacks, user.feedbacks);
     }
 
     /**
@@ -172,7 +172,7 @@ public abstract class User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(netID, name, rating, feedback);
+        return Objects.hash(netID, name, rating, feedbacks);
     }
 
     /**
@@ -187,7 +187,7 @@ public abstract class User {
                 + ", netID='" + netID + '\''
                 + ", name='" + name + '\''
                 + ", rating=" + rating
-                + ", feedback=" + feedback
+                + ", feedbacks=" + feedbacks
                 + '}';
     }
 }

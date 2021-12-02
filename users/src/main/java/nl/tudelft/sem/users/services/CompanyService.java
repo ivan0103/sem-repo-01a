@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import nl.tudelft.sem.users.entities.Company;
 import nl.tudelft.sem.users.entities.Feedback;
-import nl.tudelft.sem.users.entities.Student;
 import nl.tudelft.sem.users.repositories.CompanyRepository;
 import nl.tudelft.sem.users.repositories.FeedbackRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,8 +97,54 @@ public class CompanyService implements UserService<Company> {
         feedbackRepository.save(feedback);
         Company company = companyRepository.findById(netID).get();
         company.addFeedback(feedback);
+        company.setRating((company.getRating() * (company.getFeedbacks().size() - 1)
+                + ((float) feedback.getRating())) / ((float) company.getFeedbacks().size()));
         companyRepository.save(company);
 
         return feedback;
+    }
+
+    /**
+     * Deletes the company with the corresponding netID.
+     *
+     * @param netID the id of the company
+     * @return the company that was deleted
+     */
+
+    @Override
+    public Company deleteUser(String netID) {
+        if (companyRepository.findById(netID).isEmpty()) {
+            return null;
+        }
+
+        Company company = companyRepository.findById(netID).get();
+        List<Feedback> feedbacks = new ArrayList<>(company.getFeedbacks());
+        companyRepository.delete(company);
+        feedbackRepository.deleteAll(feedbacks);
+
+        return company;
+    }
+
+    /**
+     * Updates information of company.
+     *
+     * @param netID the id of the company
+     * @param name the new name of company
+     * @param newNetID the new id of company (optional and not required)
+     * @return an updated company
+     */
+
+    @Override
+    public Company updateUser(String netID, String name, String newNetID) {
+        if (companyRepository.findById(netID).isEmpty()) {
+            return null;
+        }
+
+        Company company = companyRepository.findById(netID).get();
+        companyRepository.delete(company);
+        company.setName(name);
+        company.setNetID(name);
+        companyRepository.save(company);
+        return company;
     }
 }

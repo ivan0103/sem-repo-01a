@@ -2,7 +2,7 @@ package nl.tudelft.sem.users.services;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Objects;
 import nl.tudelft.sem.users.entities.Feedback;
 import nl.tudelft.sem.users.entities.Student;
 import nl.tudelft.sem.users.repositories.FeedbackRepository;
@@ -98,8 +98,63 @@ public class StudentService implements UserService<Student> {
         feedbackRepository.save(feedback);
         Student student = studentRepository.findById(netID).get();
         student.addFeedback(feedback);
+        student.setRating((student.getRating() * (student.getFeedbacks().size() - 1)
+                + ((float) feedback.getRating())) / ((float) student.getFeedbacks().size()));
         studentRepository.save(student);
 
         return feedback;
+    }
+
+    /**
+     * Deletes the student with the corresponding netID.
+     *
+     * @param netID the id of the student
+     * @return the student that was deleted
+     */
+
+    @Override
+    public Student deleteUser(String netID) {
+        if (studentRepository.findById(netID).isEmpty()) {
+            return null;
+        }
+
+        Student student = studentRepository.findById(netID).get();
+        List<Feedback> feedbacks = new ArrayList<>(student.getFeedbacks());
+        studentRepository.delete(student);
+        feedbackRepository.deleteAll(feedbacks);
+
+        return student;
+    }
+
+    /**
+     * Updates information of student.
+     *
+     * @param netID the id of the student
+     * @param name the new name of student
+     * @param newNetID the new id of student (optional)
+     * @return an updated student
+     */
+
+    @Override
+    public Student updateUser(String netID, String name, String newNetID) {
+        if (studentRepository.findById(netID).isEmpty()) {
+            return null;
+        }
+
+        Student student = studentRepository.findById(netID).get();
+
+        if (Objects.equals(newNetID, "null") || newNetID == null
+            || studentRepository.findById(newNetID).isPresent()) {
+
+            student.setName(name);
+            studentRepository.save(student);
+            return student;
+        }
+
+        studentRepository.delete(student);
+        student.setName(name);
+        student.setNetID(newNetID);
+        studentRepository.save(student);
+        return student;
     }
 }

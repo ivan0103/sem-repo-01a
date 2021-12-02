@@ -25,11 +25,11 @@ public class Company extends User {
      *
      * @param name name of the company - acts as primary key
      * @param rating rating of the company
-     * @param feedback list of feedback received by the company from other users
+     * @param feedbacks list of feedback received by the company from other users
      */
 
-    public Company(String name, Float rating, List<Feedback> feedback) {
-        super(name, name, rating, feedback);
+    public Company(String name, Float rating, List<Feedback> feedbacks) {
+        super(name, name, rating, feedbacks);
         this.role = "company";
     }
 
@@ -76,7 +76,7 @@ public class Company extends User {
     @Override
     public int hashCode() {
         return Objects.hash(this.getNetID(), this.getName(),
-                this.getRating(), this.getFeedback(), role);
+                this.getRating(), this.getFeedbacks(), role);
     }
 
     /**
@@ -90,7 +90,7 @@ public class Company extends User {
         return "Company{"
                 + ", name='" + this.getName() + '\''
                 + ", rating=" + this.getRating()
-                + ", feedback=" + this.getFeedback()
+                + ", feedbacks=" + this.getFeedbacks()
                 + '}';
     }
 }

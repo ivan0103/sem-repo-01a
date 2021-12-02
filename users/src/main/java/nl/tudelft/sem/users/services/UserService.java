@@ -13,6 +13,10 @@ public interface UserService<T> {
 
     T addUser(String netID, String name);
 
+    T deleteUser(String netID);
+
+    T updateUser(String netID, String name, String newNetID);
+
     Feedback addFeedback(String netID, String text, Integer rating);
 
 }

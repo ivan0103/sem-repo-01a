@@ -27,11 +27,11 @@ public class Student extends User {
      * @param netID netId of the student - acts as primary key
      * @param name name of the student
      * @param rating rating of the student
-     * @param feedback list of feedback received by the student from other users
+     * @param feedbacks list of feedback received by the student from other users
      */
 
-    public Student(String netID, String name, Float rating, List<Feedback> feedback) {
-        super(netID, name, rating, feedback);
+    public Student(String netID, String name, Float rating, List<Feedback> feedbacks) {
+        super(netID, name, rating, feedbacks);
         this.role = "student";
     }
 
@@ -78,7 +78,7 @@ public class Student extends User {
     @Override
     public int hashCode() {
         return Objects.hash(this.getNetID(), this.getName(),
-                this.getRating(), this.getFeedback(), role);
+                this.getRating(), this.getFeedbacks(), role);
     }
 
     /**
@@ -93,7 +93,7 @@ public class Student extends User {
                 + ", netID='" + this.getNetID() + '\''
                 + ", name='" + this.getName() + '\''
                 + ", rating=" + this.getRating()
-                + ", feedback=" + this.getFeedback()
+                + ", feedbacks=" + this.getFeedbacks()
                 + '}';
     }
 }

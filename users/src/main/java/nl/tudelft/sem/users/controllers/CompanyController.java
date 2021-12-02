@@ -5,9 +5,11 @@ import nl.tudelft.sem.users.entities.Company;
 import nl.tudelft.sem.users.entities.Feedback;
 import nl.tudelft.sem.users.services.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -60,7 +62,7 @@ public class CompanyController implements UserController<Company> {
      * @return a new company
      */
 
-    @PostMapping(path = "{netID}/{name}")
+    @PostMapping(path = "{" + valueId + "}/{" + valueName + "}")
     public Company addUser(@PathVariable(value = "netID") String netID,
                            @PathVariable(value = "name") String name) {
 
@@ -76,11 +78,42 @@ public class CompanyController implements UserController<Company> {
      * @return a new feedback
      */
 
-    @PostMapping(path = "{netID}/{text}/{rating}")
+    @PostMapping(path = "{" + valueId + "}/{text}/{rating}")
     public Feedback addFeedback(@PathVariable(value = "netID") String netID,
                                 @PathVariable(value = "text") String text,
                                 @PathVariable(value = "rating") Integer rating) {
 
         return companyService.addFeedback(netID, text, rating);
+    }
+
+    /**
+     * DeleteMapping for company.
+     *
+     * @param netID the id of the company
+     * @return the company that was deleted
+     */
+
+    @DeleteMapping(path = "{" + valueId + "}")
+    public Company deleteUser(@PathVariable(value = "netID") String netID) {
+        return companyService.deleteUser(netID);
+    }
+
+    /**
+     * PutMapping for company.
+     *
+     * @param netID the id of the company
+     * @param name the new name of the company
+     * @param newNetID the new id of the company (optional and not required for company)
+     * @return the company with updated name
+     */
+
+    @PutMapping(path = {"{" + valueId + "}/{" + valueName + "}",
+            "{" + valueId + "}/{" + valueName + "}/{newNetID}"})
+
+    public Company updateUser(@PathVariable(value = "netID") String netID,
+                              @PathVariable(value = "name") String name,
+                              @PathVariable(value = "newNetID", required = false) String newNetID) {
+
+        return companyService.updateUser(netID, name, newNetID);
     }
 }
