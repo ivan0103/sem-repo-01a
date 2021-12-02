@@ -9,4 +9,6 @@ public interface UserService<T> {
 
     T getOneUser(String netID);
 
+    T addUser(String netID, String name);
+
 }

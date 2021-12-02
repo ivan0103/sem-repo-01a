@@ -1,11 +1,14 @@
 package nl.tudelft.sem.users.controllers;
 
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 import nl.tudelft.sem.users.entities.Student;
 import nl.tudelft.sem.users.services.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -47,6 +50,21 @@ public class StudentController implements UserController<Student> {
     @GetMapping(path = "{netID}")
     public Student getOneUser(@PathVariable(value = "netID") String netID) {
         return studentService.getOneUser(netID);
+    }
+
+    /**
+     * PostMapping for one specific student.
+     *
+     * @param netID the id of the new student
+     * @param name the name of the new student
+     * @return a new student
+     */
+
+    @PostMapping(path = "{netID}/{name}")
+    public Student addUser(@PathVariable(value = "netID") String netID,
+                           @PathVariable(value = "name") String name) {
+
+        return studentService.addUser(netID, name);
     }
 
 }

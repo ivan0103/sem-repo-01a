@@ -6,6 +6,7 @@ import nl.tudelft.sem.users.services.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -48,5 +49,20 @@ public class CompanyController implements UserController<Company> {
     @GetMapping(path = "{netID}")
     public Company getOneUser(@PathVariable(value = "netID") String netID) {
         return companyService.getOneUser(netID);
+    }
+
+    /**
+     * PostMapping for one specific company.
+     *
+     * @param netID the id of the new company
+     * @param name the name of the new company
+     * @return a new company
+     */
+
+    @PostMapping(path = "{netID}/{name}")
+    public Company addUser(@PathVariable(value = "netID") String netID,
+                           @PathVariable(value = "name") String name) {
+
+        return companyService.addUser(netID, name);
     }
 }

@@ -10,4 +10,7 @@ public interface UserController<T> {
 
     T getOneUser(@PathVariable(value = "netID") String netID);
 
+    T addUser(@PathVariable(value = "netID") String netID,
+              @PathVariable(value = "name") String name);
+
 }

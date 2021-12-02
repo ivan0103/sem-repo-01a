@@ -1,8 +1,10 @@
 package nl.tudelft.sem.users.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import nl.tudelft.sem.users.entities.Company;
 import nl.tudelft.sem.users.repositories.CompanyRepository;
+import nl.tudelft.sem.users.repositories.FeedbackRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,16 +13,21 @@ import org.springframework.stereotype.Service;
 public class CompanyService implements UserService<Company> {
 
     private final transient CompanyRepository companyRepository;
+    private final transient FeedbackRepository feedbackRepository;
 
     /**
      * Constructor of CompanyRepository - It instantiates a new CompanyService object.
      *
      * @param companyRepository repository injected with data from the database
+     * @param feedbackRepository repository injected with data from the database
      */
 
     @Autowired
-    public CompanyService(CompanyRepository companyRepository) {
+    public CompanyService(CompanyRepository companyRepository,
+                          FeedbackRepository feedbackRepository) {
+
         this.companyRepository = companyRepository;
+        this.feedbackRepository = feedbackRepository;
     }
 
     /**
@@ -49,5 +56,24 @@ public class CompanyService implements UserService<Company> {
         }
 
         return companyRepository.findById(netID).get();
+    }
+
+    /**
+     * Creates a new company.
+     *
+     * @param netID the netID of the new company
+     * @param name the name of the new company
+     * @return a new company
+     */
+
+    @Override
+    public Company addUser(String netID, String name) {
+        if (companyRepository.findById(name).isPresent()) {
+            return companyRepository.findById(name).get();
+        }
+
+        Company company = new Company(name, 0.0f, new ArrayList<>());
+        companyRepository.save(company);
+        return company;
     }
 }
