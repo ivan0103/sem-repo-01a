@@ -6,8 +6,6 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
@@ -17,11 +15,6 @@ import javax.validation.constraints.Size;
 public class Requirement {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
-    @Column(name = "requirement_id")
-    private Long id;
-
     @Column(name = "requirement")
     @NotNull(message = "Requirement cannot be null!")
     @Size(min = 2, max = 20, message = "Requirements must b between 2-20 chars long!")
@@ -34,12 +27,8 @@ public class Requirement {
     public Requirement() {
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public Requirement(String requirementString) {
+        this.requirementString = requirementString;
     }
 
     public String getRequirementString() {

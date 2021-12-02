@@ -4,17 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import org.hibernate.annotations.NaturalId;
 
 @Entity
 public class Expertise {
@@ -28,6 +24,10 @@ public class Expertise {
     @JsonIgnore
     @ManyToMany(mappedBy = "expertiseSet", fetch = FetchType.EAGER)
     private Set<Post> postSet = new HashSet<>();
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "expertise", fetch = FetchType.EAGER)
+    private Set<CompanyOffer> offerSet = new HashSet<>();
 
     public Expertise() {
     }
@@ -55,6 +55,14 @@ public class Expertise {
     @Override
     public String toString() {
         return expertiseString;
+    }
+
+    public Set<CompanyOffer> getOfferSet() {
+        return offerSet;
+    }
+
+    public void setOfferSet(Set<CompanyOffer> offerSet) {
+        this.offerSet = offerSet;
     }
 
     @Override

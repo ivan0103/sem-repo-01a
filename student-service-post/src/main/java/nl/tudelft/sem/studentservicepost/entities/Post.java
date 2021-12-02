@@ -1,6 +1,5 @@
 package nl.tudelft.sem.studentservicepost.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -70,7 +69,7 @@ public class Post {
 
     // Prevent company offer spoofing when creating a new post
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
     private Set<CompanyOffer> companyOfferSet = new HashSet<>();
 
 
@@ -78,7 +77,7 @@ public class Post {
     }
 
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(Long id) {
@@ -133,7 +132,6 @@ public class Post {
             + ", pricePerHour=" + pricePerHour
             + ", expertiseSet=" + expertiseSet
             + ", competencySet=" + competencySet
-            + ", companyOfferSet=" + companyOfferSet
             + '}';
     }
 
@@ -149,12 +147,11 @@ public class Post {
         return Objects.equals(author, post.author)
             && Objects.equals(pricePerHour, post.pricePerHour)
             && Objects.equals(expertiseSet, post.expertiseSet)
-            && Objects.equals(competencySet, post.competencySet)
-            && Objects.equals(companyOfferSet, post.companyOfferSet);
+            && Objects.equals(competencySet, post.competencySet);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(author, pricePerHour, expertiseSet, competencySet, companyOfferSet);
+        return Objects.hash(author, pricePerHour, expertiseSet, competencySet);
     }
 }

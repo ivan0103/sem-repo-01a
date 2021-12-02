@@ -2,9 +2,12 @@ package nl.tudelft.sem.studentservicepost.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -38,7 +41,7 @@ public class CompanyOffer {
 
     @NotEmpty(message = "At least 1 requirement must be provided!")
     @Valid
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "offer_requirement",
             joinColumns = {@JoinColumn(name = "offer_id")},
@@ -58,7 +61,7 @@ public class CompanyOffer {
 
     @NotEmpty(message = "At least 1 expertise must be provided!")
     @Valid
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "offer_expertise",
             joinColumns = {@JoinColumn(name = "offer_id")},
@@ -68,7 +71,7 @@ public class CompanyOffer {
 
     // Post ID to be linked to is provided in the query parameter
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "post_id", referencedColumnName = "post_id")
     private Post post;
 
@@ -142,5 +145,27 @@ public class CompanyOffer {
                 + ", expertise=" + expertise
                 + ", post=" + post
                 + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        CompanyOffer that = (CompanyOffer) o;
+        return Objects.equals(companyId, that.companyId)
+            && Objects.equals(requirementsSet, that.requirementsSet)
+            && Objects.equals(weeklyHours, that.weeklyHours)
+            && Objects.equals(totalHours, that.totalHours)
+            && Objects.equals(expertise, that.expertise)
+            && Objects.equals(post, that.post);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(companyId, requirementsSet, weeklyHours, totalHours, expertise, post);
     }
 }
