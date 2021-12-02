@@ -36,7 +36,6 @@ public class PostService {
      * @throws PostNotFoundException id the post is not found in the database.
      */
     public Post editPost(Post post) {
-        // TODO change the value in the database
         // TODO check if the user can actually edit this post, related to authentication
         if (postRepository.existsById(post.getId())) {
             return postRepository.save(post);
