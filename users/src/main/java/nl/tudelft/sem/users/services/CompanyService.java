@@ -141,9 +141,16 @@ public class CompanyService implements UserService<Company> {
         }
 
         Company company = companyRepository.findById(netID).get();
-        companyRepository.delete(company);
+        List<Feedback> feedbacks = new ArrayList<>();
+        for (Feedback feedback : company.getFeedbacks()) {
+            Feedback feed = new Feedback(feedback.getText(), feedback.getRating());
+            feedbacks.add(feed);
+        }
+        deleteUser(netID);
         company.setName(name);
         company.setNetID(name);
+        company.setFeedbacks(feedbacks);
+        feedbackRepository.saveAll(feedbacks);
         companyRepository.save(company);
         return company;
     }

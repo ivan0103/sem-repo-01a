@@ -151,9 +151,16 @@ public class StudentService implements UserService<Student> {
             return student;
         }
 
-        studentRepository.delete(student);
+        List<Feedback> feedbacks = new ArrayList<>();
+        for (Feedback feedback : student.getFeedbacks()) {
+            Feedback feed = new Feedback(feedback.getText(), feedback.getRating());
+            feedbacks.add(feed);
+        }
+        deleteUser(netID);
         student.setName(name);
         student.setNetID(newNetID);
+        student.setFeedbacks(feedbacks);
+        feedbackRepository.saveAll(feedbacks);
         studentRepository.save(student);
         return student;
     }
