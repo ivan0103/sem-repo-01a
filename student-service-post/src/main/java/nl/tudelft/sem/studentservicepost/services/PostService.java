@@ -75,7 +75,8 @@ public class PostService {
      */
     public Post editPost(Post post) {
         // TODO check if the user can actually edit this post, related to authentication
-        if (postRepository.existsById(post.getId())) {
+        Long id = post.getId();
+        if (postRepository.existsById(id)) {
             Post toEdit = postRepository.getPostById(post.getId());
             if (toEdit.getAuthor().equals(post.getAuthor())) {
                 // this only checks that NetID is same
@@ -116,6 +117,9 @@ public class PostService {
             post.setCompanyOfferSet(null);
         }
         return result;
+    }
 
+    public Collection<Post> getAll() {
+        return postRepository.findAll();
     }
 }

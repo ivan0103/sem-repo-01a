@@ -58,5 +58,10 @@ public class PostController {
         return new ResponseEntity<>(found, HttpStatus.FOUND);
     }
 
+    @GetMapping(value = "/getall")
+    public ResponseEntity<Collection<Post>> searchPostsByKeywords() {
+        Collection<Post> found = postService.getAll();
+        return new ResponseEntity<>(found, HttpStatus.FOUND);
+    }
 
 }

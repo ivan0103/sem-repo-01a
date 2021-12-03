@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 public class Expertise {
@@ -24,6 +26,7 @@ public class Expertise {
 
     @JsonIgnore
     @ManyToMany(mappedBy = "expertiseSet", fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Set<Post> postSet = new HashSet<>();
 
     @JsonIgnore
