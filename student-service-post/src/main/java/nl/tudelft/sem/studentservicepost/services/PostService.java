@@ -1,5 +1,9 @@
 package nl.tudelft.sem.studentservicepost.services;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Set;
 import nl.tudelft.sem.studentservicepost.entities.Competency;
 import nl.tudelft.sem.studentservicepost.entities.Expertise;
 import nl.tudelft.sem.studentservicepost.entities.Post;
@@ -82,6 +86,36 @@ public class PostService {
         } else {
             throw new PostNotFoundException();
         }
+
+    }
+
+    /**
+     * Search by keyword.
+     *
+     * @param keyword the keyword
+     * @return the collection
+     */
+    public Collection<Post> searchByKeyword(String keyword) {
+        keyword = keyword.toLowerCase(Locale.ROOT).replaceAll("\\s", "");
+        Collection<Competency> competencies =
+            competencyRepository.getAllByCompetencyStringContaining(keyword);
+
+        Collection<Post> result = new HashSet<>();
+
+        for (Competency competency : competencies) {
+            result.addAll(postRepository.getAllByCompetencySetContaining(competency));
+        }
+
+        Collection<Expertise> expertises =
+            expertiseRepository.getAllByExpertiseStringContaining(keyword);
+        for (Expertise expertise : expertises) {
+            result.addAll(postRepository.getAllByExpertiseSetContaining(expertise));
+        }
+
+        for (Post post : result) {
+            post.setCompanyOfferSet(null);
+        }
+        return result;
 
     }
 }

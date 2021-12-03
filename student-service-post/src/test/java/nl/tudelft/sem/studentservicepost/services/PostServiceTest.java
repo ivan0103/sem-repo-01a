@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import nl.tudelft.sem.studentservicepost.entities.Competency;
 import nl.tudelft.sem.studentservicepost.entities.Expertise;
 import nl.tudelft.sem.studentservicepost.entities.Post;
@@ -32,7 +33,7 @@ class PostServiceTest {
         post = new Post();
         post.setId(0L);
         post.setAuthor("despacito");
-        post.setPricePerHour(new BigDecimal("15.0"));
+        post.setPricePerHour(new BigDecimal("15.00"));
         post.getCompetencySet().add(new Competency("comp1"));
         post.getExpertiseSet().add(new Expertise("exp1"));
 
@@ -105,6 +106,19 @@ class PostServiceTest {
         assertThatThrownBy(() -> postService.editPost(tmp))
             .isInstanceOf(InvalidEditException.class);
 
+    }
 
+    @Test
+    void testSearchByKeywordFound() {
+        Post tmp = postService.createPost(post);
+        Collection<Post> result = postService.searchByKeyword("cOmp  1");
+        assertThat(result).containsOnlyOnce(tmp).hasSize(1);
+    }
+
+    @Test
+    void testSearchByKeywordNotFound() {
+        Post tmp = postService.createPost(post);
+        Collection<Post> result = postService.searchByKeyword("cOmp  2");
+        assertThat(result).isEmpty();
     }
 }
