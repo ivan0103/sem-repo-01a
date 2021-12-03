@@ -2,6 +2,7 @@ package nl.tudelft.sem.contracts.entities;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -57,7 +58,7 @@ public class Contract {
     private LocalDate endDate;
 
     @Column(name = "agreementDate")
-    private LocalDate agreementDate;
+    private final LocalDate agreementDate;
 
 
     /**
@@ -89,6 +90,11 @@ public class Contract {
 
     public long getId() {
         return id;
+    }
+
+
+    protected void setId(long id) {
+        this.id = id;
     }
 
     public long getFreelancerId() {
@@ -175,4 +181,8 @@ public class Contract {
         return false;
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
+    }
 }

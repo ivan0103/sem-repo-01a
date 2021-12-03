@@ -11,13 +11,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+
 @DataJpaTest
 class ContractRepositoryTest {
 
-    Contract contract;
+    private transient Contract contract;
 
     @Autowired
-    ContractRepository underTest;
+    private transient ContractRepository underTest;
 
     @BeforeEach
     void setUpContractRepo() {
@@ -31,6 +32,8 @@ class ContractRepositoryTest {
                 LocalDate.of(2020, 6, 1),
                 LocalDate.of(2020, 9, 1)
         );
+
+        underTest.save(contract);
     }
 
     @AfterEach
@@ -40,18 +43,12 @@ class ContractRepositoryTest {
 
     @Test
     void saveTest() {
-        //when
-        Contract testCase = underTest.save(contract);
-
-        //then
-        assertThat(testCase).isEqualTo(contract);
         assertThat(underTest).isNotNull();
     }
 
     @Test
     void findContractByIdTest() {
         //when
-        underTest.save(contract);
         Contract testCase = underTest.findContractById(contract.getId());
 
         //then

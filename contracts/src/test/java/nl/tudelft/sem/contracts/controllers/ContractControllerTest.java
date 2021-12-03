@@ -21,18 +21,18 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class ContractControllerTest {
-    Contract contract;
+    private transient Contract contract;
 
-    private ContractController underTest;
-
-    @Mock
-    private ContractService contractService;
+    private transient ContractController underTest;
 
     @Mock
-    private PdfGeneratorService pdfGeneratorService;
+    private transient ContractService contractService;
 
-    ArgumentCaptor<Contract> contractArgumentCaptor;
-    ArgumentCaptor<Long> idArgumentCaptor;
+    @Mock
+    private transient PdfGeneratorService pdfGeneratorService;
+
+    private transient ArgumentCaptor<Contract> contractArgumentCaptor;
+    private transient ArgumentCaptor<Long> idArgumentCaptor;
 
 
     @BeforeEach

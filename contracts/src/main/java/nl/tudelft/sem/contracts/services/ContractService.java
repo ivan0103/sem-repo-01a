@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ContractService {
-    private ContractRepository contractRepository;
+    private final transient ContractRepository contractRepository;
 
     /**
      * Auto-wires the contractRepository to this class to use its methods.

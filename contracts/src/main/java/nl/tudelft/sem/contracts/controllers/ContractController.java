@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping("/contract")
 public class ContractController {
-    private ContractService contractService;
-    private PdfGeneratorService pdfGeneratorService;
+    private final transient ContractService contractService;
+    private final transient PdfGeneratorService pdfGeneratorService;
 
     /**
      * This auto-wires different services to allow this controller class to use their functions.
@@ -36,10 +36,9 @@ public class ContractController {
      *
      * @param contract - the contract to save.
      * @return The saved contract.
-     * @throws Exception - in case contract details are invalid.
      */
     @PostMapping("/create")
-    public Contract create(@RequestParam Contract contract) throws Exception {
+    public Contract create(@RequestParam Contract contract) {
         return contractService.create(contract);
     }
 
@@ -85,7 +84,7 @@ public class ContractController {
 
         //Set the header for the HTTP response and filename.
         String headerKey = "Content-Disposition";
-        String headerValue = "attachment; filename=pdf_" + currentDateTime.toString() + ".pdf";
+        String headerValue = "attachment; filename=pdf_" + currentDateTime + ".pdf";
         response.setHeader(headerKey, headerValue);
 
         //Actually generate the PDF.

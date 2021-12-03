@@ -17,12 +17,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class ContractServiceTest {
-    Contract contract;
+    private transient Contract contract;
 
-    private ContractService underTest;
+    private transient ContractService underTest;
 
     @Mock
-    private ContractRepository contractRepository;
+    private transient ContractRepository contractRepository;
 
     @BeforeEach
     void setUp() {

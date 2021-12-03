@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class ContractTest {
-    transient Contract contract;
+    private transient Contract contract;
 
     private static final String student = "student";
     private static final String company = "company";
