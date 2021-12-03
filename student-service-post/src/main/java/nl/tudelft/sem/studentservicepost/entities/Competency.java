@@ -2,6 +2,7 @@ package nl.tudelft.sem.studentservicepost.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 import javax.persistence.Column;
@@ -30,7 +31,7 @@ public class Competency {
     }
 
     public Competency(String string) {
-        this.competencyString = string;
+        this.competencyString = string.toLowerCase(Locale.ROOT).replaceAll("\\s", "");
     }
 
     public String getCompetencyString() {
@@ -38,7 +39,7 @@ public class Competency {
     }
 
     public void setCompetencyString(String competencyString) {
-        this.competencyString = competencyString;
+        this.competencyString = competencyString.toLowerCase(Locale.ROOT).replaceAll("\\s", "");
     }
 
     public Set<Post> getPostSet() {
@@ -58,7 +59,9 @@ public class Competency {
             return false;
         }
         Competency that = (Competency) o;
-        return Objects.equals(competencyString, that.competencyString);
+        String thatC = that.competencyString.replaceAll("\\s", "");
+        String thisC = this.competencyString.replaceAll("\\s", "");
+        return thisC.equalsIgnoreCase(thatC);
     }
 
     @Override
