@@ -96,7 +96,7 @@ public class StudentService implements UserService<Student> {
             return null;
         }
 
-        Student student = new Student(netID, name, 0.0f, new ArrayList<>());
+        Student student = new Student(netID, name, 0.0f);
         studentRepository.save(student);
         return student;
     }
@@ -186,12 +186,11 @@ public class StudentService implements UserService<Student> {
      *
      * @param netID the id of the student
      * @param name the new name of student
-     * @param newNetID the new id of student (optional)
      * @return an updated student
      */
 
     @Override
-    public Student updateUser(String netID, String name, String newNetID) {
+    public Student updateUser(String netID, String name) {
         if (studentRepository.findById(netID).isEmpty()) {
             return null;
         }
@@ -203,18 +202,7 @@ public class StudentService implements UserService<Student> {
         }
 
         Student student = (Student) studentRepository.findById(netID).get();
-
-        if (Objects.equals(newNetID, "null") || newNetID == null
-            || studentRepository.findById(newNetID).isPresent()) {
-
-            student.setName(name);
-            studentRepository.save(student);
-            return student;
-        }
-
-        deleteUser(netID);
         student.setName(name);
-        student.setNetID(newNetID);
         studentRepository.save(student);
         return student;
     }

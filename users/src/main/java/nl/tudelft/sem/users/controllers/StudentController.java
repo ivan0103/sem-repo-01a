@@ -104,17 +104,14 @@ public class StudentController implements UserController<Student> {
      *
      * @param netID the id of the student
      * @param name the new name of the student
-     * @param newNetID the new id of the student (optional)
-     * @return the student with updated name (and updated id)
+     * @return the student with updated name
      */
 
-    @PutMapping(path = {"{" + valueId + "}/{" + valueName + "}",
-            "{" + valueId + "}/{" + valueName + "}/{newNetID}"})
+    @PutMapping(path = "{" + valueId + "}/{" + valueName + "}")
 
     public Student updateUser(@PathVariable(value = "netID") String netID,
-                              @PathVariable(value = "name") String name,
-                              @PathVariable(value = "newNetID", required = false) String newNetID) {
+                              @PathVariable(value = "name") String name) {
 
-        return studentService.updateUser(netID, name, newNetID);
+        return studentService.updateUser(netID, name);
     }
 }

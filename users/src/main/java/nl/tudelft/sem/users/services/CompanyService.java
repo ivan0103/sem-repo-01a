@@ -95,7 +95,7 @@ public class CompanyService implements UserService<Company> {
             return (Company) companyRepository.findById(netID).get();
         }
 
-        Company company = new Company(netID, 0.0f, new ArrayList<>());
+        Company company = new Company(netID, 0.0f);
         companyRepository.save(company);
         return company;
     }
@@ -185,12 +185,11 @@ public class CompanyService implements UserService<Company> {
      *
      * @param netID the id of the company
      * @param name the new name of company
-     * @param newNetID the new id of company (optional and not required)
      * @return an updated company
      */
 
     @Override
-    public Company updateUser(String netID, String name, String newNetID) {
+    public Company updateUser(String netID, String name) {
         if (companyRepository.findById(netID).isEmpty()) {
             return null;
         }
@@ -202,9 +201,7 @@ public class CompanyService implements UserService<Company> {
         }
 
         Company company = (Company) companyRepository.findById(netID).get();
-        deleteUser(netID);
         company.setName(name);
-        company.setNetID(name);
         companyRepository.save(company);
         return company;
     }

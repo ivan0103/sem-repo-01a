@@ -66,7 +66,7 @@ public class CompanyController implements UserController<Company> {
     public Company addUser(@PathVariable(value = valueId) String netID,
                            @PathVariable(value = valueName) String name) {
 
-        return companyService.addUser(name, name);
+        return companyService.addUser(netID, netID);
     }
 
     /**
@@ -105,17 +105,14 @@ public class CompanyController implements UserController<Company> {
      *
      * @param netID the id of the company
      * @param name the new name of the company
-     * @param newNetID the new id of the company (optional and not required for company)
      * @return the company with updated name
      */
 
-    @PutMapping(path = {"{" + valueId + "}/{" + valueName + "}",
-            "{" + valueId + "}/{" + valueName + "}/{newNetID}"})
+    @PutMapping(path = "{" + valueId + "}/{" + valueName + "}")
 
     public Company updateUser(@PathVariable(value = valueId) String netID,
-                              @PathVariable(value = valueName) String name,
-                              @PathVariable(value = "newNetID", required = false) String newNetID) {
+                              @PathVariable(value = valueName) String name) {
 
-        return companyService.updateUser(netID, name, newNetID);
+        return companyService.updateUser(netID, name);
     }
 }

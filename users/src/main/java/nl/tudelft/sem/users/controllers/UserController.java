@@ -20,8 +20,7 @@ public interface UserController<T> {
     T deleteUser(@PathVariable(value = valueId) String netID);
 
     T updateUser(@PathVariable(value = valueId) String netID,
-                 @PathVariable(value = valueName) String name,
-                 @PathVariable(value = "newNetID", required = false) String newNetID);
+                 @PathVariable(value = valueName) String name);
 
     Feedback addFeedback(@PathVariable(value = valueId) String netID,
                          @PathVariable(value = "text") String text,
