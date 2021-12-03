@@ -1,11 +1,13 @@
 package nl.tudelft.sem.users.entities;
 
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -29,12 +31,29 @@ public class Feedback {
     @Column(name = "rating")
     private Integer rating;
 
+    @OneToOne
+    private User user;
+
     /**
      * Default constructor.
      */
 
     public Feedback() {
 
+    }
+
+    /**
+     * Constructor for feedback.
+     *
+     * @param text the actual feedback
+     * @param rating the rating of the feedback
+     * @param user the owner of the feedback
+     */
+
+    public Feedback(String text, Integer rating, User user) {
+        this.text = text;
+        this.rating = rating;
+        this.user = user;
     }
 
     /**
@@ -124,6 +143,26 @@ public class Feedback {
     }
 
     /**
+     * Getter for user.
+     *
+     * @return the user the made the feedback
+     */
+
+    public User getUser() {
+        return user;
+    }
+
+    /**
+     * Setter for user.
+     *
+     * @param user the new owner of the feedback
+     */
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    /**
      * Equals method.
      *
      * @param o the object used to compare the feedback
@@ -142,7 +181,8 @@ public class Feedback {
         Feedback feedback = (Feedback) o;
         return Objects.equals(id, feedback.id)
                 && Objects.equals(text, feedback.text)
-                && Objects.equals(rating, feedback.rating);
+                && Objects.equals(rating, feedback.rating)
+                && Objects.equals(user, feedback.user);
     }
 
     /**
@@ -153,7 +193,7 @@ public class Feedback {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, text, rating);
+        return Objects.hash(id, text, rating, user);
     }
 
     /**
@@ -168,6 +208,7 @@ public class Feedback {
                 + "id=" + id
                 + ", text='" + text + '\''
                 + ", rating=" + rating
+                + ", user=" + user
                 + '}';
     }
 }

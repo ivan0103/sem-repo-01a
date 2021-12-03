@@ -3,12 +3,13 @@ package nl.tudelft.sem.users.entities;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 
 @Entity(name = "student")
-@Table
+@DiscriminatorValue("Student")
 public class Student extends User {
     @Column(name = "role")
     private String role;
@@ -19,6 +20,19 @@ public class Student extends User {
 
     public Student() {
         super();
+    }
+
+    /**
+     * Initialises a student object.
+     *
+     * @param netID netId of the student - acts as primary key
+     * @param name name of the student
+     * @param rating rating of the student
+     */
+
+    public Student(String netID, String name, Float rating) {
+        super(netID, name, rating);
+        this.role = "student";
     }
 
     /**
@@ -65,8 +79,20 @@ public class Student extends User {
 
     @Override
     public boolean equals(Object o) {
-        return super.equals(o) && getClass() == o.getClass()
-                && Objects.equals(role, ((Student) o).role);
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Student student = (Student) o;
+        return Objects.equals(this.getNetID(), student.getNetID())
+                && Objects.equals(this.getName(), student.getName())
+                && Objects.equals(this.getRating(), student.getRating())
+                && Objects.equals(this.getFeedbacks(), student.getFeedbacks())
+                && Objects.equals(role, student.role);
     }
 
     /**

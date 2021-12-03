@@ -5,8 +5,9 @@ import java.util.List;
 import java.util.Objects;
 import nl.tudelft.sem.users.entities.Feedback;
 import nl.tudelft.sem.users.entities.Student;
+import nl.tudelft.sem.users.entities.User;
 import nl.tudelft.sem.users.repositories.FeedbackRepository;
-import nl.tudelft.sem.users.repositories.StudentRepository;
+import nl.tudelft.sem.users.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class StudentService implements UserService<Student> {
 
-    private final transient StudentRepository studentRepository;
+    private final transient UserRepository studentRepository;
     private final transient FeedbackRepository feedbackRepository;
 
     /**
@@ -25,8 +26,7 @@ public class StudentService implements UserService<Student> {
      */
 
     @Autowired
-    public StudentService(StudentRepository studentRepository,
-                          FeedbackRepository feedbackRepository) {
+    public StudentService(UserRepository studentRepository, FeedbackRepository feedbackRepository) {
 
         this.studentRepository = studentRepository;
         this.feedbackRepository = feedbackRepository;
@@ -40,7 +40,15 @@ public class StudentService implements UserService<Student> {
 
     @Override
     public List<Student> getUsers() {
-        return studentRepository.findAll();
+        List<Student> students = new ArrayList<>();
+
+        for (User user : studentRepository.findAll()) {
+            if (user instanceof Student) {
+                students.add((Student) user);
+            }
+        }
+
+        return students;
     }
 
     /**
@@ -57,7 +65,13 @@ public class StudentService implements UserService<Student> {
             return null;
         }
 
-        return studentRepository.findById(netID).get();
+        if (studentRepository.findById(netID).isPresent()
+            && !(studentRepository.findById(netID).get() instanceof Student)) {
+
+            return null;
+        }
+
+        return (Student) studentRepository.findById(netID).get();
     }
 
     /**
@@ -70,8 +84,16 @@ public class StudentService implements UserService<Student> {
 
     @Override
     public Student addUser(String netID, String name) {
-        if (studentRepository.findById(netID).isPresent()) {
-            return studentRepository.findById(netID).get();
+        if (studentRepository.findById(netID).isPresent()
+            && (studentRepository.findById(netID).get() instanceof Student)) {
+
+            return (Student) studentRepository.findById(netID).get();
+        }
+
+        if (studentRepository.findById(netID).isPresent()
+            && !(studentRepository.findById(netID).get() instanceof Student)) {
+
+            return null;
         }
 
         Student student = new Student(netID, name, 0.0f, new ArrayList<>());
@@ -85,24 +107,35 @@ public class StudentService implements UserService<Student> {
      * @param netID id of the student
      * @param text text of the feedback
      * @param rating rating of the feedback
+     * @param toNetID the netID of the user that receives the feedback
      * @return a new feedback
      */
 
     @Override
-    public Feedback addFeedback(String netID, String text, Integer rating) {
+    public Feedback addFeedback(String netID, String text, Integer rating, String toNetID) {
         if (studentRepository.findById(netID).isEmpty()) {
             return null;
         }
 
-        Feedback feedback = new Feedback(text, rating);
-        feedbackRepository.save(feedback);
-        Student student = studentRepository.findById(netID).get();
-        student.addFeedback(feedback);
-        student.setRating((student.getRating() * (student.getFeedbacks().size() - 1)
-                + ((float) feedback.getRating())) / ((float) student.getFeedbacks().size()));
-        studentRepository.save(student);
+        if (studentRepository.findById(netID).isPresent()
+            && !(studentRepository.findById(netID).get() instanceof Student)) {
 
-        return feedback;
+            return null;
+        }
+
+        if (studentRepository.findById(toNetID).isEmpty()) {
+            return null;
+        }
+
+        Student student = (Student) studentRepository.findById(netID).get();
+        Feedback feedback = new Feedback(text, rating, student);
+        User toUser = studentRepository.findById(toNetID).get();
+        toUser.addFeedback(feedback);
+        toUser.setRating((toUser.getRating() * (toUser.getFeedbacks().size() - 1)
+                + ((float) feedback.getRating())) / ((float) toUser.getFeedbacks().size()));
+        studentRepository.save(toUser);
+
+        return feedbackRepository.findTopByOrderByIdDesc();
     }
 
     /**
@@ -118,11 +151,33 @@ public class StudentService implements UserService<Student> {
             return null;
         }
 
-        Student student = studentRepository.findById(netID).get();
-        List<Feedback> feedbacks = new ArrayList<>(student.getFeedbacks());
-        studentRepository.delete(student);
-        feedbackRepository.deleteAll(feedbacks);
+        if (studentRepository.findById(netID).isPresent()
+            && !(studentRepository.findById(netID).get() instanceof Student)) {
 
+            return null;
+        }
+
+        Student student = (Student) studentRepository.findById(netID).get();
+        List<User> users = studentRepository.findAll();
+        List<Feedback> removals = new ArrayList<>();
+
+        for (User user : users) {
+            List<Feedback> keeps = new ArrayList<>();
+
+            for (Feedback feedback : user.getFeedbacks()) {
+                if (feedback.getUser().equals(student)) {
+                    removals.add(feedback);
+                } else {
+                    keeps.add(feedback);
+                }
+            }
+
+            user.setFeedbacks(keeps);
+            studentRepository.save(user);
+        }
+
+        feedbackRepository.deleteAll(removals);
+        studentRepository.delete(student);
         return student;
     }
 
@@ -141,7 +196,13 @@ public class StudentService implements UserService<Student> {
             return null;
         }
 
-        Student student = studentRepository.findById(netID).get();
+        if (studentRepository.findById(netID).isPresent()
+            && !(studentRepository.findById(netID).get() instanceof Student)) {
+
+            return null;
+        }
+
+        Student student = (Student) studentRepository.findById(netID).get();
 
         if (Objects.equals(newNetID, "null") || newNetID == null
             || studentRepository.findById(newNetID).isPresent()) {
@@ -151,16 +212,9 @@ public class StudentService implements UserService<Student> {
             return student;
         }
 
-        List<Feedback> feedbacks = new ArrayList<>();
-        for (Feedback feedback : student.getFeedbacks()) {
-            Feedback feed = new Feedback(feedback.getText(), feedback.getRating());
-            feedbacks.add(feed);
-        }
         deleteUser(netID);
         student.setName(name);
         student.setNetID(newNetID);
-        student.setFeedbacks(feedbacks);
-        feedbackRepository.saveAll(feedbacks);
         studentRepository.save(student);
         return student;
     }

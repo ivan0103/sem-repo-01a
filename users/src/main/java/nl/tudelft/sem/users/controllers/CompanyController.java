@@ -66,7 +66,7 @@ public class CompanyController implements UserController<Company> {
     public Company addUser(@PathVariable(value = valueId) String netID,
                            @PathVariable(value = valueName) String name) {
 
-        return companyService.addUser(netID, name);
+        return companyService.addUser(name, name);
     }
 
     /**
@@ -75,15 +75,17 @@ public class CompanyController implements UserController<Company> {
      * @param netID the id of the company
      * @param text the text of the feedback
      * @param rating the rating of the feedback
+     * @param toNetID the netID of the user that receives the feedback
      * @return a new feedback
      */
 
-    @PostMapping(path = "{" + valueId + "}/{text}/{rating}")
+    @PostMapping(path = "{" + valueId + "}/{text}/{rating}/{toNetID}")
     public Feedback addFeedback(@PathVariable(value = valueId) String netID,
                                 @PathVariable(value = "text") String text,
-                                @PathVariable(value = "rating") Integer rating) {
+                                @PathVariable(value = "rating") Integer rating,
+                                @PathVariable(value = "toNetID") String toNetID) {
 
-        return companyService.addFeedback(netID, text, rating);
+        return companyService.addFeedback(netID, text, rating, toNetID);
     }
 
     /**

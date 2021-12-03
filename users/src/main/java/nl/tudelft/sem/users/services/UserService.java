@@ -17,6 +17,6 @@ public interface UserService<T> {
 
     T updateUser(String netID, String name, String newNetID);
 
-    Feedback addFeedback(String netID, String text, Integer rating);
+    Feedback addFeedback(String netID, String text, Integer rating, String toNetID);
 
 }

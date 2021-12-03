@@ -1,8 +1,12 @@
 package nl.tudelft.sem.users.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
@@ -13,7 +17,9 @@ import javax.persistence.Table;
 
 @Entity(name = "user")
 @Table
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING,
+        name = "User")
 public abstract class User {
     @Id
     @Column(name = "netID", nullable = false)
@@ -25,7 +31,7 @@ public abstract class User {
     @Column(name = "rating")
     private Float rating;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Feedback> feedbacks;
 
     /**
@@ -34,6 +40,21 @@ public abstract class User {
 
     public User() {
 
+    }
+
+    /**
+     * Initialises a user object.
+     *
+     * @param netID netId of the user - acts as primary key
+     * @param name name of the user
+     * @param rating rating of the user
+     */
+
+    public User(String netID, String name, Float rating) {
+        this.netID = netID;
+        this.name = name;
+        this.rating = rating;
+        this.feedbacks = new ArrayList<>();
     }
 
     /**
@@ -119,7 +140,7 @@ public abstract class User {
      */
 
     public List<Feedback> getFeedbacks() {
-        return feedbacks;
+        return this.feedbacks;
     }
 
     /**
@@ -144,10 +165,13 @@ public abstract class User {
 
     /**
      * Equals method - checks whether the users are the same or not.
+     * NOTE! Since this is an abstract class an equal method does not make much sense
+     * to have it, but pmd complained about it, unfortunately.
      *
      * @param o the object used to compare the user
      * @return true - the users represent the same instance
      *         false - otherwise
+     *
      */
 
     @Override
@@ -155,11 +179,14 @@ public abstract class User {
         if (this == o) {
             return true;
         }
+
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
+
         User user = (User) o;
-        return Objects.equals(name, user.name)
+        return Objects.equals(netID, user.netID)
+                && Objects.equals(name, user.name)
                 && Objects.equals(rating, user.rating)
                 && Objects.equals(feedbacks, user.feedbacks);
     }

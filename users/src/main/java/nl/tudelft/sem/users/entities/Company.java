@@ -3,11 +3,11 @@ package nl.tudelft.sem.users.entities;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.Table;
 
 @Entity(name = "company")
-@Table
+@DiscriminatorValue("Company")
 public class Company extends User {
     @Column(name = "role")
     private String role;
@@ -18,6 +18,18 @@ public class Company extends User {
 
     public Company() {
         super();
+    }
+
+    /**
+     * Initialises a company object.
+     *
+     * @param name name of the company - acts as primary key
+     * @param rating rating of the company
+     */
+
+    public Company(String name, Float rating) {
+        super(name, name, rating);
+        this.role = "company";
     }
 
     /**
@@ -63,8 +75,20 @@ public class Company extends User {
 
     @Override
     public boolean equals(Object o) {
-        return super.equals(o) && getClass() == o.getClass()
-                && Objects.equals(role, ((Company) o).role);
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Company company = (Company) o;
+        return Objects.equals(this.getNetID(), company.getNetID())
+                && Objects.equals(this.getName(), company.getName())
+                && Objects.equals(this.getRating(), company.getRating())
+                && Objects.equals(this.getFeedbacks(), company.getFeedbacks())
+                && Objects.equals(role, company.role);
     }
 
     /**
