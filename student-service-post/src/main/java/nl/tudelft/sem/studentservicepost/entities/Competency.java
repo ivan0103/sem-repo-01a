@@ -31,7 +31,7 @@ public class Competency {
     }
 
     public Competency(String string) {
-        this.competencyString = string.toLowerCase(Locale.ROOT).replaceAll("\\s", "");
+        this.competencyString = makeSearchable(string);
     }
 
     public String getCompetencyString() {
@@ -39,7 +39,7 @@ public class Competency {
     }
 
     public void setCompetencyString(String competencyString) {
-        this.competencyString = competencyString.toLowerCase(Locale.ROOT).replaceAll("\\s", "");
+        this.competencyString = makeSearchable(competencyString);
     }
 
     public Set<Post> getPostSet() {
@@ -59,8 +59,8 @@ public class Competency {
             return false;
         }
         Competency that = (Competency) o;
-        String thatC = that.competencyString.replaceAll("\\s", "");
-        String thisC = this.competencyString.replaceAll("\\s", "");
+        String thatC = that.competencyString;
+        String thisC = this.competencyString;
         return thisC.equalsIgnoreCase(thatC);
     }
 
@@ -72,5 +72,9 @@ public class Competency {
     @Override
     public String toString() {
         return competencyString;
+    }
+
+    protected static String makeSearchable(String string) {
+        return string.toLowerCase(Locale.ROOT).replaceAll("\\s", "");
     }
 }

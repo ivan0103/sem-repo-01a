@@ -34,7 +34,7 @@ public class Expertise {
     }
 
     public Expertise(String string) {
-        this.expertiseString = string.toLowerCase(Locale.ROOT).replaceAll("\\s", "");
+        this.expertiseString = Competency.makeSearchable(string);
     }
 
     public String getExpertiseString() {
@@ -42,7 +42,7 @@ public class Expertise {
     }
 
     public void setExpertiseString(String expertiseString) {
-        this.expertiseString = expertiseString.toLowerCase(Locale.ROOT).replaceAll("\\s", "");
+        this.expertiseString = Competency.makeSearchable(expertiseString);
     }
 
     public Set<Post> getPostSet() {
@@ -75,8 +75,8 @@ public class Expertise {
             return false;
         }
         Expertise expertise = (Expertise) o;
-        String thatE = expertise.expertiseString.replaceAll("\\s", "");
-        String thisE = this.expertiseString.replaceAll("\\s", "");
+        String thatE = expertise.expertiseString;
+        String thisE = this.expertiseString;
         return thisE.equalsIgnoreCase(thatE);
     }
 
