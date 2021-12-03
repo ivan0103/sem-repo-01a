@@ -8,7 +8,7 @@ stages:
 generic-service-post-build:
   stage: build
   script:
-    gradle :generic-service-post:classes :generic-service-post:testClasses
+    gradle :generic-service-post:build
 
 generic-service-post-checkStyle:
   stage: staticAnalysis

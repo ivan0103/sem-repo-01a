@@ -37,7 +37,6 @@ public class ContractService {
      * @return The contract corresponding to the id.
      */
     public Contract getContract(long id){
-        Contract contract = contractRepository.findContractById(id);
-        return contract;
+        return contractRepository.findContractById(id);
     }
 }

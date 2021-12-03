@@ -8,7 +8,7 @@ stages:
 student-service-post-build:
   stage: build
   script:
-    gradle :student-service-post:classes :student-service-post:testClasses
+    gradle :student-service-post:build
 
 student-service-post-checkStyle:
   stage: staticAnalysis

@@ -44,7 +44,7 @@ class ContractServiceTest {
     @Test
     void createTest() {
         //setup
-        ArgumentCaptor<Contract> contractArgumentCaptor = ArgumentCaptor.forClass(Contract.class);;
+        ArgumentCaptor<Contract> contractArgumentCaptor = ArgumentCaptor.forClass(Contract.class);
 
         //given
         given(contractRepository.save(contract)).willReturn(contract);
@@ -63,7 +63,7 @@ class ContractServiceTest {
     @Test
     void getContractTest() {
         //setup
-        ArgumentCaptor<Long> idArgumentCaptor = ArgumentCaptor.forClass(Long.class);;
+        ArgumentCaptor<Long> idArgumentCaptor = ArgumentCaptor.forClass(Long.class);
 
         //given
         given(contractRepository.findContractById(contract.getId())).willReturn(contract);
