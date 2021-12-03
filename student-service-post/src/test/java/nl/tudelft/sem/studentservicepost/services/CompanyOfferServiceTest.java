@@ -19,16 +19,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class CompanyOfferServiceTest {
 
-    Post post;
+    transient Post post;
 
     @Autowired
-    CompanyOfferService companyOfferService;
+    transient CompanyOfferService companyOfferService;
 
     @Autowired
-    CompanyOfferRepository companyOfferRepository;
+    transient CompanyOfferRepository companyOfferRepository;
 
     @Autowired
-    PostService postService;
+    transient PostService postService;
 
     @BeforeEach
     void setup() {
@@ -71,9 +71,7 @@ class CompanyOfferServiceTest {
         companyOffer.setTotalHours(420);
         companyOffer.setWeeklyHours(12);
 
-        String postId = "12";
-
-        assertThatThrownBy(() -> companyOfferService.createOffer(companyOffer, postId))
+        assertThatThrownBy(() -> companyOfferService.createOffer(companyOffer, "12"))
             .isInstanceOf(PostNotFoundException.class);
     }
 
@@ -88,9 +86,8 @@ class CompanyOfferServiceTest {
         companyOffer.setTotalHours(420);
         companyOffer.setWeeklyHours(12);
 
-        String postId = "a valid id lol";
 
-        assertThatThrownBy(() -> companyOfferService.createOffer(companyOffer, postId))
+        assertThatThrownBy(() -> companyOfferService.createOffer(companyOffer, "a valid id lol"))
             .isInstanceOf(NumberFormatException.class);
     }
 
