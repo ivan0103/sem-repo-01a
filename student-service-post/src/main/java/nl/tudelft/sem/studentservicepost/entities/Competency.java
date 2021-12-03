@@ -20,7 +20,7 @@ public class Competency {
     @Id
     @Column(name = "competency")
     @NotNull
-    @Size(min = 0, max = 20)
+    @Size(max = 20)
     private String competencyString;
 
     @JsonIgnore
