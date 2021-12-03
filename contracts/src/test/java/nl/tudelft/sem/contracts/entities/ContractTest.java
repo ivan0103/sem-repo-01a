@@ -151,21 +151,21 @@ public class ContractTest {
         assertThat(endDate).isEqualTo(LocalDate.of(2020, 10, 1));
     }
 
-//    @Test
-//    public void equalFalseTest() {
-//        Contract contract1 = new Contract(
-//                1,
-//                2,
-//                student,
-//                company,
-//                LocalTime.of(6, 0),
-//                14.5F,
-//                LocalDate.of(2020, 6, 1),
-//                LocalDate.of(2020, 9, 1)
-//        );
-//
-//        assertThat(contract.equals(contract1)).isFalse();
-//    }
+    /* @Test
+    public void equalFalseTest() {
+        Contract contract1 = new Contract(
+                1,
+                2,
+                student,
+                company,
+                LocalTime.of(6, 0),
+                14.5F,
+                LocalDate.of(2020, 6, 1),
+                LocalDate.of(2020, 9, 1)
+        );
+
+        assertThat(contract.equals(contract1)).isFalse();
+    }*/
 
     @Test
     public void equalTrue() {

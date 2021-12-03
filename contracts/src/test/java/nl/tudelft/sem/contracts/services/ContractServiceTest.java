@@ -1,5 +1,11 @@
 package nl.tudelft.sem.contracts.services;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 import nl.tudelft.sem.contracts.entities.Contract;
 import nl.tudelft.sem.contracts.repositories.ContractRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,13 +14,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class ContractServiceTest {

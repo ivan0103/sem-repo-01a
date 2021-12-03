@@ -1,5 +1,7 @@
 package nl.tudelft.sem.contracts.entities;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,8 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 
 
@@ -86,6 +86,7 @@ public class Contract {
         this.endDate = endDate;
         this.agreementDate = LocalDate.now();
     }
+
     public long getId() {
         return id;
     }
@@ -160,12 +161,13 @@ public class Contract {
 
     /**
      * Equals method to check of equality of entity to another object using its id.
+     *
      * @param o - the other object.
      * @return A boolean representing if they are equal.
      */
     @Override
     public boolean equals(Object o) {
-        if ( o instanceof Contract){
+        if (o instanceof Contract) {
             Contract that = (Contract) o;
 
             return (this.id == that.getId());

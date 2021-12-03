@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class ContractsApplicationTest {
 
     @Test
-    public void contextLoads() {
+    private void contextLoads() {
     }
 
 }

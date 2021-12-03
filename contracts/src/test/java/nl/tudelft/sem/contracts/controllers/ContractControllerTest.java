@@ -1,9 +1,16 @@
 package nl.tudelft.sem.contracts.controllers;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import javax.servlet.http.HttpServletResponse;
 import nl.tudelft.sem.contracts.entities.Contract;
 import nl.tudelft.sem.contracts.services.ContractService;
 import nl.tudelft.sem.contracts.services.PdfGeneratorService;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,16 +18,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
-import java.time.LocalDate;
-import java.time.LocalTime;
-
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class ContractControllerTest {
@@ -74,20 +71,21 @@ class ContractControllerTest {
 
     @Test
     void getContractPdfTest() throws Exception {
-        //setup
-        HttpServletResponse response = mock(HttpServletResponse.class);
-        ArgumentCaptor<HttpServletResponse> responseArgumentCaptor = ArgumentCaptor.forClass(HttpServletResponse.class);
-
         //given
         given(contractService.getContract(contract.getId())).willReturn(contract);
 
+        //setup
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        ArgumentCaptor<HttpServletResponse> responseArgumentCaptor =
+                ArgumentCaptor.forClass(HttpServletResponse.class);
 
         //when
-        underTest.getContractPdf(response,contract.getId());
+        underTest.getContractPdf(response, contract.getId());
 
         //then
         verify(contractService).getContract(idArgumentCaptor.capture());
-        verify(pdfGeneratorService).exportContract(responseArgumentCaptor.capture(), contractArgumentCaptor.capture());
+        verify(pdfGeneratorService).exportContract(responseArgumentCaptor.capture(),
+                contractArgumentCaptor.capture());
 
         long capturedId = idArgumentCaptor.getValue();
         HttpServletResponse capturedResponse = responseArgumentCaptor.getValue();
