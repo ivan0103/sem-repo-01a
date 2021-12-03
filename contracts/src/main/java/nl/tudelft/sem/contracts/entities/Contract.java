@@ -158,6 +158,11 @@ public class Contract {
         return agreementDate;
     }
 
+    /**
+     * Equals method to check of equality of entity to another object using its id.
+     * @param o - the other object.
+     * @return A boolean representing if they are equal.
+     */
     @Override
     public boolean equals(Object o) {
         if ( o instanceof Contract){
