@@ -135,4 +135,23 @@ public class StudentController implements UserController<Student> {
 
         return studentService.editFeedback(netID, text, rating, feedbackId, toNetID);
     }
+
+    /**
+     * DeleteMapping for feedback.
+     *
+     * @param netID the id of the student that created the feedback
+     * @param feedbackId the id of the feedback
+     * @param toNetID the id of the feedback receiver
+     * @return the deleted feedback
+     */
+
+    @DeleteMapping(path = "{" + valueId + "}/{feedbackId}/{" + receiverId + "}")
+    public Feedback deleteFeedback(@PathVariable(value = valueId) String netID,
+                                   @PathVariable(value = "feedbackId") Long feedbackId,
+                                   @PathVariable(value = receiverId) String toNetID) {
+
+        return studentService.deleteFeedback(netID, feedbackId, toNetID);
+    }
+
+
 }

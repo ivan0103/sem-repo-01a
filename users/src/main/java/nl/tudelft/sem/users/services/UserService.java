@@ -2,7 +2,6 @@ package nl.tudelft.sem.users.services;
 
 import java.util.List;
 import nl.tudelft.sem.users.entities.Feedback;
-import org.springframework.web.bind.annotation.PathVariable;
 
 
 public interface UserService<T> {
@@ -21,5 +20,7 @@ public interface UserService<T> {
 
     Feedback editFeedback(String netID, String text, Integer rating,
                           Long feedbackId, String toNetID);
+
+    Feedback deleteFeedback(String netID, Long feedbackId, String toNetID);
 
 }

@@ -136,4 +136,21 @@ public class CompanyController implements UserController<Company> {
 
         return companyService.editFeedback(netID, text, rating, feedbackId, toNetID);
     }
+
+    /**
+     * DeleteMapping for feedback.
+     *
+     * @param netID the id of the company that created the feedback
+     * @param feedbackId the id of the feedback
+     * @param toNetID the id of the feedback receiver
+     * @return the deleted feedback
+     */
+
+    @DeleteMapping(path = "{" + valueId + "}/{feedbackId}/{" + receiverId + "}")
+    public Feedback deleteFeedback(@PathVariable(value = valueId) String netID,
+                                   @PathVariable(value = "feedbackId") Long feedbackId,
+                                   @PathVariable(value = receiverId) String toNetID) {
+
+        return companyService.deleteFeedback(netID, feedbackId, toNetID);
+    }
 }

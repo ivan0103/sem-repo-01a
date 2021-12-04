@@ -154,13 +154,23 @@ public abstract class User {
     }
 
     /**
-     * Adds a new feedback to the list of feedback.
+     * Adds a new feedback to the list of feedbacks.
      *
      * @param feedback the new feedback to be added
      */
 
     public void addFeedback(Feedback feedback) {
         this.feedbacks.add(feedback);
+    }
+
+    /**
+     * Removes a new feedback from the list of feedbacks.
+     *
+     * @param feedback the feedback to be removed
+     */
+
+    public void removeFeedback(Feedback feedback) {
+        this.feedbacks.remove(feedback);
     }
 
     /**

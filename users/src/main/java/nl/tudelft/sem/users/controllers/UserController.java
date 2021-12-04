@@ -9,6 +9,7 @@ public interface UserController<T> {
 
     String valueId = "netID";
     String valueName = "name";
+    String receiverId = "toNetID";
 
     List<T> getUsers();
 
@@ -25,12 +26,15 @@ public interface UserController<T> {
     Feedback addFeedback(@PathVariable(value = valueId) String netID,
                          @PathVariable(value = "text") String text,
                          @PathVariable(value = "rating") Integer rating,
-                         @PathVariable(value = "toNetID") String toNetID);
+                         @PathVariable(value = receiverId) String toNetID);
 
     Feedback editFeedback(@PathVariable(value = valueId) String netID,
                           @PathVariable(value = "text", required = false) String text,
                           @PathVariable(value = "rating", required = false) Integer rating,
                           @PathVariable(value = "feedbackId") Long feedbackId,
-                          @PathVariable(value = "toNetID") String toNetID);
+                          @PathVariable(value = receiverId) String toNetID);
 
+    Feedback deleteFeedback(@PathVariable(value = valueId) String netID,
+                            @PathVariable(value = "feedbackId") Long feedbackId,
+                            @PathVariable(value = receiverId) String toNetID);
 }

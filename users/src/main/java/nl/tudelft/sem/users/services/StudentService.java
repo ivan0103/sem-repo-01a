@@ -2,7 +2,6 @@ package nl.tudelft.sem.users.services;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import nl.tudelft.sem.users.entities.Feedback;
 import nl.tudelft.sem.users.entities.Student;
 import nl.tudelft.sem.users.entities.User;
@@ -132,7 +131,7 @@ public class StudentService implements UserService<Student> {
         User toUser = studentRepository.findById(toNetID).get();
         toUser.addFeedback(feedback);
         toUser.setRating((toUser.getRating() * (toUser.getFeedbacks().size() - 1)
-                + ((float) feedback.getRating())) / ((float) toUser.getFeedbacks().size()));
+                + feedback.getRating()) / (toUser.getFeedbacks().size()));
         studentRepository.save(toUser);
 
         return feedbackRepository.findTopByOrderByIdDesc();
@@ -243,12 +242,12 @@ public class StudentService implements UserService<Student> {
         Feedback feedback = feedbackRepository.findById(feedbackId).get();
         Student student = (Student) studentRepository.findById(netID).get();
         User receiver = studentRepository.findById(toNetID).get();
-        List<Feedback> newFeedbacks = new ArrayList<>(receiver.getFeedbacks());
-        newFeedbacks.remove(feedback);
 
         if (!feedback.getUser().equals(student) || !receiver.getFeedbacks().contains(feedback)) {
             return null;
         }
+
+        receiver.removeFeedback(feedback);
 
         if (text != null) {
             feedback.setText(text);
@@ -259,10 +258,61 @@ public class StudentService implements UserService<Student> {
         }
 
         feedbackRepository.save(feedback);
-        newFeedbacks.add(feedback);
+        receiver.addFeedback(feedback);
         receiver.setRating((receiver.getRating() * (receiver.getFeedbacks().size() - 1)
-                + ((float) feedback.getRating())) / ((float) receiver.getFeedbacks().size()));
-        receiver.setFeedbacks(newFeedbacks);
+                + feedback.getRating()) / (receiver.getFeedbacks().size()));
+        studentRepository.save(receiver);
+
+        return feedback;
+    }
+
+    /**
+     * Deletes a feedback.
+     *
+     * @param netID the id of the student that created the feedback
+     * @param feedbackId the id of the feedback
+     * @param toNetID the id of the user that received the feedback
+     * @return the deleted feedback
+     */
+
+    @Override
+    public Feedback deleteFeedback(String netID, Long feedbackId, String toNetID) {
+        if (studentRepository.findById(netID).isEmpty()) {
+            return null;
+        }
+
+        if (studentRepository.findById(toNetID).isEmpty()) {
+            return null;
+        }
+
+        if (studentRepository.findById(netID).isPresent()
+            && !(studentRepository.findById(netID).get() instanceof Student)) {
+
+            return null;
+        }
+
+        if (feedbackRepository.findById(feedbackId).isEmpty()) {
+            return null;
+        }
+
+        Student student = (Student) studentRepository.findById(netID).get();
+        Feedback feedback = feedbackRepository.findById(feedbackId).get();
+        User receiver = studentRepository.findById(toNetID).get();
+
+        if (!feedback.getUser().equals(student) || !receiver.getFeedbacks().contains(feedback)) {
+            return null;
+        }
+
+        if (receiver.getFeedbacks().size() - 1 <= 0) {
+            receiver.setRating(0.0f);
+        } else {
+            receiver.setRating(((float) (receiver.getRating() * (receiver.getFeedbacks().size())
+                    - ((float) feedback.getRating())))
+                    / (((float) receiver.getFeedbacks().size() - 1)));
+        }
+
+        receiver.removeFeedback(feedback);
+        feedbackRepository.delete(feedback);
         studentRepository.save(receiver);
 
         return feedback;

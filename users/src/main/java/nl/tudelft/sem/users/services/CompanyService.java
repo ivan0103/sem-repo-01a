@@ -131,7 +131,7 @@ public class CompanyService implements UserService<Company> {
         User toUser = companyRepository.findById(toNetID).get();
         toUser.addFeedback(feedback);
         toUser.setRating((toUser.getRating() * (toUser.getFeedbacks().size() - 1)
-                + ((float) feedback.getRating())) / ((float) toUser.getFeedbacks().size()));
+                + feedback.getRating()) / (toUser.getFeedbacks().size()));
         companyRepository.save(toUser);
 
         return feedbackRepository.findTopByOrderByIdDesc();
@@ -260,8 +260,60 @@ public class CompanyService implements UserService<Company> {
         feedbackRepository.save(feedback);
         newFeedbacks.add(feedback);
         receiver.setRating((receiver.getRating() * (receiver.getFeedbacks().size() - 1)
-                + ((float) feedback.getRating())) / ((float) receiver.getFeedbacks().size()));
+                + feedback.getRating()) / (receiver.getFeedbacks().size()));
         receiver.setFeedbacks(newFeedbacks);
+        companyRepository.save(receiver);
+
+        return feedback;
+    }
+
+    /**
+     * Deletes a feedback.
+     *
+     * @param netID the id of the company that created the feedback
+     * @param feedbackId the id of the feedback
+     * @param toNetID the id of the user that received the feedback
+     * @return the deleted feedback
+     */
+
+    @Override
+    public Feedback deleteFeedback(String netID, Long feedbackId, String toNetID) {
+        if (companyRepository.findById(netID).isEmpty()) {
+            return null;
+        }
+
+        if (companyRepository.findById(toNetID).isEmpty()) {
+            return null;
+        }
+
+        if (companyRepository.findById(netID).isPresent()
+                && !(companyRepository.findById(netID).get() instanceof Company)) {
+
+            return null;
+        }
+
+        if (feedbackRepository.findById(feedbackId).isEmpty()) {
+            return null;
+        }
+
+        Company company = (Company) companyRepository.findById(netID).get();
+        Feedback feedback = feedbackRepository.findById(feedbackId).get();
+        User receiver = companyRepository.findById(toNetID).get();
+
+        if (!feedback.getUser().equals(company) || !receiver.getFeedbacks().contains(feedback)) {
+            return null;
+        }
+
+        if (receiver.getFeedbacks().size() - 1 <= 0) {
+            receiver.setRating(0.0f);
+        } else {
+            receiver.setRating(((float) (receiver.getRating() * (receiver.getFeedbacks().size())
+                    - ((float) feedback.getRating())))
+                    / (((float) receiver.getFeedbacks().size() - 1)));
+        }
+
+        receiver.removeFeedback(feedback);
+        feedbackRepository.delete(feedback);
         companyRepository.save(receiver);
 
         return feedback;
