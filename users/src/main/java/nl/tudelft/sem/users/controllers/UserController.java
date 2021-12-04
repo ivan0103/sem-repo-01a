@@ -27,4 +27,10 @@ public interface UserController<T> {
                          @PathVariable(value = "rating") Integer rating,
                          @PathVariable(value = "toNetID") String toNetID);
 
+    Feedback editFeedback(@PathVariable(value = valueId) String netID,
+                          @PathVariable(value = "text", required = false) String text,
+                          @PathVariable(value = "rating", required = false) Integer rating,
+                          @PathVariable(value = "feedbackId") Long feedbackId,
+                          @PathVariable(value = "toNetID") String toNetID);
+
 }

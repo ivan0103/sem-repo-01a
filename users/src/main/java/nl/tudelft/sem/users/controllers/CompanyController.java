@@ -115,4 +115,25 @@ public class CompanyController implements UserController<Company> {
 
         return companyService.updateUser(netID, name);
     }
+
+    /**
+     * PutMapping for feedback.
+     *
+     * @param netID the id of the company
+     * @param text the new text of the feedback
+     * @param rating the new rating of the feedback
+     * @param feedbackId the id of the feedback
+     * @param toNetID the id of the company that received the feedback
+     * @return an edited feedback
+     */
+
+    @PutMapping(path = "{" + valueId + "}/{text}/{rating}/{feedbackId}/{toNetID}")
+    public Feedback editFeedback(@PathVariable(value = valueId) String netID,
+                                 @PathVariable(value = "text", required = false) String text,
+                                 @PathVariable(value = "rating", required = false) Integer rating,
+                                 @PathVariable(value = "feedbackId") Long feedbackId,
+                                 @PathVariable(value = "toNetID") String toNetID) {
+
+        return companyService.editFeedback(netID, text, rating, feedbackId, toNetID);
+    }
 }

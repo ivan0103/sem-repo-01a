@@ -206,4 +206,65 @@ public class StudentService implements UserService<Student> {
         studentRepository.save(student);
         return student;
     }
+
+    /**
+     * Allows students to edit their feedback.
+     *
+     * @param netID the id of the student
+     * @param text the new text of the feedback
+     * @param rating the new rating of the feedback
+     * @param feedbackId the id of the feedback
+     * @param toNetID the id of the student that received the feedback
+     * @return an edited feedback
+     */
+
+    @Override
+    public Feedback editFeedback(String netID, String text,
+                                 Integer rating, Long feedbackId, String toNetID) {
+
+        if (studentRepository.findById(netID).isEmpty()) {
+            return null;
+        }
+
+        if (studentRepository.findById(netID).isPresent()
+            && !(studentRepository.findById(netID).get() instanceof Student)) {
+
+            return null;
+        }
+
+        if (studentRepository.findById(toNetID).isEmpty()) {
+            return null;
+        }
+
+        if (feedbackRepository.findById(feedbackId).isEmpty()) {
+            return null;
+        }
+
+        Feedback feedback = feedbackRepository.findById(feedbackId).get();
+        Student student = (Student) studentRepository.findById(netID).get();
+        User receiver = studentRepository.findById(toNetID).get();
+        List<Feedback> newFeedbacks = new ArrayList<>(receiver.getFeedbacks());
+        newFeedbacks.remove(feedback);
+
+        if (!feedback.getUser().equals(student) || !receiver.getFeedbacks().contains(feedback)) {
+            return null;
+        }
+
+        if (text != null) {
+            feedback.setText(text);
+        }
+
+        if (rating != null) {
+            feedback.setRating(rating);
+        }
+
+        feedbackRepository.save(feedback);
+        newFeedbacks.add(feedback);
+        receiver.setRating((receiver.getRating() * (receiver.getFeedbacks().size() - 1)
+                + ((float) feedback.getRating())) / ((float) receiver.getFeedbacks().size()));
+        receiver.setFeedbacks(newFeedbacks);
+        studentRepository.save(receiver);
+
+        return feedback;
+    }
 }

@@ -19,4 +19,7 @@ public interface UserService<T> {
 
     Feedback addFeedback(String netID, String text, Integer rating, String toNetID);
 
+    Feedback editFeedback(String netID, String text, Integer rating,
+                          Long feedbackId, String toNetID);
+
 }
