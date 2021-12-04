@@ -23,8 +23,8 @@ class ContractRepositoryTest {
     @BeforeEach
     void setUpContractRepo() {
         contract = new Contract(
-                1,
-                2,
+                "1",
+                "2",
                 "student",
                 "company",
                 LocalTime.of(6, 0),

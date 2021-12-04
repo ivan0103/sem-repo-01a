@@ -29,8 +29,8 @@ class ContractServiceTest {
         underTest = new ContractService(contractRepository);
 
         contract = new Contract(
-                1,
-                2,
+                "1",
+                "2",
                 "student",
                 "company",
                 LocalTime.of(6, 0),

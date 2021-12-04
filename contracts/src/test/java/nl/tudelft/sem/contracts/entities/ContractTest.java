@@ -17,8 +17,8 @@ public class ContractTest {
     @BeforeEach
     void setUpContractTest() {
         contract = new Contract(
-                1,
-                2,
+                "1",
+                "2",
                 student,
                 company,
                 LocalTime.of(6, 0),
@@ -31,8 +31,8 @@ public class ContractTest {
     @AfterEach
     void resetContractTest() {
         contract = new Contract(
-                1,
-                2,
+                "1",
+                "2",
                 "student",
                 "company",
                 LocalTime.of(6, 0),
@@ -49,14 +49,14 @@ public class ContractTest {
 
     @Test
     public void getFreelancerIdTest() {
-        long freelancerId = contract.getFreelancerId();
-        assertThat(freelancerId).isEqualTo(1);
+        String freelancerId = contract.getFreelancerId();
+        assertThat(freelancerId).isEqualTo("1");
     }
 
     @Test
     public void getCompanyIdTest() {
-        long companyId = contract.getCompanyId();
-        assertThat(companyId).isEqualTo(2);
+        String companyId = contract.getCompanyId();
+        assertThat(companyId).isEqualTo("2");
     }
 
     @Test
@@ -97,16 +97,18 @@ public class ContractTest {
 
     @Test
     public void setFreelancerIdTest() {
-        contract.setFreelancerId(3);
-        long freelancerId = contract.getFreelancerId();
-        assertThat(freelancerId).isEqualTo(3);
+        String id = "3";
+        contract.setFreelancerId(id);
+        String freelancerId = contract.getFreelancerId();
+        assertThat(freelancerId).isEqualTo(id);
     }
 
     @Test
     public void setCompanyIdTest() {
-        contract.setCompanyId(4);
-        long companyId = contract.getCompanyId();
-        assertThat(companyId).isEqualTo(4);
+        String id = "4";
+        contract.setCompanyId(id);
+        String companyId = contract.getCompanyId();
+        assertThat(companyId).isEqualTo(id);
     }
 
     @Test
@@ -151,11 +153,11 @@ public class ContractTest {
         assertThat(endDate).isEqualTo(LocalDate.of(2020, 10, 1));
     }
 
-    /* @Test
+    @Test
     public void equalFalseTest() {
         Contract contract1 = new Contract(
-                1,
-                2,
+                "1",
+                "2",
                 student,
                 company,
                 LocalTime.of(6, 0),
@@ -163,9 +165,11 @@ public class ContractTest {
                 LocalDate.of(2020, 6, 1),
                 LocalDate.of(2020, 9, 1)
         );
+        contract.setId(1);
+        contract1.setId(2);
 
         assertThat(contract.equals(contract1)).isFalse();
-    }*/
+    }
 
     @Test
     public void equalTrue() {

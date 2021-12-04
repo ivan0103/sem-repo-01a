@@ -39,8 +39,8 @@ class ContractControllerTest {
     void setUp() {
         underTest = new ContractController(contractService, pdfGeneratorService);
         contract = new Contract(
-                1,
-                2,
+                "1",
+                "2",
                 "student",
                 "company",
                 LocalTime.of(6, 0),

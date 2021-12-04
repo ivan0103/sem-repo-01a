@@ -34,10 +34,10 @@ public class Contract {
     private long id;
 
     @Column(name = "freelancerId")
-    private long freelancerId;
+    private String freelancerId;
 
     @Column(name = "companyId")
-    private long companyId;
+    private String companyId;
 
     @Column(name = "freelancerName")
     private String freelancerName;
@@ -73,7 +73,7 @@ public class Contract {
      * @param startDate      the start date
      * @param endDate        the end date
      */
-    public Contract(long freelancerId, long companyId, String freelancerName,
+    public Contract(String freelancerId, String companyId, String freelancerName,
                     String companyName, LocalTime hoursPerWeek, float payPerWeek,
                     LocalDate startDate, LocalDate endDate) {
 
@@ -97,19 +97,19 @@ public class Contract {
         this.id = id;
     }
 
-    public long getFreelancerId() {
+    public String getFreelancerId() {
         return freelancerId;
     }
 
-    public void setFreelancerId(long freelancerId) {
+    public void setFreelancerId(String freelancerId) {
         this.freelancerId = freelancerId;
     }
 
-    public long getCompanyId() {
+    public String getCompanyId() {
         return companyId;
     }
 
-    public void setCompanyId(long companyId) {
+    public void setCompanyId(String companyId) {
         this.companyId = companyId;
     }
 
