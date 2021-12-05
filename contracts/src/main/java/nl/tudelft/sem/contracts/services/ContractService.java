@@ -38,6 +38,10 @@ public class ContractService {
      * @return The contract corresponding to the id.
      */
     public Contract getContract(long id) {
-        return contractRepository.findContractById(id);
+        return contractRepository.getById(id);
+    }
+
+    public boolean exists(long id) {
+        return contractRepository.existsById(id);
     }
 }

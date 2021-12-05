@@ -24,6 +24,9 @@ class ContractServiceTest {
     @Mock
     private transient ContractRepository contractRepository;
 
+    //setup
+    private transient ArgumentCaptor<Long> idArgumentCaptor;
+
     @BeforeEach
     void setUp() {
         underTest = new ContractService(contractRepository);
@@ -38,6 +41,8 @@ class ContractServiceTest {
                 LocalDate.of(2020, 6, 1),
                 LocalDate.of(2020, 9, 1)
         );
+
+        idArgumentCaptor = ArgumentCaptor.forClass(Long.class);
     }
 
     @Test
@@ -61,20 +66,34 @@ class ContractServiceTest {
 
     @Test
     void getContractTest() {
-        //setup
-        ArgumentCaptor<Long> idArgumentCaptor = ArgumentCaptor.forClass(Long.class);
-
         //given
-        given(contractRepository.findContractById(contract.getId())).willReturn(contract);
+        given(contractRepository.getById(contract.getId())).willReturn(contract);
 
         //when
         Contract testCase = underTest.getContract(contract.getId());
 
         //then
-        verify(contractRepository).findContractById(idArgumentCaptor.capture());
+        verify(contractRepository).getById(idArgumentCaptor.capture());
         long capturedId = idArgumentCaptor.getValue();
 
         assertThat(capturedId).isEqualTo(contract.getId());
         assertThat(testCase).isEqualTo(contract);
     }
+
+    @Test
+    void existsTest() {
+        //given
+        given(contractRepository.existsById(contract.getId())).willReturn(true);
+
+        //when
+        boolean testCase = underTest.exists(contract.getId());
+
+        //then
+        verify(contractRepository).existsById(idArgumentCaptor.capture());
+        long capturedId = idArgumentCaptor.getValue();
+
+        assertThat(capturedId).isEqualTo(contract.getId());
+        assertThat(testCase).isEqualTo(true);
+    }
+
 }

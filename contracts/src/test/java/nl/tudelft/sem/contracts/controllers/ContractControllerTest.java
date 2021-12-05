@@ -33,6 +33,7 @@ class ContractControllerTest {
 
     private transient ArgumentCaptor<Contract> contractArgumentCaptor;
     private transient ArgumentCaptor<Long> idArgumentCaptor;
+    private transient ArgumentCaptor<Long> idArgumentCaptor2;
 
 
     @BeforeEach
@@ -51,6 +52,7 @@ class ContractControllerTest {
 
         contractArgumentCaptor = ArgumentCaptor.forClass(Contract.class);
         idArgumentCaptor = ArgumentCaptor.forClass(Long.class);
+        idArgumentCaptor2 = ArgumentCaptor.forClass(Long.class);
     }
 
     @Test
@@ -72,6 +74,7 @@ class ContractControllerTest {
     @Test
     void getContractPdfTest() throws Exception {
         //given
+        given(contractService.exists(contract.getId())).willReturn(true);
         given(contractService.getContract(contract.getId())).willReturn(contract);
 
         //setup
@@ -83,15 +86,18 @@ class ContractControllerTest {
         underTest.getContractPdf(response, contract.getId());
 
         //then
-        verify(contractService).getContract(idArgumentCaptor.capture());
         verify(pdfGeneratorService).exportContract(responseArgumentCaptor.capture(),
                 contractArgumentCaptor.capture());
+        verify(contractService).getContract(idArgumentCaptor.capture());
+        verify(contractService).exists(idArgumentCaptor2.capture());
 
         long capturedId = idArgumentCaptor.getValue();
+        long capturedId2 = idArgumentCaptor2.getValue();
         HttpServletResponse capturedResponse = responseArgumentCaptor.getValue();
         Contract capturedContract = contractArgumentCaptor.getValue();
 
         assertThat(capturedId).isEqualTo(contract.getId());
+        assertThat(capturedId2).isEqualTo(contract.getId());
         assertThat(capturedContract).isEqualTo(contract);
         assertThat(capturedResponse).isEqualTo(response);
     }
@@ -99,6 +105,7 @@ class ContractControllerTest {
     @Test
     void getContractTest() throws Exception {
         //given
+        given(contractService.exists(contract.getId())).willReturn(true);
         given(contractService.getContract(contract.getId())).willReturn(contract);
 
 
@@ -107,9 +114,38 @@ class ContractControllerTest {
 
         //then
         verify(contractService).getContract(idArgumentCaptor.capture());
+        verify(contractService).exists(idArgumentCaptor2.capture());
+
         long capturedId = idArgumentCaptor.getValue();
+        long capturedId2 = idArgumentCaptor2.getValue();
 
         assertThat(capturedId).isEqualTo(contract.getId());
+        assertThat(capturedId2).isEqualTo(contract.getId());
         assertThat(result).isEqualTo(contract);
     }
+
+    @Test
+    void modifyContractTest() throws Exception {
+        //setup
+        contract.setEndDate(LocalDate.of(2021, 2, 6));
+
+        //given
+        given(contractService.exists(contract.getId())).willReturn(true);
+        given(contractService.create(contract)).willReturn(contract);
+
+        //when
+        Contract testCase = underTest.modifyContract(contract);
+
+        //then
+        verify(contractService).create(contractArgumentCaptor.capture());
+        verify(contractService).exists(idArgumentCaptor.capture());
+
+        Contract capturedContract = contractArgumentCaptor.getValue();
+        long captureId = idArgumentCaptor.getValue();
+
+        assertThat(captureId).isEqualTo(contract.getId());
+        assertThat(capturedContract).isEqualTo(contract);
+        assertThat(testCase).isEqualTo(contract);
+    }
+
 }

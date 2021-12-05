@@ -18,6 +18,10 @@ public class ContractTest {
 
     @BeforeEach
     void setUpContractTest() {
+        student = "student";
+
+        company = "company";
+
         contract = new Contract(
                 "1",
                 "2",

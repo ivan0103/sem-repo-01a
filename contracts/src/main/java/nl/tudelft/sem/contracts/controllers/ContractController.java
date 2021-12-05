@@ -51,12 +51,11 @@ public class ContractController {
      */
     @PostMapping("/getContract")
     public Contract getContract(@RequestParam long contractId) throws Exception {
-        Contract contract = contractService.getContract(contractId);
-        if (contract == null) {
-            throw new Exception("Invalid contract id.");
+        if (!contractService.exists(contractId)) {
+            throw new Exception("Invalid contract id. Contract Id does not exist in database.");
         }
 
-        return contract;
+        return contractService.getContract(contractId);
     }
 
     /**
@@ -71,10 +70,10 @@ public class ContractController {
     @PostMapping("/getPdf")
     public void getContractPdf(HttpServletResponse response,
                                @RequestParam long contractId) throws Exception {
-        Contract contract = contractService.getContract(contractId);
-        if (contract == null) {
-            throw new Exception("Invalid contract id.");
+        if (!contractService.exists(contractId)) {
+            throw new Exception("Invalid contract id. Contract Id does not exist in database.");
         }
+        Contract contract = contractService.getContract(contractId);
 
         //set response to be a PDF.
         response.setContentType("application/pdf");
@@ -91,7 +90,19 @@ public class ContractController {
         this.pdfGeneratorService.exportContract(response, contract);
     }
 
-
-    //@PostMapping("/modify")
+    /**
+     * Modifies details of an existing contract.
+     *
+     * @param contract - the contract to change with new details.
+     * @return The saved contract
+     * @throws Exception - If id of contract does not exist in database.
+     */
+    @PostMapping("/modify")
+    public Contract modifyContract(@RequestParam Contract contract) throws Exception {
+        if (!contractService.exists(contract.getId())) {
+            throw new Exception("Invalid contract id. Contract Id does not exist in database.");
+        }
+        return contractService.create(contract);
+    }
 
 }

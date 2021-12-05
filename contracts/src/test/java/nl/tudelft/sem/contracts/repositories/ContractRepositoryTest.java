@@ -17,6 +17,7 @@ class ContractRepositoryTest {
 
     private transient Contract contract;
 
+
     @Autowired
     private transient ContractRepository underTest;
 
@@ -47,12 +48,22 @@ class ContractRepositoryTest {
     }
 
     @Test
-    void findContractByIdTest() {
+    void getByIdTest() {
         //when
-        Contract testCase = underTest.findContractById(contract.getId());
+        Contract testCase = underTest.getById(contract.getId());
 
         //then
         assertThat(testCase).isEqualTo(contract);
     }
+
+    @Test
+    void existsByIdTest() {
+        //when
+        boolean testCase = underTest.existsById(contract.getId());
+
+        //then
+        assertThat(testCase).isEqualTo(true);
+    }
+
 
 }
