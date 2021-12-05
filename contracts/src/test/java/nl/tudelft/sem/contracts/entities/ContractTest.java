@@ -11,8 +11,10 @@ import org.junit.jupiter.api.Test;
 public class ContractTest {
     private transient Contract contract;
 
-    private static final String student = "student";
-    private static final String company = "company";
+    private transient String student;
+
+    private transient String company;
+
 
     @BeforeEach
     void setUpContractTest() {
@@ -33,8 +35,8 @@ public class ContractTest {
         contract = new Contract(
                 "1",
                 "2",
-                "student",
-                "company",
+                student,
+                company,
                 LocalTime.of(6, 0),
                 14.5F,
                 LocalDate.of(2020, 6, 1),
@@ -151,6 +153,13 @@ public class ContractTest {
         contract.setEndDate(LocalDate.of(2020, 10, 1));
         LocalDate endDate = contract.getEndDate();
         assertThat(endDate).isEqualTo(LocalDate.of(2020, 10, 1));
+    }
+
+    @Test
+    public void setAgreementDateTest() {
+        contract.setAgreementDate(LocalDate.of(2019, 10, 1));
+        LocalDate agreementDate = contract.getAgreementDate();
+        assertThat(agreementDate).isEqualTo(LocalDate.of(2019, 10, 1));
     }
 
     @Test

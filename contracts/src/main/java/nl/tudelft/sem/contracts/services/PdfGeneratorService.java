@@ -126,7 +126,7 @@ public class PdfGeneratorService {
                 + contract.getEndDate().toString()
                 + "\n-Hours per week: "
                 + contract.getHoursPerWeek().toString()
-                + "\n-Hourly rate: "
+                + "\n-Hourly rate: €"
                 + contract.getPayPerWeek(), normalFont);
 
         contractDetails.setAlignment(Paragraph.ALIGN_LEFT);

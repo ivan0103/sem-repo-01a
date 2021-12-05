@@ -58,7 +58,7 @@ public class Contract {
     private LocalDate endDate;
 
     @Column(name = "agreementDate")
-    private final LocalDate agreementDate;
+    private LocalDate agreementDate;
 
 
     /**
@@ -163,6 +163,10 @@ public class Contract {
 
     public LocalDate getAgreementDate() {
         return agreementDate;
+    }
+
+    public void setAgreementDate(LocalDate agreementDate) {
+        this.agreementDate = agreementDate;
     }
 
     /**
