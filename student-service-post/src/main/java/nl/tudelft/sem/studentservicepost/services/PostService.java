@@ -97,9 +97,9 @@ public class PostService {
      * @return the collection
      */
     public Collection<Post> searchByKeyword(String keyword) {
-        keyword = keyword.toLowerCase(Locale.ROOT).replaceAll("\\s", "");
+        keyword = Competency.makeSearchable(keyword);
         Collection<Competency> competencies =
-            competencyRepository.getAllByCompetencyStringContaining(keyword);
+            competencyRepository.getAllBySearchableStringContaining(keyword);
 
         Collection<Post> result = new HashSet<>();
 
@@ -108,7 +108,7 @@ public class PostService {
         }
 
         Collection<Expertise> expertises =
-            expertiseRepository.getAllByExpertiseStringContaining(keyword);
+            expertiseRepository.getAllBySearchableStringContaining(keyword);
         for (Expertise expertise : expertises) {
             result.addAll(postRepository.getAllByExpertiseSetContaining(expertise));
         }
