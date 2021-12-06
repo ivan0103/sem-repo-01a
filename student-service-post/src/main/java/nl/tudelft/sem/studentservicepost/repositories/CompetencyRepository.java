@@ -11,4 +11,6 @@ public interface CompetencyRepository extends JpaRepository<Competency, String> 
     Competency getCompetencyByCompetencyString(String competency);
 
     Collection<Competency> getAllByCompetencyStringContaining(String keyword);
+
+    Collection<Competency> getAllBySearchableStringContaining(String keyword);
 }

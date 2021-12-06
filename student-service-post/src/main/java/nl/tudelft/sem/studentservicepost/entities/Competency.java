@@ -30,11 +30,16 @@ public class Competency {
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Set<Post> postSet = new HashSet<>();
 
+    @Column(name = "searchable_string")
+    @Size(max = 20)
+    private String searchableString;
+
     public Competency() {
     }
 
     public Competency(String string) {
-        this.competencyString = makeSearchable(string);
+        this.competencyString = string;
+        this.searchableString = makeSearchable(string);
     }
 
     public String getCompetencyString() {
@@ -42,7 +47,8 @@ public class Competency {
     }
 
     public void setCompetencyString(String competencyString) {
-        this.competencyString = makeSearchable(competencyString);
+        this.competencyString = competencyString;
+        this.searchableString = makeSearchable(competencyString);
     }
 
     public Set<Post> getPostSet() {
@@ -51,6 +57,14 @@ public class Competency {
 
     public void setPostSet(Set<Post> postSet) {
         this.postSet = postSet;
+    }
+
+    public String getSearchableString() {
+        return searchableString;
+    }
+
+    public void setSearchableString(String searchableString) {
+        this.searchableString = makeSearchable(searchableString);
     }
 
     @Override
@@ -62,8 +76,8 @@ public class Competency {
             return false;
         }
         Competency that = (Competency) o;
-        String thatC = that.competencyString;
-        String thisC = this.competencyString;
+        String thatC = makeSearchable(that.competencyString);
+        String thisC = makeSearchable(this.competencyString);
         return thisC.equalsIgnoreCase(thatC);
     }
 
@@ -77,7 +91,9 @@ public class Competency {
         return competencyString;
     }
 
-    protected static String makeSearchable(String string) {
+    public static String makeSearchable(String string) {
         return string.toLowerCase(Locale.ROOT).replaceAll("\\s", "");
     }
+
+
 }

@@ -33,11 +33,16 @@ public class Expertise {
     @ManyToMany(mappedBy = "expertise", fetch = FetchType.EAGER)
     private Set<CompanyOffer> offerSet = new HashSet<>();
 
+    @Column(name = "searchable_string")
+    @Size(max = 20)
+    private String searchableString;
+
     public Expertise() {
     }
 
     public Expertise(String string) {
-        this.expertiseString = Competency.makeSearchable(string);
+        this.expertiseString = string;
+        this.searchableString = Competency.makeSearchable(string);
     }
 
     public String getExpertiseString() {
@@ -45,7 +50,8 @@ public class Expertise {
     }
 
     public void setExpertiseString(String expertiseString) {
-        this.expertiseString = Competency.makeSearchable(expertiseString);
+        this.expertiseString = expertiseString;
+        this.searchableString = Competency.makeSearchable(expertiseString);
     }
 
     public Set<Post> getPostSet() {
@@ -69,6 +75,14 @@ public class Expertise {
         this.offerSet = offerSet;
     }
 
+    public String getSearchableString() {
+        return searchableString;
+    }
+
+    public void setSearchableString(String searchableString) {
+        this.searchableString = Competency.makeSearchable(searchableString);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -78,8 +92,8 @@ public class Expertise {
             return false;
         }
         Expertise expertise = (Expertise) o;
-        String thatE = expertise.expertiseString;
-        String thisE = this.expertiseString;
+        String thatE = Competency.makeSearchable(expertise.expertiseString);
+        String thisE = Competency.makeSearchable(this.expertiseString);
         return thisE.equalsIgnoreCase(thatE);
     }
 
