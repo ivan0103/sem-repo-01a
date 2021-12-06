@@ -8,7 +8,7 @@ stages:
 users-build:
   stage: build
   script:
-    gradle :users:build
+    gradle :users:classes :users:testClasses
 
 users-checkStyle:
   stage: staticAnalysis

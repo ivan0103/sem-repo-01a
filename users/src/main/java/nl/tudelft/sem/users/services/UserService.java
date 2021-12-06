@@ -1,23 +1,26 @@
 package nl.tudelft.sem.users.services;
 
-import nl.tudelft.sem.users.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import java.util.List;
+import nl.tudelft.sem.users.entities.Feedback;
 
 
-@Service
-public class UserService {
+public interface UserService<T> {
 
-    private final transient UserRepository userRepository;
+    List<T> getUsers();
 
-    /**
-     * Constructor of UserService - It instantiates a new UserService object.
-     *
-     * @param userRepository repository injected with data from the database
-     */
+    T getOneUser(String netID);
 
-    @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    T addUser(String netID, String name);
+
+    T deleteUser(String netID);
+
+    T updateUser(String netID, String name);
+
+    Feedback addFeedback(String netID, String text, Integer rating, String toNetID);
+
+    Feedback editFeedback(String netID, String text, Integer rating,
+                          Long feedbackId, String toNetID);
+
+    Feedback deleteFeedback(String netID, Long feedbackId, String toNetID);
+
 }
