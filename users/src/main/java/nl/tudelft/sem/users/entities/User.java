@@ -1,29 +1,38 @@
 package nl.tudelft.sem.users.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 
 @Entity(name = "user")
 @Table
-public class User {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING,
+        name = "User")
+public abstract class User {
     @Id
     @Column(name = "netID", nullable = false)
     private String netID;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "rating")
     private Float rating;
 
-    @OneToMany
-    private List<Feedback> feedback;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Feedback> feedbacks;
 
     /**
      * Default constructor.
@@ -39,14 +48,29 @@ public class User {
      * @param netID netId of the user - acts as primary key
      * @param name name of the user
      * @param rating rating of the user
-     * @param feedback list of feedback received by the user from other users
      */
 
-    public User(String netID, String name, Float rating, List<Feedback> feedback) {
+    public User(String netID, String name, Float rating) {
         this.netID = netID;
         this.name = name;
         this.rating = rating;
-        this.feedback = feedback;
+        this.feedbacks = new ArrayList<>();
+    }
+
+    /**
+     * Initialises a user object.
+     *
+     * @param netID netId of the user - acts as primary key
+     * @param name name of the user
+     * @param rating rating of the user
+     * @param feedbacks list of feedbacks received by the user from other users
+     */
+
+    public User(String netID, String name, Float rating, List<Feedback> feedbacks) {
+        this.netID = netID;
+        this.name = name;
+        this.rating = rating;
+        this.feedbacks = feedbacks;
     }
 
     /**
@@ -110,31 +134,54 @@ public class User {
     }
 
     /**
-     * Getter for the feedback provided by other users.
+     * Getter for the feedbacks provided by other users.
      *
      * @return a list of feedbacks
      */
 
-    public List<Feedback> getFeedback() {
-        return feedback;
+    public List<Feedback> getFeedbacks() {
+        return this.feedbacks;
     }
 
     /**
      * Setter for the feedback list.
      *
-     * @param feedback a new list of feedbacks
+     * @param feedbacks a new list of feedbacks
      */
 
-    public void setFeedback(List<Feedback> feedback) {
-        this.feedback = feedback;
+    public void setFeedbacks(List<Feedback> feedbacks) {
+        this.feedbacks = feedbacks;
+    }
+
+    /**
+     * Adds a new feedback to the list of feedbacks.
+     *
+     * @param feedback the new feedback to be added
+     */
+
+    public void addFeedback(Feedback feedback) {
+        this.feedbacks.add(feedback);
+    }
+
+    /**
+     * Removes a new feedback from the list of feedbacks.
+     *
+     * @param feedback the feedback to be removed
+     */
+
+    public void removeFeedback(Feedback feedback) {
+        this.feedbacks.remove(feedback);
     }
 
     /**
      * Equals method - checks whether the users are the same or not.
+     * NOTE! Since this is an abstract class an equal method does not make much sense
+     * to have it, but pmd complained about it, unfortunately.
      *
      * @param o the object used to compare the user
      * @return true - the users represent the same instance
      *         false - otherwise
+     *
      */
 
     @Override
@@ -142,13 +189,16 @@ public class User {
         if (this == o) {
             return true;
         }
+
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
+
         User user = (User) o;
-        return Objects.equals(name, user.name)
+        return Objects.equals(netID, user.netID)
+                && Objects.equals(name, user.name)
                 && Objects.equals(rating, user.rating)
-                && Objects.equals(feedback, user.feedback);
+                && Objects.equals(feedbacks, user.feedbacks);
     }
 
     /**
@@ -159,7 +209,7 @@ public class User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(netID, name, rating, feedback);
+        return Objects.hash(netID, name, rating, feedbacks);
     }
 
     /**
@@ -174,7 +224,7 @@ public class User {
                 + ", netID='" + netID + '\''
                 + ", name='" + name + '\''
                 + ", rating=" + rating
-                + ", feedback=" + feedback
+                + ", feedbacks=" + feedbacks
                 + '}';
     }
 }
