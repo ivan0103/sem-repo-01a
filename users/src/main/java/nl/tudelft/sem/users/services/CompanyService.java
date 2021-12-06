@@ -21,7 +21,7 @@ public class CompanyService implements UserService<Company> {
     /**
      * Constructor of CompanyRepository - It instantiates a new CompanyService object.
      *
-     * @param companyRepository repository injected with data from the database
+     * @param companyRepository  repository injected with data from the database
      * @param feedbackRepository repository injected with data from the database
      */
 
@@ -78,7 +78,7 @@ public class CompanyService implements UserService<Company> {
      * Creates a new company.
      *
      * @param netID the netID of the new company
-     * @param name the name of the new company
+     * @param name  the name of the new company
      * @return a new company
      */
 
@@ -96,7 +96,7 @@ public class CompanyService implements UserService<Company> {
             return (Company) companyRepository.findById(netID).get();
         }
 
-        Company company = (Company) new UserFactory().createUser(netID, netID,0.0f,"company");
+        Company company = (Company) new UserFactory().createUser(netID, netID, 0.0f, "company");
         companyRepository.save(company);
         return company;
     }
@@ -104,9 +104,9 @@ public class CompanyService implements UserService<Company> {
     /**
      * Creates a new feedback.
      *
-     * @param netID id of the company
-     * @param text text of the feedback
-     * @param rating rating of the feedback
+     * @param netID   id of the company
+     * @param text    text of the feedback
+     * @param rating  rating of the feedback
      * @param toNetID the netID of the user that receives the feedback
      * @return a new feedback
      */
@@ -118,7 +118,7 @@ public class CompanyService implements UserService<Company> {
         }
 
         if (companyRepository.findById(netID).isPresent()
-                && !(companyRepository.findById(netID).get() instanceof Company)) {
+            && !(companyRepository.findById(netID).get() instanceof Company)) {
 
             return null;
         }
@@ -132,7 +132,7 @@ public class CompanyService implements UserService<Company> {
         User toUser = companyRepository.findById(toNetID).get();
         toUser.addFeedback(feedback);
         toUser.setRating((toUser.getRating() * (toUser.getFeedbacks().size() - 1)
-                + feedback.getRating()) / (toUser.getFeedbacks().size()));
+            + feedback.getRating()) / (toUser.getFeedbacks().size()));
         companyRepository.save(toUser);
 
         return feedbackRepository.findTopByOrderByIdDesc();
@@ -185,7 +185,7 @@ public class CompanyService implements UserService<Company> {
      * Updates information of company.
      *
      * @param netID the id of the company
-     * @param name the new name of company
+     * @param name  the new name of company
      * @return an updated company
      */
 
@@ -210,11 +210,11 @@ public class CompanyService implements UserService<Company> {
     /**
      * Allows students to edit their feedback.
      *
-     * @param netID the id of the student
-     * @param text the new text of the feedback
-     * @param rating the new rating of the feedback
+     * @param netID      the id of the student
+     * @param text       the new text of the feedback
+     * @param rating     the new rating of the feedback
      * @param feedbackId the id of the feedback
-     * @param toNetID the id of the user that received the feedback
+     * @param toNetID    the id of the user that received the feedback
      * @return an edited feedback
      */
 
@@ -261,7 +261,7 @@ public class CompanyService implements UserService<Company> {
         feedbackRepository.save(feedback);
         newFeedbacks.add(feedback);
         receiver.setRating((receiver.getRating() * (receiver.getFeedbacks().size() - 1)
-                + feedback.getRating()) / (receiver.getFeedbacks().size()));
+            + feedback.getRating()) / (receiver.getFeedbacks().size()));
         receiver.setFeedbacks(newFeedbacks);
         companyRepository.save(receiver);
 
@@ -271,9 +271,9 @@ public class CompanyService implements UserService<Company> {
     /**
      * Deletes a feedback.
      *
-     * @param netID the id of the company that created the feedback
+     * @param netID      the id of the company that created the feedback
      * @param feedbackId the id of the feedback
-     * @param toNetID the id of the user that received the feedback
+     * @param toNetID    the id of the user that received the feedback
      * @return the deleted feedback
      */
 
@@ -288,7 +288,7 @@ public class CompanyService implements UserService<Company> {
         }
 
         if (companyRepository.findById(netID).isPresent()
-                && !(companyRepository.findById(netID).get() instanceof Company)) {
+            && !(companyRepository.findById(netID).get() instanceof Company)) {
 
             return null;
         }
@@ -309,8 +309,8 @@ public class CompanyService implements UserService<Company> {
             receiver.setRating(0.0f);
         } else {
             receiver.setRating(((float) (receiver.getRating() * (receiver.getFeedbacks().size())
-                    - ((float) feedback.getRating())))
-                    / (((float) receiver.getFeedbacks().size() - 1)));
+                - ((float) feedback.getRating())))
+                / (((float) receiver.getFeedbacks().size() - 1)));
         }
 
         receiver.removeFeedback(feedback);
