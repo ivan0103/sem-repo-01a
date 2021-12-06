@@ -5,6 +5,7 @@ import java.util.List;
 import nl.tudelft.sem.users.entities.Company;
 import nl.tudelft.sem.users.entities.Feedback;
 import nl.tudelft.sem.users.entities.User;
+import nl.tudelft.sem.users.entities.UserFactory;
 import nl.tudelft.sem.users.repositories.FeedbackRepository;
 import nl.tudelft.sem.users.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,7 +96,7 @@ public class CompanyService implements UserService<Company> {
             return (Company) companyRepository.findById(netID).get();
         }
 
-        Company company = new Company(netID, 0.0f);
+        Company company = (Company) new UserFactory().createUser(netID, netID,0.0f,"company");
         companyRepository.save(company);
         return company;
     }

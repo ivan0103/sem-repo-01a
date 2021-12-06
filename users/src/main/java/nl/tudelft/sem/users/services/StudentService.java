@@ -5,6 +5,7 @@ import java.util.List;
 import nl.tudelft.sem.users.entities.Feedback;
 import nl.tudelft.sem.users.entities.Student;
 import nl.tudelft.sem.users.entities.User;
+import nl.tudelft.sem.users.entities.UserFactory;
 import nl.tudelft.sem.users.repositories.FeedbackRepository;
 import nl.tudelft.sem.users.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,7 +96,7 @@ public class StudentService implements UserService<Student> {
             return null;
         }
 
-        Student student = new Student(netID, name, 0.0f);
+        Student student = (Student) new UserFactory().createUser(netID, name, 0.0f, "student");
         studentRepository.save(student);
         return student;
     }
