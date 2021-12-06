@@ -14,11 +14,13 @@ generic-service-post-checkStyle:
   stage: staticAnalysis
   script:
     gradle :generic-service-post:checkstyleMain :generic-service-post:checkStyleTest
+  allow_failure: true
 
 generic-service-post-PMD:
   stage: staticAnalysis
   script:
       gradle :generic-service-post:pmdMain :generic-service-post:pmdTest
+  allow_failure: true
 
 generic-service-post-test:
   stage: test

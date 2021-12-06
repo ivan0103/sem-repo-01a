@@ -14,11 +14,13 @@ contracts-checkStyle:
   stage: staticAnalysis
   script:
     gradle :contracts:checkstyleMain :contracts:checkStyleTest
+  allow_failure: true
 
 contracts-PMD:
   stage: staticAnalysis
   script:
       gradle :contracts:pmdMain :contracts:pmdTest
+  allow_failure: true
 
 contracts-test:
   stage: test
