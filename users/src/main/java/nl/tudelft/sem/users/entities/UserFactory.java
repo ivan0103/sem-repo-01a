@@ -14,7 +14,7 @@ public class UserFactory {
      * @param rating the rating of the user
      * @param feedbackList the list of feedbacks the user has
      * @param role the role of the user
-     * @return a new user
+     * @return a new user or null
      */
 
     public User createUser(String netID, String name, Float rating,
@@ -38,7 +38,7 @@ public class UserFactory {
      * @param name the name of the user
      * @param rating the rating of the user
      * @param role the role of the user
-     * @return a new user
+     * @return a new user or null
      */
 
     public User createUser(String netID, String name, Float rating, String role) {
