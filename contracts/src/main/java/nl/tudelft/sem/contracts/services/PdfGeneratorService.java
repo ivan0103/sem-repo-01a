@@ -25,31 +25,32 @@ public class PdfGeneratorService {
      */
     public void exportContract(HttpServletResponse response, Contract contract) throws IOException {
 
-      /*  //Make an A4 document since that's the standard page size.
-        Document document = new Document(PageSize.A4);
+        //Make an A4 document since that's the standard page size.
+        try (Document document = new Document(PageSize.A4)) {
+            //Attach document in PDF format to response.
+            PdfWriter.getInstance(document, response.getOutputStream());
 
-        //Attach document in PDF format to response.
-        PdfWriter.getInstance(document, response.getOutputStream());
+            //Set normal fonts to use for document.
+            Font normalFont = FontFactory.getFont(FontFactory.TIMES);
+            normalFont.setSize(12);
 
-        //Set normal fonts to use for document.
-        Font normalFont = FontFactory.getFont(FontFactory.TIMES);
-        normalFont.setSize(12);
+            //Declare different paragraphs of text and format them.
+            Paragraph title = formatTitle(contract);
 
-        //Declare different paragraphs of text and format them.
-        Paragraph title = formatTitle(contract);
+            Paragraph intro = formatIntro(contract, normalFont);
 
-        Paragraph intro = formatIntro(contract, normalFont);
+            Paragraph detailsHeader = formatDetailsHeader();
 
-        Paragraph detailsHeader = formatDetailsHeader();
+            Paragraph contractDetails = formatDetails(contract, normalFont);
 
-        Paragraph contractDetails = formatDetails(contract, normalFont);
-
-        //add the paragraphs to the document and close the document.
-        document.add(title);
-        document.add(intro);
-        document.add(detailsHeader);
-        document.add(contractDetails);
-        document.close();*/
+            //add the paragraphs to the document and close the document.
+            document.add(title);
+            document.add(intro);
+            document.add(detailsHeader);
+            document.add(contractDetails);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 

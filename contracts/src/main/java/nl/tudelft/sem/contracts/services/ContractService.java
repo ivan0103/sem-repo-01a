@@ -41,7 +41,14 @@ public class ContractService {
         return contractRepository.getById(id);
     }
 
+    /**
+     * Uses contractRepository to check if id represents a contract in database.
+     *
+     * @param id - the id associated with contract
+     * @return boolean representing whether a contract exists.
+     */
     public boolean exists(long id) {
         return contractRepository.existsById(id);
     }
+
 }
