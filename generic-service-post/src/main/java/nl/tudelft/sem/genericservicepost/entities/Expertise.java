@@ -1,12 +1,12 @@
 package nl.tudelft.sem.genericservicepost.entities;
 
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
 
 @Entity
 public class Expertise {
@@ -42,7 +42,9 @@ public class Expertise {
     }
 
     @Override
-    public String toString(){ return expertiseString; }
+    public String toString() {
+        return expertiseString;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -54,5 +56,10 @@ public class Expertise {
         }
         Expertise expertise = (Expertise) o;
         return Objects.equals(expertiseString, expertise.expertiseString);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getExpertiseString(), getGenericPostSet());
     }
 }
