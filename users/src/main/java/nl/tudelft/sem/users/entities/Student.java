@@ -18,7 +18,7 @@ public class Student extends User {
      * Default constructor.
      */
 
-    public Student() {
+    protected Student() {
         super();
     }
 
@@ -30,7 +30,7 @@ public class Student extends User {
      * @param rating rating of the student
      */
 
-    public Student(String netID, String name, Float rating) {
+    protected Student(String netID, String name, Float rating) {
         super(netID, name, rating);
         this.role = "student";
     }
@@ -44,7 +44,7 @@ public class Student extends User {
      * @param feedbacks list of feedback received by the student from other users
      */
 
-    public Student(String netID, String name, Float rating, List<Feedback> feedbacks) {
+    protected Student(String netID, String name, Float rating, List<Feedback> feedbacks) {
         super(netID, name, rating, feedbacks);
         this.role = "student";
     }
