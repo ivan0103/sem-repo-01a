@@ -1,7 +1,10 @@
 package nl.tudelft.sem.studentservicepost.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import nl.tudelft.sem.studentservicepost.entities.CompanyOffer;
@@ -11,8 +14,15 @@ import nl.tudelft.sem.studentservicepost.entities.Post;
 import nl.tudelft.sem.studentservicepost.entities.Requirement;
 import nl.tudelft.sem.studentservicepost.exceptions.PostNotFoundException;
 import nl.tudelft.sem.studentservicepost.repositories.CompanyOfferRepository;
+import nl.tudelft.sem.studentservicepost.repositories.CompetencyRepository;
+import nl.tudelft.sem.studentservicepost.repositories.ExpertiseRepository;
+import nl.tudelft.sem.studentservicepost.repositories.PostRepository;
+import nl.tudelft.sem.studentservicepost.repositories.RequirementRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.AdditionalAnswers;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -21,17 +31,38 @@ class CompanyOfferServiceTest {
 
     transient Post post;
 
-    @Autowired
+    @InjectMocks
     transient CompanyOfferService companyOfferService;
 
-    @Autowired
+    @Mock
     transient CompanyOfferRepository companyOfferRepository;
 
-    @Autowired
+    @Mock
     transient PostService postService;
+
+    @Mock
+    transient PostRepository postRepository;
+
+    @Mock
+    transient RequirementRepository requirementRepository;
+
+    @Mock
+    transient ExpertiseRepository expertiseRepository;
+
+    final transient String reqString = "being smort";
+
+    final transient String expString = "being not stupid";
+
 
     @BeforeEach
     void setup() {
+
+        when(postRepository.existsById(any())).thenReturn(false);
+        when(postRepository.existsById(1L)).thenReturn(true);
+        when(postService.createPost(any())).thenAnswer(AdditionalAnswers.returnsFirstArg());
+        when(companyOfferRepository.save(any())).thenAnswer(AdditionalAnswers.returnsFirstArg());
+
+
         post = new Post();
         post.setId(0L);
         post.setAuthor("despacito");
@@ -40,6 +71,22 @@ class CompanyOfferServiceTest {
         post.getExpertiseSet().add(new Expertise("exp1"));
 
         post = postService.createPost(post);
+
+        post.setId(1L);
+
+        when(postRepository.getPostById(1L)).thenReturn(post);
+
+        when(requirementRepository.existsById(any())).thenReturn(false);
+        when(requirementRepository.existsById(reqString)).thenReturn(true);
+        when(requirementRepository.getRequirementByRequirementString(reqString)).thenReturn(
+            new Requirement(reqString));
+
+        when(expertiseRepository.existsById(any())).thenReturn(false);
+        when(expertiseRepository.existsById(expString)).thenReturn(true);
+        when(expertiseRepository.getExpertiseByExpertiseString(expString)).thenReturn(
+            new Expertise(expString));
+
+
     }
 
     @Test
@@ -47,8 +94,8 @@ class CompanyOfferServiceTest {
         CompanyOffer companyOffer = new CompanyOffer();
 
         companyOffer.setCompanyId("あなたばか");
-        companyOffer.getExpertise().add(new Expertise("being not stupid"));
-        companyOffer.getRequirementsSet().add(new Requirement("being smort"));
+        companyOffer.getExpertise().add(new Expertise(expString));
+        companyOffer.getRequirementsSet().add(new Requirement(reqString));
 
         companyOffer.setTotalHours(420);
         companyOffer.setWeeklyHours(12);
@@ -65,8 +112,8 @@ class CompanyOfferServiceTest {
         CompanyOffer companyOffer = new CompanyOffer();
 
         companyOffer.setCompanyId("scemo chi legge");
-        companyOffer.getExpertise().add(new Expertise("being not stupid"));
-        companyOffer.getRequirementsSet().add(new Requirement("being smort"));
+        companyOffer.getExpertise().add(new Expertise(expString));
+        companyOffer.getRequirementsSet().add(new Requirement(reqString));
 
         companyOffer.setTotalHours(420);
         companyOffer.setWeeklyHours(12);
@@ -80,8 +127,8 @@ class CompanyOfferServiceTest {
         CompanyOffer companyOffer = new CompanyOffer();
 
         companyOffer.setCompanyId("scemo chi legge");
-        companyOffer.getExpertise().add(new Expertise("being not stupid"));
-        companyOffer.getRequirementsSet().add(new Requirement("being smort"));
+        companyOffer.getExpertise().add(new Expertise(expString));
+        companyOffer.getRequirementsSet().add(new Requirement(reqString));
 
         companyOffer.setTotalHours(420);
         companyOffer.setWeeklyHours(12);
