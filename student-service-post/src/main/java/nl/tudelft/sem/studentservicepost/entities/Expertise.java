@@ -35,6 +35,7 @@ public class Expertise {
 
     @Column(name = "searchable_string")
     @Size(max = 20)
+    @JsonIgnore
     private String searchableString;
 
     public Expertise() {

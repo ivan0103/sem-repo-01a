@@ -32,6 +32,7 @@ public class Competency {
 
     @Column(name = "searchable_string")
     @Size(max = 20)
+    @JsonIgnore
     private String searchableString;
 
     public Competency() {
