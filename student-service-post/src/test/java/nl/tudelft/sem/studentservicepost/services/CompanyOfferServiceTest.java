@@ -7,6 +7,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import nl.tudelft.sem.studentservicepost.entities.CompanyOffer;
 import nl.tudelft.sem.studentservicepost.entities.Competency;
 import nl.tudelft.sem.studentservicepost.entities.Expertise;
@@ -53,6 +56,8 @@ class CompanyOfferServiceTest {
 
     final transient String expString = "being not stupid";
 
+    final transient String companyName = "あなたばか";
+
 
     @BeforeEach
     void setup() {
@@ -86,6 +91,8 @@ class CompanyOfferServiceTest {
         when(expertiseRepository.getExpertiseByExpertiseString(expString)).thenReturn(
             new Expertise(expString));
 
+        when(companyOfferRepository.getAllByPost(any())).thenReturn(new HashSet<>());
+
 
     }
 
@@ -93,7 +100,7 @@ class CompanyOfferServiceTest {
     void createOffer() {
         CompanyOffer companyOffer = new CompanyOffer();
 
-        companyOffer.setCompanyId("あなたばか");
+        companyOffer.setCompanyId(companyName);
         companyOffer.getExpertise().add(new Expertise(expString));
         companyOffer.getRequirementsSet().add(new Requirement(reqString));
 
@@ -136,6 +143,77 @@ class CompanyOfferServiceTest {
 
         assertThatThrownBy(() -> companyOfferService.createOffer(companyOffer, "a valid id lol"))
             .isInstanceOf(NumberFormatException.class);
+    }
+
+    @Test
+    void getByPostId() {
+        CompanyOffer companyOffer = new CompanyOffer();
+
+        companyOffer.setCompanyId(companyName);
+        companyOffer.getExpertise().add(new Expertise(expString));
+        companyOffer.getRequirementsSet().add(new Requirement(reqString));
+
+        companyOffer.setTotalHours(420);
+        companyOffer.setWeeklyHours(12);
+
+        String postId = post.getId().toString();
+
+        CompanyOffer inserted = companyOfferService.createOffer(companyOffer, postId);
+
+        when(companyOfferRepository.getAllByPost(post)).thenReturn(
+            new HashSet<>(List.of(inserted)));
+
+        Set<CompanyOffer> result = companyOfferService.getByPostId(postId);
+
+        assertThat(result).hasSize(1).containsOnlyOnce(inserted);
+
+    }
+
+    @Test
+    void getByPostIdEmpty() {
+        CompanyOffer companyOffer = new CompanyOffer();
+
+        companyOffer.setCompanyId(companyName);
+        companyOffer.getExpertise().add(new Expertise(expString));
+        companyOffer.getRequirementsSet().add(new Requirement(reqString));
+
+        companyOffer.setTotalHours(420);
+        companyOffer.setWeeklyHours(12);
+
+        String postId = post.getId().toString();
+
+        CompanyOffer inserted = companyOfferService.createOffer(companyOffer, postId);
+
+        when(companyOfferRepository.getAllByPost(post)).thenReturn(
+            new HashSet<>(List.of(inserted)));
+
+        assertThatThrownBy(() -> companyOfferService.getByPostId("12")).isInstanceOf(
+            PostNotFoundException.class);
+
+
+    }
+
+    @Test
+    void getByPostIdWrong() {
+        CompanyOffer companyOffer = new CompanyOffer();
+
+        companyOffer.setCompanyId(companyName);
+        companyOffer.getExpertise().add(new Expertise(expString));
+        companyOffer.getRequirementsSet().add(new Requirement(reqString));
+
+        companyOffer.setTotalHours(420);
+        companyOffer.setWeeklyHours(12);
+
+        String postId = post.getId().toString();
+
+        CompanyOffer inserted = companyOfferService.createOffer(companyOffer, postId);
+
+        when(companyOfferRepository.getAllByPost(post)).thenReturn(
+            new HashSet<>(List.of(inserted)));
+
+        assertThatThrownBy(() -> companyOfferService.getByPostId("lmao")).isInstanceOf(
+            NumberFormatException.class);
+
     }
 
 }

@@ -1,5 +1,6 @@
 package nl.tudelft.sem.studentservicepost.services;
 
+import java.util.Set;
 import nl.tudelft.sem.studentservicepost.entities.CompanyOffer;
 import nl.tudelft.sem.studentservicepost.entities.Expertise;
 import nl.tudelft.sem.studentservicepost.entities.Post;
@@ -76,5 +77,23 @@ public class CompanyOfferService {
             throw new PostNotFoundException();
         }
 
+    }
+
+    /**
+     * Gets all offers by post id.
+     *
+     * @param postId the post id
+     * @return set of all offers
+     */
+    public Set<CompanyOffer> getByPostId(String postId) {
+        long postIdL = Long.parseLong(postId); // TODO catch NumberFormatException
+        Set<CompanyOffer> result;
+        if (postRepository.existsById(postIdL)) {
+            Post toCheck = postRepository.getPostById(postIdL);
+            result = companyOfferRepository.getAllByPost(toCheck);
+        } else {
+            throw new PostNotFoundException();
+        }
+        return result;
     }
 }
