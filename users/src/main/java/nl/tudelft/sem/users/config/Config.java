@@ -6,6 +6,7 @@ import nl.tudelft.sem.users.entities.Company;
 import nl.tudelft.sem.users.entities.Feedback;
 import nl.tudelft.sem.users.entities.Student;
 import nl.tudelft.sem.users.entities.User;
+import nl.tudelft.sem.users.entities.UserFactory;
 import nl.tudelft.sem.users.repositories.FeedbackRepository;
 import nl.tudelft.sem.users.repositories.UserRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -27,11 +28,14 @@ public class Config {
                                             FeedbackRepository feedbackRepository) {
 
         return args -> {
-            Student student = new Student("netID_Mate!", "name", 10.0f);
+            User student = new UserFactory().createUser("netID_Mate!",
+                    "name", 10.0f, "student");
+
             userRepository.save(student);
             Feedback feedbackFromStudent = new Feedback("Chad", 10, student);
             List<Feedback> feedbacksCompany = List.of(feedbackFromStudent);
-            Company company = new Company("exploitEmployees", 10.0f, feedbacksCompany);
+            User company = new UserFactory().createUser("exploitEmployees",
+                    "exploitEmployees", 10.0f, feedbacksCompany, "company");
             userRepository.save(company);
         };
     }
