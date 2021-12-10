@@ -16,7 +16,7 @@ public class Company extends User {
      * Default constructor.
      */
 
-    public Company() {
+    protected Company() {
         super();
     }
 
@@ -27,7 +27,7 @@ public class Company extends User {
      * @param rating rating of the company
      */
 
-    public Company(String name, Float rating) {
+    protected Company(String name, Float rating) {
         super(name, name, rating);
         this.role = "company";
     }
@@ -40,7 +40,7 @@ public class Company extends User {
      * @param feedbacks list of feedback received by the company from other users
      */
 
-    public Company(String name, Float rating, List<Feedback> feedbacks) {
+    protected Company(String name, Float rating, List<Feedback> feedbacks) {
         super(name, name, rating, feedbacks);
         this.role = "company";
     }

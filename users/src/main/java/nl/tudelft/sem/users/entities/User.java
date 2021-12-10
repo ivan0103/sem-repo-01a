@@ -38,7 +38,7 @@ public abstract class User {
      * Default constructor.
      */
 
-    public User() {
+    protected User() {
 
     }
 
@@ -50,7 +50,7 @@ public abstract class User {
      * @param rating rating of the user
      */
 
-    public User(String netID, String name, Float rating) {
+    protected User(String netID, String name, Float rating) {
         this.netID = netID;
         this.name = name;
         this.rating = rating;
@@ -66,7 +66,7 @@ public abstract class User {
      * @param feedbacks list of feedbacks received by the user from other users
      */
 
-    public User(String netID, String name, Float rating, List<Feedback> feedbacks) {
+    protected User(String netID, String name, Float rating, List<Feedback> feedbacks) {
         this.netID = netID;
         this.name = name;
         this.rating = rating;
