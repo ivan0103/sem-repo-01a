@@ -13,6 +13,13 @@ public class Expertise {
     @Column(name = "expertise")
     private String expertiseString;
 
+    /**
+    Constructor
+     */
+    public Expertise(String string){
+        this.expertiseString = string;
+    }
+
     @ManyToMany(mappedBy = "expertiseSet")
     private Set<GenericPost> genericPostSet = new HashSet<>();
 
