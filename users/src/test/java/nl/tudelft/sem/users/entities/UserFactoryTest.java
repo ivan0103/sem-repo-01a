@@ -1,15 +1,10 @@
-package nl.tudelft.sem.users;
+package nl.tudelft.sem.users.entities;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
-import nl.tudelft.sem.users.entities.Company;
-import nl.tudelft.sem.users.entities.Feedback;
-import nl.tudelft.sem.users.entities.Student;
-import nl.tudelft.sem.users.entities.User;
-import nl.tudelft.sem.users.entities.UserFactory;
 import org.junit.jupiter.api.Test;
 
 

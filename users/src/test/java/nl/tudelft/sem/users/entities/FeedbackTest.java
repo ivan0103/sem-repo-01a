@@ -1,4 +1,4 @@
-package nl.tudelft.sem.users;
+package nl.tudelft.sem.users.entities;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -7,9 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.ArrayList;
 import java.util.Objects;
-import nl.tudelft.sem.users.entities.Feedback;
-import nl.tudelft.sem.users.entities.User;
-import nl.tudelft.sem.users.entities.UserFactory;
 import org.junit.jupiter.api.Test;
 
 
@@ -80,3 +77,4 @@ public class FeedbackTest {
         assertEquals(toString, feedback.toString());
     }
 }
+
