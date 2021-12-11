@@ -5,8 +5,11 @@ import nl.tudelft.sem.genericservicepost.entities.GenericPost;
 import nl.tudelft.sem.genericservicepost.entities.StudentOffer;
 import nl.tudelft.sem.genericservicepost.repositories.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 public class ServiceRequestPostTest {
@@ -37,6 +40,20 @@ public class ServiceRequestPostTest {
         genericPost1.setDuration(1);
 
         genericPost.getExpertiseSet().add(new Expertise("A"));
-        genericPost1.getExpertiseSet().add(new Expertise("B"));
+        genericPost1.getExpertiseSet().add(new Expertise("A"));
     }
+
+    @Test
+    void createGenericPost(){
+        GenericPost post = serviceRequestPost.createPost(genericPost);
+        assertThat(post).isEqualTo(genericPost);
+    }
+
+    @Test
+    void createPostSameExpertise(){
+        serviceRequestPost.createPost(genericPost);
+        GenericPost post = serviceRequestPost.createPost(genericPost1);
+        assertThat(post).isEqualTo(genericPost1);
+    }
+
 }
