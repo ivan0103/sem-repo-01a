@@ -32,6 +32,18 @@ public class ErrorResponse {
     }
 
     /**
+     * Instantiates a new Error response.
+     *
+     * @param message the message
+     * @param status  the status
+     */
+    public ErrorResponse(String message, HttpStatus status) {
+        this.message = message;
+        this.status =  status.value();
+        this.error = status.getReasonPhrase();
+    }
+
+    /**
      * Gets message.
      *
      * @return the message

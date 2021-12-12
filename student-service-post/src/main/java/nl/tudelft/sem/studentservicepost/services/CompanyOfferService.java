@@ -39,12 +39,18 @@ public class CompanyOfferService {
      * @param postId       the post id
      * @return the company offer
      */
-    public CompanyOffer createOffer(CompanyOffer companyOffer, String postId) {
+    public CompanyOffer createOffer(CompanyOffer companyOffer, String postId)
+            throws PostNotFoundException {
         // Find post using PostId, add to companyOffer obj then save, do something if not found
 
         companyOffer.setId(null);
+        long postIdL;
 
-        long postIdL = Long.parseLong(postId); // TODO catch NumberFormatException
+        try {
+            postIdL = Long.parseLong(postId);
+        } catch (NumberFormatException e) {
+            throw new PostNotFoundException();
+        }
         if (postRepository.existsById(postIdL)) {
             Post post = postRepository.getPostById(postIdL);
             post.getCompanyOfferSet().add(companyOffer);
@@ -86,7 +92,12 @@ public class CompanyOfferService {
      * @return set of all offers
      */
     public Set<CompanyOffer> getByPostId(String postId) {
-        long postIdL = Long.parseLong(postId); // TODO catch NumberFormatException
+        long postIdL;
+        try {
+            postIdL = Long.parseLong(postId);
+        } catch (NumberFormatException e) {
+            throw new PostNotFoundException();
+        }
         Set<CompanyOffer> result;
         if (postRepository.existsById(postIdL)) {
             Post toCheck = postRepository.getPostById(postIdL);

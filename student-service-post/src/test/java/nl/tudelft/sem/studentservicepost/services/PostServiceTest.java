@@ -158,7 +158,7 @@ class PostServiceTest {
         tmp.setPricePerHour(new BigDecimal("42.00"));
         tmp.getCompetencySet().add(comp2);
 
-        Post edited = postService.editPost(tmp);
+        Post edited = postService.editPost(tmp, "1");
 
         Post retrieved = postRepository.getPostById(tmp.getId());
 
@@ -175,9 +175,9 @@ class PostServiceTest {
         Long realId = postService.createPost(post).getId();
 
         Post toEdit = new Post();
-        toEdit.setId(realId + 100L); // set id to something different from existing post
+        //toEdit.setId(realId + 100L); // set id to something different from existing post
 
-        assertThatThrownBy(() -> postService.editPost(toEdit))
+        assertThatThrownBy(() -> postService.editPost(toEdit, "999999"))
             .isInstanceOf(PostNotFoundException.class);
         postRepository.delete(toEdit);
 
@@ -197,7 +197,7 @@ class PostServiceTest {
         toEdit.setAuthor("anotherguy");
 
 
-        assertThatThrownBy(() -> postService.editPost(toEdit))
+        assertThatThrownBy(() -> postService.editPost(toEdit, "1"))
             .isInstanceOf(InvalidEditException.class);
 
     }
