@@ -1,5 +1,9 @@
 package nl.tudelft.sem.studentservicepost.services;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Set;
 import nl.tudelft.sem.studentservicepost.entities.Competency;
 import nl.tudelft.sem.studentservicepost.entities.Expertise;
 import nl.tudelft.sem.studentservicepost.entities.Post;
@@ -71,7 +75,8 @@ public class PostService {
      */
     public Post editPost(Post post) {
         // TODO check if the user can actually edit this post, related to authentication
-        if (postRepository.existsById(post.getId())) {
+        Long id = post.getId();
+        if (postRepository.existsById(id)) {
             Post toEdit = postRepository.getPostById(post.getId());
             if (toEdit.getAuthor().equals(post.getAuthor())) {
                 // this only checks that NetID is same
@@ -83,5 +88,38 @@ public class PostService {
             throw new PostNotFoundException();
         }
 
+    }
+
+    /**
+     * Search by keyword.
+     *
+     * @param keyword the keyword
+     * @return the collection
+     */
+    public Collection<Post> searchByKeyword(String keyword) {
+        keyword = Competency.makeSearchable(keyword);
+        Collection<Competency> competencies =
+            competencyRepository.getAllBySearchableStringContaining(keyword);
+
+        Collection<Post> result = new HashSet<>();
+
+        for (Competency competency : competencies) {
+            result.addAll(postRepository.getAllByCompetencySetContaining(competency));
+        }
+
+        Collection<Expertise> expertises =
+            expertiseRepository.getAllBySearchableStringContaining(keyword);
+        for (Expertise expertise : expertises) {
+            result.addAll(postRepository.getAllByExpertiseSetContaining(expertise));
+        }
+
+        for (Post post : result) {
+            post.setCompanyOfferSet(null);
+        }
+        return result;
+    }
+
+    public Collection<Post> getAll() {
+        return postRepository.findAll();
     }
 }

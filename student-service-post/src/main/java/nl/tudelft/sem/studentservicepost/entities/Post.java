@@ -1,6 +1,5 @@
 package nl.tudelft.sem.studentservicepost.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -23,6 +22,8 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 
 // Validation docs: https://javaee.github.io/javaee-spec/javadocs/javax/validation/constraints/package-summary.html
@@ -56,6 +57,7 @@ public class Post {
         joinColumns = {@JoinColumn(name = "post_id")},
         inverseJoinColumns = {@JoinColumn(name = "expertise")}
     )
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Set<Expertise> expertiseSet = new HashSet<>();
 
     @NotEmpty(message = "At least 1 competency must be provided!")
@@ -66,11 +68,13 @@ public class Post {
         joinColumns = {@JoinColumn(name = "post_id")},
         inverseJoinColumns = {@JoinColumn(name = "competency")}
     )
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Set<Competency> competencySet = new HashSet<>();
 
     // Prevent company offer spoofing when creating a new post
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<CompanyOffer> companyOfferSet = new HashSet<>();
 
 
@@ -78,7 +82,7 @@ public class Post {
     }
 
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(Long id) {
@@ -133,7 +137,6 @@ public class Post {
             + ", pricePerHour=" + pricePerHour
             + ", expertiseSet=" + expertiseSet
             + ", competencySet=" + competencySet
-            + ", companyOfferSet=" + companyOfferSet
             + '}';
     }
 
@@ -149,12 +152,11 @@ public class Post {
         return Objects.equals(author, post.author)
             && Objects.equals(pricePerHour, post.pricePerHour)
             && Objects.equals(expertiseSet, post.expertiseSet)
-            && Objects.equals(competencySet, post.competencySet)
-            && Objects.equals(companyOfferSet, post.companyOfferSet);
+            && Objects.equals(competencySet, post.competencySet);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(author, pricePerHour, expertiseSet, competencySet, companyOfferSet);
+        return Objects.hash(author, pricePerHour, expertiseSet, competencySet);
     }
 }
