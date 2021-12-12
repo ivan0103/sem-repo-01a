@@ -142,7 +142,7 @@ class CompanyOfferServiceTest {
 
 
         assertThatThrownBy(() -> companyOfferService.createOffer(companyOffer, "a valid id lol"))
-            .isInstanceOf(NumberFormatException.class);
+            .isInstanceOf(PostNotFoundException.class);
     }
 
     @Test
@@ -212,7 +212,7 @@ class CompanyOfferServiceTest {
             new HashSet<>(List.of(inserted)));
 
         assertThatThrownBy(() -> companyOfferService.getByPostId("lmao")).isInstanceOf(
-            NumberFormatException.class);
+           PostNotFoundException.class);
 
     }
 

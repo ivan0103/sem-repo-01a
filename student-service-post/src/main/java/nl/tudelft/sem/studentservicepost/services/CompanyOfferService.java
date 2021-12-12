@@ -45,7 +45,6 @@ public class CompanyOfferService {
 
         companyOffer.setId(null);
         long postIdL;
-
         try {
             postIdL = Long.parseLong(postId);
         } catch (NumberFormatException e) {
