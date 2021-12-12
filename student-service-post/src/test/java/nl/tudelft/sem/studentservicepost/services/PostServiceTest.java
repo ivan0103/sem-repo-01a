@@ -172,8 +172,6 @@ class PostServiceTest {
 
     @Test
     void editNonExistentPost() {
-        Long realId = postService.createPost(post).getId();
-
         Post toEdit = new Post();
         //toEdit.setId(realId + 100L); // set id to something different from existing post
 

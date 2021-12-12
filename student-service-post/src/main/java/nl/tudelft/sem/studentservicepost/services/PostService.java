@@ -76,24 +76,24 @@ public class PostService {
         long id;
         try {
             id = Long.parseLong(postId);
+
+            if (postRepository.existsById(id)) {
+                Post toEdit = postRepository.getPostById(id);
+
+                // this only checks that NetID is same
+                if (toEdit.getAuthor().equals(post.getAuthor())) {
+                    post.setId(toEdit.getId());
+                    return postRepository.save(post);
+                } else {
+                    throw new InvalidEditException();
+                }
+            } else {
+                throw new PostNotFoundException();
+            }
+
         } catch (NumberFormatException e) {
             throw new PostNotFoundException();
         }
-
-        if (postRepository.existsById(id)) {
-            Post toEdit = postRepository.getPostById(id);
-
-            // this only checks that NetID is same
-            if (toEdit.getAuthor().equals(post.getAuthor())) {
-                post.setId(toEdit.getId());
-                return postRepository.save(post);
-            } else {
-                throw new InvalidEditException();
-            }
-        } else {
-            throw new PostNotFoundException();
-        }
-
     }
 
     /**

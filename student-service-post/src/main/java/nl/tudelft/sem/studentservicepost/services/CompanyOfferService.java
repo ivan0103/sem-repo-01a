@@ -1,6 +1,8 @@
 package nl.tudelft.sem.studentservicepost.services;
 
 import java.util.Set;
+import java.util.regex.Pattern;
+
 import nl.tudelft.sem.studentservicepost.entities.CompanyOffer;
 import nl.tudelft.sem.studentservicepost.entities.Expertise;
 import nl.tudelft.sem.studentservicepost.entities.Post;
@@ -44,44 +46,42 @@ public class CompanyOfferService {
         // Find post using PostId, add to companyOffer obj then save, do something if not found
 
         companyOffer.setId(null);
-        long postIdL;
         try {
-            postIdL = Long.parseLong(postId);
+            long postIdL = Long.parseLong(postId);
+            if (postRepository.existsById(postIdL)) {
+                Post post = postRepository.getPostById(postIdL);
+                post.getCompanyOfferSet().add(companyOffer);
+                companyOffer.setPost(post);
+
+                for (Expertise expertise : companyOffer.getExpertise()) {
+                    if (expertiseRepository.existsById(expertise.getExpertiseString())) {
+                        Expertise tmp = expertiseRepository.getExpertiseByExpertiseString(
+                                expertise.getExpertiseString());
+                        tmp.getOfferSet().add(companyOffer);
+                        expertiseRepository.save(tmp);
+                    } else {
+                        expertiseRepository.save(expertise);
+                    }
+                }
+
+                for (Requirement requirement : companyOffer.getRequirementsSet()) {
+                    if (requirementRepository.existsById(requirement.getRequirementString())) {
+                        Requirement tmp = requirementRepository.getRequirementByRequirementString(
+                                requirement.getRequirementString());
+                        tmp.getCompanyOfferSet().add(companyOffer);
+                        requirementRepository.save(tmp);
+                    } else {
+                        requirementRepository.save(requirement);
+                    }
+                }
+                postRepository.save(post);
+                return companyOfferRepository.save(companyOffer);
+            } else {
+                throw new PostNotFoundException();
+            }
         } catch (NumberFormatException e) {
             throw new PostNotFoundException();
         }
-        if (postRepository.existsById(postIdL)) {
-            Post post = postRepository.getPostById(postIdL);
-            post.getCompanyOfferSet().add(companyOffer);
-            companyOffer.setPost(post);
-
-            for (Expertise expertise : companyOffer.getExpertise()) {
-                if (expertiseRepository.existsById(expertise.getExpertiseString())) {
-                    Expertise tmp = expertiseRepository.getExpertiseByExpertiseString(
-                        expertise.getExpertiseString());
-                    tmp.getOfferSet().add(companyOffer);
-                    expertiseRepository.save(tmp);
-                } else {
-                    expertiseRepository.save(expertise);
-                }
-            }
-
-            for (Requirement requirement : companyOffer.getRequirementsSet()) {
-                if (requirementRepository.existsById(requirement.getRequirementString())) {
-                    Requirement tmp = requirementRepository.getRequirementByRequirementString(
-                        requirement.getRequirementString());
-                    tmp.getCompanyOfferSet().add(companyOffer);
-                    requirementRepository.save(tmp);
-                } else {
-                    requirementRepository.save(requirement);
-                }
-            }
-            postRepository.save(post);
-            return companyOfferRepository.save(companyOffer);
-        } else {
-            throw new PostNotFoundException();
-        }
-
     }
 
     /**
@@ -94,16 +94,19 @@ public class CompanyOfferService {
         long postIdL;
         try {
             postIdL = Long.parseLong(postId);
+
+            Set<CompanyOffer> result;
+            if (postRepository.existsById(postIdL)) {
+                Post toCheck = postRepository.getPostById(postIdL);
+                result = companyOfferRepository.getAllByPost(toCheck);
+            } else {
+                throw new PostNotFoundException();
+            }
+            return result;
         } catch (NumberFormatException e) {
             throw new PostNotFoundException();
         }
-        Set<CompanyOffer> result;
-        if (postRepository.existsById(postIdL)) {
-            Post toCheck = postRepository.getPostById(postIdL);
-            result = companyOfferRepository.getAllByPost(toCheck);
-        } else {
-            throw new PostNotFoundException();
-        }
-        return result;
+
+
     }
 }
