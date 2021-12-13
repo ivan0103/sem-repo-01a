@@ -24,12 +24,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @WebMvcTest(UserController.class)
 public class UserControllerTest {
 
@@ -53,7 +51,7 @@ public class UserControllerTest {
     private final transient UserController userController = new UserController(userService);
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         userService.addUser(user1.getNetID(), user1.getName(), ((Student) user1).getRole());
         userService.addUser(user2.getNetID(), user2.getName(), ((Company) user2).getRole());
     }
