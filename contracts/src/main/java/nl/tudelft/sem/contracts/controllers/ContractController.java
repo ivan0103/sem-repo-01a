@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import javax.servlet.http.HttpServletResponse;
 import nl.tudelft.sem.contracts.entities.Contract;
 import nl.tudelft.sem.contracts.services.ContractService;
+import nl.tudelft.sem.contracts.services.DetailsCheckService;
 import nl.tudelft.sem.contracts.services.PdfGeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class ContractController {
     private final transient ContractService contractService;
     private final transient PdfGeneratorService pdfGeneratorService;
+    private final transient DetailsCheckService detailsCheckService;
 
     /**
      * This auto-wires different services to allow this controller class to use their functions.
@@ -26,9 +28,11 @@ public class ContractController {
      */
     @Autowired
     public ContractController(ContractService contractService,
-                              PdfGeneratorService pdfGeneratorService) {
+                              PdfGeneratorService pdfGeneratorService,
+                              DetailsCheckService detailsCheckService) {
         this.contractService = contractService;
         this.pdfGeneratorService = pdfGeneratorService;
+        this.detailsCheckService = detailsCheckService;
     }
 
     /**
@@ -36,9 +40,19 @@ public class ContractController {
      *
      * @param contract - the contract to save.
      * @return The saved contract.
+     * @throws Exception - if contract details are invalid.
      */
     @PostMapping("/create")
-    public Contract create(@RequestParam Contract contract) {
+    public Contract create(@RequestParam Contract contract) throws Exception {
+
+        if (!detailsCheckService.checkContractDates(contract.getStartDate(),
+                contract.getEndDate())) {
+            throw new Exception("Invalid start or end dates for contract");
+        }
+
+        if (!detailsCheckService.checkContractWorkHours(contract.getHoursPerWeek())) {
+            throw new Exception("hours per week is more than allowed 20h");
+        }
         return contractService.create(contract);
     }
 
@@ -95,12 +109,21 @@ public class ContractController {
      *
      * @param contract - the contract to change with new details.
      * @return The saved contract
-     * @throws Exception - If id of contract does not exist in database.
+     * @throws Exception - If id of contract does not exist in database or new details are invalid.
      */
     @PostMapping("/modify")
     public Contract modifyContract(@RequestParam Contract contract) throws Exception {
         if (!contractService.exists(contract.getId())) {
             throw new Exception("Invalid contract id. Contract Id does not exist in database.");
+        }
+
+        if (!detailsCheckService.checkContractDates(contract.getStartDate(),
+                contract.getEndDate())) {
+            throw new Exception("Invalid start or end dates for contract");
+        }
+
+        if (!detailsCheckService.checkContractWorkHours(contract.getHoursPerWeek())) {
+            throw new Exception("hours per week is more than allowed 20h");
         }
         return contractService.create(contract);
     }
