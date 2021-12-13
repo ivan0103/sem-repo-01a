@@ -11,10 +11,10 @@ import javax.persistence.ManyToMany;
 @Entity
 public class Expertise {
 
-    protected Expertise() {
+    public Expertise() {
     }
 
-    protected Expertise(String string) {
+    public Expertise(String string) {
         this.expertiseString = string;
     }
 

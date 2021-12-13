@@ -13,6 +13,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "generic_posts")
@@ -26,9 +29,15 @@ public class GenericPost {
     @Column(name = "author_id")
     private String author;
 
+    @NotNull(message = "Minimum weekly hours cannot be null!")
+    @Min(value = 0, message = "Minimum weekly hours cannot be negative!")
+    @Max(value = 20, message = "Maximum weekly hours cannot be above 20!")
     @Column(name = "hours_per_week")
     private int hoursPerWeek;
 
+    @NotNull(message = "Duration cannot be null!")
+    @Min(value = 1, message = "Duration must be above 1 month!")
+    @Max(value = 6, message = "Duration cannot be above 6 months!")
     @Column(name = "duration")
     private int duration;
 
