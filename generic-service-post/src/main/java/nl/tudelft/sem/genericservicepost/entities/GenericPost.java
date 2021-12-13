@@ -1,6 +1,7 @@
 package nl.tudelft.sem.genericservicepost.entities;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,7 +21,7 @@ public class GenericPost {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "generic_post_id")
-    private long id;
+    private Long id;
 
     @Column(name = "author_id")
     private String author;
@@ -42,7 +43,7 @@ public class GenericPost {
     @OneToMany
     private Set<StudentOffer> studentOfferSet = new HashSet<>();
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -88,5 +89,45 @@ public class GenericPost {
 
     public void setStudentOfferSet(Set<StudentOffer> studentOfferSet) {
         this.studentOfferSet = studentOfferSet;
+    }
+
+    @Override
+    public String toString() {
+        return "GenericPost{"
+                + "id=" + id
+                + ", author='"
+                + author + '\''
+                + ", hoursPerWeek="
+                + hoursPerWeek + ", duration="
+                + duration + ", expertiseSet="
+                + expertiseSet + ", studentOfferSet="
+                + studentOfferSet + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        GenericPost that = (GenericPost) o;
+        return getHoursPerWeek() == that.getHoursPerWeek()
+                && getDuration() == that.getDuration()
+                && Objects.equals(getId(), that.getId())
+                && Objects.equals(getAuthor(), that.getAuthor())
+                && Objects.equals(getExpertiseSet(), that.getExpertiseSet())
+                && Objects.equals(getStudentOfferSet(), that.getStudentOfferSet());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(),
+                getAuthor(),
+                getHoursPerWeek(),
+                getDuration(),
+                getExpertiseSet(),
+                getStudentOfferSet());
     }
 }
