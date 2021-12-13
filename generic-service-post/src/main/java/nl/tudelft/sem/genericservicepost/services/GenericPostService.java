@@ -2,10 +2,14 @@ package nl.tudelft.sem.genericservicepost.services;
 
 import nl.tudelft.sem.genericservicepost.entities.Expertise;
 import nl.tudelft.sem.genericservicepost.entities.GenericPost;
+import nl.tudelft.sem.genericservicepost.exceptions.GenericPostNotFoundException;
+import nl.tudelft.sem.genericservicepost.exceptions.InvalidEditException;
 import nl.tudelft.sem.genericservicepost.repositories.ExpertiseRepository;
 import nl.tudelft.sem.genericservicepost.repositories.GenericPostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.security.GeneralSecurityException;
 
 @Service
 public class GenericPostService {
@@ -40,4 +44,23 @@ public class GenericPostService {
         return genericPost;
     }
 
+    /**
+     * Edit generic post and save it.
+     *
+     * @param genericPost the generic Post
+     * @return the generic Post
+     * @throws GenericPostNotFoundException if id of the generic post was not found.
+     */
+    public GenericPost editGenericPost(GenericPost genericPost){
+        if (genericPostRepository.existsById(genericPost.getId())){
+            GenericPost edit = genericPostRepository.getGenericPostById(genericPost.getId());
+            if (edit.getAuthor().equals(genericPost.getAuthor())){
+                return genericPostRepository.save(genericPost);
+            }
+            else{
+                throw new InvalidEditException();
+            }
+        }
+        else throw new GenericPostNotFoundException();
+    }
 }
