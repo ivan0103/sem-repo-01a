@@ -2,8 +2,6 @@ package nl.tudelft.sem.studentservicepost.services;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
 import nl.tudelft.sem.studentservicepost.entities.Competency;
 import nl.tudelft.sem.studentservicepost.entities.Expertise;
 import nl.tudelft.sem.studentservicepost.entities.Post;
@@ -73,21 +71,29 @@ public class PostService {
      * @return the post
      * @throws PostNotFoundException id the post is not found in the database.
      */
-    public Post editPost(Post post) {
+    public Post editPost(Post post, String postId) {
         // TODO check if the user can actually edit this post, related to authentication
-        Long id = post.getId();
-        if (postRepository.existsById(id)) {
-            Post toEdit = postRepository.getPostById(post.getId());
-            if (toEdit.getAuthor().equals(post.getAuthor())) {
+        long id;
+        try {
+            id = Long.parseLong(postId);
+
+            if (postRepository.existsById(id)) {
+                Post toEdit = postRepository.getPostById(id);
+
                 // this only checks that NetID is same
-                return postRepository.save(post);
+                if (toEdit.getAuthor().equals(post.getAuthor())) {
+                    post.setId(toEdit.getId());
+                    return postRepository.save(post);
+                } else {
+                    throw new InvalidEditException();
+                }
             } else {
-                throw new InvalidEditException();
+                throw new PostNotFoundException();
             }
-        } else {
+
+        } catch (NumberFormatException e) {
             throw new PostNotFoundException();
         }
-
     }
 
     /**

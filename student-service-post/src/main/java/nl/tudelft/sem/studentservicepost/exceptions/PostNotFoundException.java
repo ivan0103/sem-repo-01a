@@ -9,4 +9,5 @@ public class PostNotFoundException extends RuntimeException {
 
     // Define serialization id to avoid serialization related bugs
     public static final long serialVersionUID = 1L;
+
 }

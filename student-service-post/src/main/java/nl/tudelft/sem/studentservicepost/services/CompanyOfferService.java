@@ -1,6 +1,8 @@
 package nl.tudelft.sem.studentservicepost.services;
 
 import java.util.Set;
+import java.util.regex.Pattern;
+
 import nl.tudelft.sem.studentservicepost.entities.CompanyOffer;
 import nl.tudelft.sem.studentservicepost.entities.Expertise;
 import nl.tudelft.sem.studentservicepost.entities.Post;
@@ -39,44 +41,47 @@ public class CompanyOfferService {
      * @param postId       the post id
      * @return the company offer
      */
-    public CompanyOffer createOffer(CompanyOffer companyOffer, String postId) {
+    public CompanyOffer createOffer(CompanyOffer companyOffer, String postId)
+            throws PostNotFoundException {
         // Find post using PostId, add to companyOffer obj then save, do something if not found
 
         companyOffer.setId(null);
+        try {
+            long postIdL = Long.parseLong(postId);
+            if (postRepository.existsById(postIdL)) {
+                Post post = postRepository.getPostById(postIdL);
+                post.getCompanyOfferSet().add(companyOffer);
+                companyOffer.setPost(post);
 
-        long postIdL = Long.parseLong(postId); // TODO catch NumberFormatException
-        if (postRepository.existsById(postIdL)) {
-            Post post = postRepository.getPostById(postIdL);
-            post.getCompanyOfferSet().add(companyOffer);
-            companyOffer.setPost(post);
-
-            for (Expertise expertise : companyOffer.getExpertise()) {
-                if (expertiseRepository.existsById(expertise.getExpertiseString())) {
-                    Expertise tmp = expertiseRepository.getExpertiseByExpertiseString(
-                        expertise.getExpertiseString());
-                    tmp.getOfferSet().add(companyOffer);
-                    expertiseRepository.save(tmp);
-                } else {
-                    expertiseRepository.save(expertise);
+                for (Expertise expertise : companyOffer.getExpertise()) {
+                    if (expertiseRepository.existsById(expertise.getExpertiseString())) {
+                        Expertise tmp = expertiseRepository.getExpertiseByExpertiseString(
+                                expertise.getExpertiseString());
+                        tmp.getOfferSet().add(companyOffer);
+                        expertiseRepository.save(tmp);
+                    } else {
+                        expertiseRepository.save(expertise);
+                    }
                 }
-            }
 
-            for (Requirement requirement : companyOffer.getRequirementsSet()) {
-                if (requirementRepository.existsById(requirement.getRequirementString())) {
-                    Requirement tmp = requirementRepository.getRequirementByRequirementString(
-                        requirement.getRequirementString());
-                    tmp.getCompanyOfferSet().add(companyOffer);
-                    requirementRepository.save(tmp);
-                } else {
-                    requirementRepository.save(requirement);
+                for (Requirement requirement : companyOffer.getRequirementsSet()) {
+                    if (requirementRepository.existsById(requirement.getRequirementString())) {
+                        Requirement tmp = requirementRepository.getRequirementByRequirementString(
+                                requirement.getRequirementString());
+                        tmp.getCompanyOfferSet().add(companyOffer);
+                        requirementRepository.save(tmp);
+                    } else {
+                        requirementRepository.save(requirement);
+                    }
                 }
+                postRepository.save(post);
+                return companyOfferRepository.save(companyOffer);
+            } else {
+                throw new PostNotFoundException();
             }
-            postRepository.save(post);
-            return companyOfferRepository.save(companyOffer);
-        } else {
+        } catch (NumberFormatException e) {
             throw new PostNotFoundException();
         }
-
     }
 
     /**
@@ -86,14 +91,22 @@ public class CompanyOfferService {
      * @return set of all offers
      */
     public Set<CompanyOffer> getByPostId(String postId) {
-        long postIdL = Long.parseLong(postId); // TODO catch NumberFormatException
-        Set<CompanyOffer> result;
-        if (postRepository.existsById(postIdL)) {
-            Post toCheck = postRepository.getPostById(postIdL);
-            result = companyOfferRepository.getAllByPost(toCheck);
-        } else {
+        long postIdL;
+        try {
+            postIdL = Long.parseLong(postId);
+
+            Set<CompanyOffer> result;
+            if (postRepository.existsById(postIdL)) {
+                Post toCheck = postRepository.getPostById(postIdL);
+                result = companyOfferRepository.getAllByPost(toCheck);
+            } else {
+                throw new PostNotFoundException();
+            }
+            return result;
+        } catch (NumberFormatException e) {
             throw new PostNotFoundException();
         }
-        return result;
+
+
     }
 }
