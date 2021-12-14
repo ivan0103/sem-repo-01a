@@ -62,6 +62,22 @@ public class Feedback {
      * @param id the id of the feedback
      * @param text the actual feedback
      * @param rating the rating of the feedback
+     * @param user the owner of the feedback
+     */
+
+    public Feedback(Long id, String text, Integer rating, User user) {
+        this.id = id;
+        this.text = text;
+        this.rating = rating;
+        this.user = user;
+    }
+
+    /**
+     * Constructor for feedback.
+     *
+     * @param id the id of the feedback
+     * @param text the actual feedback
+     * @param rating the rating of the feedback
      */
 
     public Feedback(Long id, String text, Integer rating) {

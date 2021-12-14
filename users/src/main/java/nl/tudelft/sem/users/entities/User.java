@@ -160,7 +160,9 @@ public abstract class User {
      */
 
     public void addFeedback(Feedback feedback) {
-        this.feedbacks.add(feedback);
+        List<Feedback> newList = new ArrayList<>(this.feedbacks);
+        newList.add(feedback);
+        this.feedbacks = newList;
     }
 
     /**
