@@ -41,8 +41,8 @@ public class GenericPostServiceTest  {
         genericPost.setDuration(5);
         genericPost1.setDuration(1);
 
-        genericPost.getExpertiseSet().add(new Expertise("A"));
-        genericPost1.getExpertiseSet().add(new Expertise("A"));
+        genericPost.getExpertiseSet().add(new Expertise("ABC"));
+        genericPost1.getExpertiseSet().add(new Expertise("ABC"));
     }
 
     @Test
