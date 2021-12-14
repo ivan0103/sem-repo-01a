@@ -16,4 +16,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Collection<Post> getAllByCompetencySetContaining(Competency competency);
 
     Collection<Post> getAllByExpertiseSetContaining(Expertise expertise);
+
 }
