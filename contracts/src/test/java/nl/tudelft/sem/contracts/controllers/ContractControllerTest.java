@@ -10,6 +10,7 @@ import java.time.LocalTime;
 import javax.servlet.http.HttpServletResponse;
 import nl.tudelft.sem.contracts.entities.Contract;
 import nl.tudelft.sem.contracts.services.ContractService;
+import nl.tudelft.sem.contracts.services.DetailsCheckService;
 import nl.tudelft.sem.contracts.services.PdfGeneratorService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,6 +32,9 @@ class ContractControllerTest {
     @Mock
     private transient PdfGeneratorService pdfGeneratorService;
 
+    @Mock
+    private transient DetailsCheckService detailsCheckService;
+
     private transient ArgumentCaptor<Contract> contractArgumentCaptor;
     private transient ArgumentCaptor<Long> idArgumentCaptor;
     private transient ArgumentCaptor<Long> idArgumentCaptor2;
@@ -38,7 +42,10 @@ class ContractControllerTest {
 
     @BeforeEach
     void setUp() {
-        underTest = new ContractController(contractService, pdfGeneratorService);
+        underTest = new ContractController(contractService,
+                pdfGeneratorService,
+                detailsCheckService);
+
         contract = new Contract(
                 "1",
                 "2",
@@ -59,6 +66,10 @@ class ContractControllerTest {
     void saveTest() throws Exception {
         //given
         given(contractService.create(contract)).willReturn(contract);
+        given(detailsCheckService.checkContractDates(contract.getStartDate(),
+                contract.getEndDate())).willReturn(true);
+        given(detailsCheckService.checkContractWorkHours(contract.getHoursPerWeek()))
+                .willReturn(true);
 
         //when
         Contract testCase = underTest.create(contract);
@@ -132,6 +143,10 @@ class ContractControllerTest {
         //given
         given(contractService.exists(contract.getId())).willReturn(true);
         given(contractService.create(contract)).willReturn(contract);
+        given(detailsCheckService.checkContractDates(contract.getStartDate(),
+                contract.getEndDate())).willReturn(true);
+        given(detailsCheckService.checkContractWorkHours(contract.getHoursPerWeek()))
+                .willReturn(true);
 
         //when
         Contract testCase = underTest.modifyContract(contract);
