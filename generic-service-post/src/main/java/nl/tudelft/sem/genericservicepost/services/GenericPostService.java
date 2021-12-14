@@ -6,6 +6,7 @@ import nl.tudelft.sem.genericservicepost.exceptions.GenericPostNotFoundException
 import nl.tudelft.sem.genericservicepost.exceptions.InvalidEditException;
 import nl.tudelft.sem.genericservicepost.repositories.ExpertiseRepository;
 import nl.tudelft.sem.genericservicepost.repositories.GenericPostRepository;
+import nl.tudelft.sem.genericservicepost.repositories.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -61,6 +62,8 @@ public class GenericPostService {
                 throw new InvalidEditException();
             }
         }
-        else throw new GenericPostNotFoundException();
+        else{
+            throw new GenericPostNotFoundException();
+        }
     }
 }

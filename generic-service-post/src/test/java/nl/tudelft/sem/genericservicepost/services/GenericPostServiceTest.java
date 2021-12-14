@@ -3,11 +3,13 @@ package nl.tudelft.sem.genericservicepost.services;
 
 import nl.tudelft.sem.genericservicepost.entities.Expertise;
 import nl.tudelft.sem.genericservicepost.entities.GenericPost;
-import nl.tudelft.sem.genericservicepost.repositories.PostRepository;
+import nl.tudelft.sem.genericservicepost.repositories.GenericPostRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -17,7 +19,7 @@ public class GenericPostServiceTest  {
     transient GenericPost genericPost1;
 
     @Autowired
-    transient PostRepository postRepository;
+    transient GenericPostRepository postRepository;
 
     @Autowired
     transient GenericPostService genericPostService;
@@ -49,4 +51,17 @@ public class GenericPostServiceTest  {
         assertThat(post).isEqualTo(genericPost);
     }
 
+    @Test
+    void editGenericPost(){
+        GenericPost tmp = genericPostService.createGenericPost(genericPost);
+
+        tmp.setDuration(3);
+
+        GenericPost edited = genericPostService.editGenericPost(tmp);
+
+        GenericPost retrieved = postRepository.getGenericPostById(tmp.getId());
+
+        assertThat(edited).isEqualTo(retrieved);
+        assertThat(edited.getDuration()).isEqualTo(3);
+    }
 }
