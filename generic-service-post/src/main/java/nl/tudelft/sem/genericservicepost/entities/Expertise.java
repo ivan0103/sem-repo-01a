@@ -1,28 +1,32 @@
 package nl.tudelft.sem.genericservicepost.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sun.istack.NotNull;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 @Entity
 public class Expertise {
 
-    protected Expertise() {
+    public Expertise() {
     }
 
-    protected Expertise(String string) {
+    public Expertise(String string) {
         this.expertiseString = string;
     }
 
     @Id
     @Column(name = "expertise")
+    @NotNull
+    @Size(min =2,max = 20)
     private String expertiseString;
 
-    @ManyToMany(mappedBy = "expertiseSet")
+    @JsonIgnore
+    @ManyToMany(mappedBy = "expertiseSet", fetch = FetchType.EAGER)
     private Set<GenericPost> genericPostSet = new HashSet<>();
 
     public String getExpertiseString() {
@@ -60,6 +64,6 @@ public class Expertise {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getExpertiseString(), getGenericPostSet());
+        return Objects.hash(expertiseString);
     }
 }
