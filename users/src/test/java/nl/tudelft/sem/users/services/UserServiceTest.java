@@ -59,6 +59,7 @@ public class UserServiceTest {
         Mockito.when(userRepository.findById(user1.getNetID()))
                 .thenReturn(java.util.Optional.of(user1));
         assertEquals(user1, userService.getOneUser(user1.getNetID()));
+        assertNotEquals(user2, userService.getOneUser(user2.getNetID()));
     }
 
     @Test
