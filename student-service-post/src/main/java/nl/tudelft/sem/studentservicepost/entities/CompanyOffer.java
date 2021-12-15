@@ -1,6 +1,7 @@
 package nl.tudelft.sem.studentservicepost.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -11,12 +12,16 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.Valid;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -24,13 +29,13 @@ import javax.validation.constraints.Size;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @EnableTransactionManagement
 @Table(name = "offers")
 public class CompanyOffer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
     @Column(name = "offer_id")
     private Long id;
 
@@ -43,9 +48,9 @@ public class CompanyOffer {
     @Valid
     @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
-            name = "offer_requirement",
-            joinColumns = {@JoinColumn(name = "offer_id")},
-            inverseJoinColumns = {@JoinColumn(name = "requirement")}
+        name = "offer_requirement",
+        joinColumns = {@JoinColumn(name = "offer_id")},
+        inverseJoinColumns = {@JoinColumn(name = "requirement")}
     )
     private Set<Requirement> requirementsSet = new java.util.LinkedHashSet<>();
 
@@ -53,6 +58,11 @@ public class CompanyOffer {
     @Min(value = 0, message = "Minimum weekly hours must be cannot be negative!")
     @Column(name = "weekly_hours")
     private Integer weeklyHours;
+
+    @NotNull(message = "Price per hour cannot be null!")
+    @DecimalMin(value = "0.0", inclusive = true, message = "Price per hour must be a decimal >= 0!")
+    @Column(name = "price_per_hour")
+    private BigDecimal pricePerHour;
 
     @NotNull(message = "Total hours cannot be null!")
     @Min(value = 1, message = "Total hours must be > 0!")
@@ -63,9 +73,9 @@ public class CompanyOffer {
     @Valid
     @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
-            name = "offer_expertise",
-            joinColumns = {@JoinColumn(name = "offer_id")},
-            inverseJoinColumns = {@JoinColumn(name = "expertise")}
+        name = "offer_expertise",
+        joinColumns = {@JoinColumn(name = "offer_id")},
+        inverseJoinColumns = {@JoinColumn(name = "expertise")}
     )
     private Set<Expertise> expertise = new HashSet<>();
 
@@ -74,6 +84,10 @@ public class CompanyOffer {
     @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "post_id", referencedColumnName = "post_id")
     private Post post;
+
+    @OneToMany(mappedBy = "parent", fetch = FetchType.EAGER)
+    @JsonIgnore
+    private Set<ChangedOffer> changedOffers = new HashSet<>();
 
     public CompanyOffer() {
     }
@@ -134,17 +148,34 @@ public class CompanyOffer {
         this.post = post;
     }
 
+    public BigDecimal getPricePerHour() {
+        return pricePerHour;
+    }
+
+    public void setPricePerHour(BigDecimal pricePerHour) {
+        this.pricePerHour = pricePerHour;
+    }
+
+    public Set<ChangedOffer> getChangedOffers() {
+        return changedOffers;
+    }
+
+    public void setChangedOffers(
+        Set<ChangedOffer> changedOffers) {
+        this.changedOffers = changedOffers;
+    }
+
     @Override
     public String toString() {
         return "CompanyOffer{"
-                + "id=" + id
-                + ", companyId='" + companyId + '\''
-                + ", requirementsSet=" + requirementsSet
-                + ", weeklyHours=" + weeklyHours
-                + ", totalHours=" + totalHours
-                + ", expertise=" + expertise
-                + ", post=" + post
-                + '}';
+            + "id=" + id
+            + ", companyId='" + companyId + '\''
+            + ", requirementsSet=" + requirementsSet
+            + ", weeklyHours=" + weeklyHours
+            + ", totalHours=" + totalHours
+            + ", expertise=" + expertise
+            + ", post=" + post
+            + '}';
     }
 
     @Override
