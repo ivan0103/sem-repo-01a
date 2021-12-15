@@ -1,8 +1,6 @@
 package nl.tudelft.sem.studentservicepost.services;
 
 import java.util.Set;
-import java.util.regex.Pattern;
-
 import nl.tudelft.sem.studentservicepost.entities.CompanyOffer;
 import nl.tudelft.sem.studentservicepost.entities.Expertise;
 import nl.tudelft.sem.studentservicepost.entities.Post;
