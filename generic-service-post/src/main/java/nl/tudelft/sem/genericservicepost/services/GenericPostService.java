@@ -49,17 +49,15 @@ public class GenericPostService {
      * @return the generic Post
      * @throws GenericPostNotFoundException if id of the generic post was not found.
      */
-    public GenericPost editGenericPost(GenericPost genericPost){
-        if (genericPostRepository.existsById(genericPost.getId())){
+    public GenericPost editGenericPost(GenericPost genericPost) {
+        if (genericPostRepository.existsById(genericPost.getId())) {
             GenericPost edit = genericPostRepository.getGenericPostById(genericPost.getId());
-            if (edit.getAuthor().equals(genericPost.getAuthor())){
+            if (edit.getAuthor().equals(genericPost.getAuthor())) {
                 return genericPostRepository.save(genericPost);
-            }
-            else{
+            } else {
                 throw new InvalidEditException();
             }
-        }
-        else{
+        } else {
             throw new GenericPostNotFoundException();
         }
     }
