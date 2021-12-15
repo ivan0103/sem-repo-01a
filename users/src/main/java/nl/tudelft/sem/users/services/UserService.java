@@ -2,6 +2,7 @@ package nl.tudelft.sem.users.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import javassist.NotFoundException;
 import nl.tudelft.sem.users.entities.Feedback;
 import nl.tudelft.sem.users.entities.User;
 import nl.tudelft.sem.users.entities.UserFactory;
@@ -15,6 +16,8 @@ public class UserService {
 
     private final transient UserRepository userRepository;
     private final transient FeedbackRepository feedbackRepository;
+    private final transient String userNotFound = "User with this netID does not exist";
+    private final transient String feedbackNotFound = "Feedback with this id does not exist";
 
     /**
      * Constructor of UserService - It instantiates a new UserService object.
@@ -47,9 +50,9 @@ public class UserService {
      * @return the user
      */
 
-    public User getOneUser(String netID) {
+    public User getOneUser(String netID) throws NotFoundException {
         if (userRepository.findById(netID).isEmpty()) {
-            return null;
+            throw new NotFoundException(userNotFound);
         }
 
         return userRepository.findById(netID).get();
@@ -84,13 +87,15 @@ public class UserService {
      * @return a new feedback
      */
 
-    public Feedback addFeedback(String netID, String text, Integer rating, String toNetID) {
+    public Feedback addFeedback(String netID, String text, Integer rating, String toNetID)
+                                throws NotFoundException {
+
         if (userRepository.findById(netID).isEmpty()) {
-            return null;
+            throw new NotFoundException(userNotFound);
         }
 
         if (userRepository.findById(toNetID).isEmpty()) {
-            return null;
+            throw new NotFoundException(userNotFound);
         }
 
         User user = userRepository.findById(netID).get();
@@ -111,9 +116,9 @@ public class UserService {
      * @return the user that was deleted
      */
 
-    public User deleteUser(String netID) {
+    public User deleteUser(String netID) throws NotFoundException {
         if (userRepository.findById(netID).isEmpty()) {
-            return null;
+            throw new NotFoundException(userNotFound);
         }
 
         User userToBeDeleted = userRepository.findById(netID).get();
@@ -148,9 +153,9 @@ public class UserService {
      * @return an updated user
      */
 
-    public User updateUser(String netID, String name) {
+    public User updateUser(String netID, String name) throws NotFoundException {
         if (userRepository.findById(netID).isEmpty()) {
-            return null;
+            throw new NotFoundException(userNotFound);
         }
 
         User user = userRepository.findById(netID).get();
@@ -171,18 +176,19 @@ public class UserService {
      */
 
     public Feedback editFeedback(String netID, String text,
-                                 Integer rating, Long feedbackId, String toNetID) {
+                                 Integer rating, Long feedbackId, String toNetID)
+                                 throws NotFoundException {
 
         if (userRepository.findById(netID).isEmpty()) {
-            return null;
+            throw new NotFoundException(userNotFound);
         }
 
         if (userRepository.findById(toNetID).isEmpty()) {
-            return null;
+            throw new NotFoundException(userNotFound);
         }
 
         if (feedbackRepository.findById(feedbackId).isEmpty()) {
-            return null;
+            throw new NotFoundException(feedbackNotFound);
         }
 
         Feedback feedback = feedbackRepository.findById(feedbackId).get();
@@ -221,17 +227,19 @@ public class UserService {
      * @return the deleted feedback
      */
 
-    public Feedback deleteFeedback(String netID, Long feedbackId, String toNetID) {
+    public Feedback deleteFeedback(String netID, Long feedbackId, String toNetID)
+                                   throws NotFoundException {
+
         if (userRepository.findById(netID).isEmpty()) {
-            return null;
+            throw new NotFoundException(userNotFound);
         }
 
         if (userRepository.findById(toNetID).isEmpty()) {
-            return null;
+            throw new NotFoundException(userNotFound);
         }
 
         if (feedbackRepository.findById(feedbackId).isEmpty()) {
-            return null;
+            throw new NotFoundException(feedbackNotFound);
         }
 
         User user = userRepository.findById(netID).get();
