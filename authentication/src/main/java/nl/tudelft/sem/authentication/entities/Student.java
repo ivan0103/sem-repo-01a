@@ -1,16 +1,11 @@
-package nl.tudelft.sem.users.entities;
+package nl.tudelft.sem.authentication.entities;
 
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
 
 
-@Entity(name = "student")
-@DiscriminatorValue("Student")
 public class Student extends User {
-    @Column(name = "role")
+
     private String role;
 
     /**
@@ -122,3 +117,4 @@ public class Student extends User {
                 + '}';
     }
 }
+

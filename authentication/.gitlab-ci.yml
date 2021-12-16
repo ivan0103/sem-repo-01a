@@ -1,0 +1,30 @@
+image: gradle:6.7-jdk15
+
+stages:
+  - build
+  - staticAnalysis
+  - test
+
+users-build:
+  stage: build
+  script:
+    gradle :authentication:classes :authentication:testClasses
+
+users-checkStyle:
+  stage: staticAnalysis
+  script:
+    gradle :authentication:checkstyleMain :authentication:checkStyleTest
+  allow_failure: true
+
+users-PMD:
+  stage: staticAnalysis
+  script:
+    gradle :authentication:pmdMain :authentication:pmdTest
+  allow_failure: true
+
+users-test:
+  stage: test
+  script:
+    - gradle :authentication:test :authentication:jacocoTestReport :authentication:pitest
+    - cat authentication/build/reports/jacoco/test/html/index.html | grep -Po "Total.*?([0-9]{1,3})%"
+  coverage: /([0-9]{1,3})%/
