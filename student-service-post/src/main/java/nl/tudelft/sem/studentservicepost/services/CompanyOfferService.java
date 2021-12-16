@@ -196,8 +196,13 @@ public class CompanyOfferService {
         }
     }
 
+    /**
+     * Accepts a company offer.
+     *
+     * @param offerId the offer id
+     * @return the accepted company offer
+     */
     public CompanyOffer acceptOffer(String offerId) {
-
         long id;
         try {
             id = Long.parseLong(offerId);
@@ -205,7 +210,7 @@ public class CompanyOfferService {
             if (companyOfferRepository.existsById(id)) {
                 CompanyOffer offer = companyOfferRepository.getById(id);
                 offer.setAccepted(true);
-                return offer;
+                return companyOfferRepository.save(offer);
 
             } else {
                 throw new OfferNotFoundException();

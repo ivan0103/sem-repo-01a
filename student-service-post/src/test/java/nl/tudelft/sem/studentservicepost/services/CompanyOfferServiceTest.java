@@ -1,7 +1,6 @@
 package nl.tudelft.sem.studentservicepost.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -10,7 +9,6 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.swing.plaf.ViewportUI;
 import nl.tudelft.sem.studentservicepost.entities.ChangedOffer;
 import nl.tudelft.sem.studentservicepost.entities.CompanyOffer;
 import nl.tudelft.sem.studentservicepost.entities.Competency;
@@ -21,7 +19,6 @@ import nl.tudelft.sem.studentservicepost.exceptions.OfferNotFoundException;
 import nl.tudelft.sem.studentservicepost.exceptions.PostNotFoundException;
 import nl.tudelft.sem.studentservicepost.repositories.ChangedOfferRepository;
 import nl.tudelft.sem.studentservicepost.repositories.CompanyOfferRepository;
-import nl.tudelft.sem.studentservicepost.repositories.CompetencyRepository;
 import nl.tudelft.sem.studentservicepost.repositories.ExpertiseRepository;
 import nl.tudelft.sem.studentservicepost.repositories.PostRepository;
 import nl.tudelft.sem.studentservicepost.repositories.RequirementRepository;
@@ -31,41 +28,31 @@ import org.junit.jupiter.api.Test;
 import org.mockito.AdditionalAnswers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class CompanyOfferServiceTest {
 
-    transient Post post;
+    final transient String reqString = "being smort";
+    final transient String expString = "being not stupid";
+    final transient String companyName = "あなたばか";
+    final transient String price = "12.00";
 
+    transient Post post;
     @InjectMocks
     transient CompanyOfferService companyOfferService;
-
     @Mock
     transient CompanyOfferRepository companyOfferRepository;
-
     @Mock
     transient PostService postService;
-
     @Mock
     transient PostRepository postRepository;
-
     @Mock
     transient RequirementRepository requirementRepository;
-
     @Mock
     transient ExpertiseRepository expertiseRepository;
-
     @Mock
     transient ChangedOfferRepository changedOfferRepository;
-
-    final transient String reqString = "being smort";
-
-    final transient String expString = "being not stupid";
-
-    final transient String companyName = "あなたばか";
-
 
     @BeforeEach
     void setup() {
@@ -242,7 +229,7 @@ class CompanyOfferServiceTest {
         companyOffer.setTotalHours(420);
         companyOffer.setWeeklyHours(12);
 
-        companyOffer.setPricePerHour(new BigDecimal("18.00"));
+        companyOffer.setPricePerHour(new BigDecimal(price));
 
         String postId = post.getId().toString();
 
@@ -271,7 +258,7 @@ class CompanyOfferServiceTest {
         companyOffer.setTotalHours(420);
         companyOffer.setWeeklyHours(12);
 
-        companyOffer.setPricePerHour(new BigDecimal("12.00"));
+        companyOffer.setPricePerHour(new BigDecimal(price));
 
         String postId = post.getId().toString();
 
@@ -296,7 +283,7 @@ class CompanyOfferServiceTest {
         companyOffer.setTotalHours(420);
         companyOffer.setWeeklyHours(12);
 
-        companyOffer.setPricePerHour(new BigDecimal("12.00"));
+        companyOffer.setPricePerHour(new BigDecimal(price));
 
         String postId = post.getId().toString();
 
@@ -317,7 +304,7 @@ class CompanyOfferServiceTest {
         assertThat(result).hasSize(1).containsOnlyOnce(change);
 
         assertThatThrownBy(() -> companyOfferService.getChanges("liao")).isInstanceOf(
-            PostNotFoundException.class);
+            OfferNotFoundException.class);
     }
 
     @Test
@@ -331,7 +318,7 @@ class CompanyOfferServiceTest {
         companyOffer.setTotalHours(420);
         companyOffer.setWeeklyHours(12);
 
-        companyOffer.setPricePerHour(new BigDecimal("12.00"));
+        companyOffer.setPricePerHour(new BigDecimal(price));
 
         String postId = post.getId().toString();
 
@@ -355,4 +342,55 @@ class CompanyOfferServiceTest {
     }
 
 
+    @Test
+    void acceptOffer() {
+        CompanyOffer companyOffer = new CompanyOffer();
+
+        companyOffer.setCompanyId(companyName);
+        companyOffer.getExpertise().add(new Expertise(expString));
+        companyOffer.getRequirementsSet().add(new Requirement(reqString));
+
+        companyOffer.setTotalHours(420);
+        companyOffer.setWeeklyHours(12);
+
+        companyOffer.setPricePerHour(new BigDecimal(price));
+
+        String postId = post.getId().toString();
+
+        CompanyOffer inserted = companyOfferService.createOffer(companyOffer, postId);
+
+        when(companyOfferRepository.getById(1L)).thenReturn(inserted);
+
+        assertThat(inserted.isAccepted()).isFalse();
+
+        CompanyOffer updated = companyOfferService.acceptOffer("1");
+        assertThat(updated.isAccepted()).isTrue();
+    }
+
+    @Test
+    void acceptOfferWrongId() {
+        CompanyOffer companyOffer = new CompanyOffer();
+
+        companyOffer.setCompanyId(companyName);
+        companyOffer.getExpertise().add(new Expertise(expString));
+        companyOffer.getRequirementsSet().add(new Requirement(reqString));
+
+        companyOffer.setTotalHours(420);
+        companyOffer.setWeeklyHours(12);
+
+        companyOffer.setPricePerHour(new BigDecimal(price));
+
+        String postId = post.getId().toString();
+
+        CompanyOffer inserted = companyOfferService.createOffer(companyOffer, postId);
+
+        when(companyOfferRepository.getById(1L)).thenReturn(inserted);
+
+        assertThatThrownBy(() -> companyOfferService.acceptOffer("10")).isInstanceOf(
+            OfferNotFoundException.class);
+
+        assertThatThrownBy(() -> companyOfferService.acceptOffer("lmao")).isInstanceOf(
+            OfferNotFoundException.class);
+
+    }
 }
