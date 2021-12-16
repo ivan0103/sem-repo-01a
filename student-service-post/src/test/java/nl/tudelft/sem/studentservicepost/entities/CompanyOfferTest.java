@@ -1,7 +1,6 @@
 package nl.tudelft.sem.studentservicepost.entities;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.HashSet;
 import java.util.Set;

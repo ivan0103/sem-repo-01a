@@ -30,9 +30,10 @@ class RequirementTest {
     @Test
     void offerSetTest() {
         Requirement c = new Requirement();
-        Set<CompanyOffer> cSet = Set.of(new CompanyOffer("aaaa"), new CompanyOffer("bbbb"));
-        c.setCompanyOfferSet(cSet);
-        assertThat(c.getCompanyOfferSet()).isEqualTo(cSet);
+        Set<CompanyOffer> companyOfferSet =
+            Set.of(new CompanyOffer("aaaa"), new CompanyOffer("bbbb"));
+        c.setCompanyOfferSet(companyOfferSet);
+        assertThat(c.getCompanyOfferSet()).isEqualTo(companyOfferSet);
     }
 
     @Test

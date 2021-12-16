@@ -63,10 +63,11 @@ class ExpertiseTest {
 
     @Test
     void offerSet() {
-        Set<CompanyOffer> cSet = Set.of(new CompanyOffer("aaaa"), new CompanyOffer("bbbb"));
+        Set<CompanyOffer> companyOfferSet =
+            Set.of(new CompanyOffer("aaaa"), new CompanyOffer("bbbb"));
         Expertise e = new Expertise();
-        e.setOfferSet(cSet);
-        assertThat(e.getOfferSet()).isEqualTo(cSet);
+        e.setOfferSet(companyOfferSet);
+        assertThat(e.getOfferSet()).isEqualTo(companyOfferSet);
     }
 
 }
