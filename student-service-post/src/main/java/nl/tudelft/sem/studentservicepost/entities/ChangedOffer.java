@@ -33,6 +33,10 @@ public class ChangedOffer extends CompanyOffer {
     public ChangedOffer() {
     }
 
+    protected ChangedOffer(String id) {
+        super(id);
+    }
+
     /**
      * Instantiates a new Changed offer based on a parent offer.
      *

@@ -95,6 +95,10 @@ public class CompanyOffer {
     public CompanyOffer() {
     }
 
+    protected CompanyOffer(String company) {
+        this.companyId = company;
+    }
+
     public Long getId() {
         return id;
     }
@@ -199,11 +203,9 @@ public class CompanyOffer {
         }
         CompanyOffer that = (CompanyOffer) o;
         return Objects.equals(companyId, that.companyId)
-            && Objects.equals(requirementsSet, that.requirementsSet)
-            && Objects.equals(weeklyHours, that.weeklyHours)
-            && Objects.equals(totalHours, that.totalHours)
-            && Objects.equals(expertise, that.expertise)
             && Objects.equals(post, that.post);
+
+        //an offer is determined by poster and postee
     }
 
     @Override

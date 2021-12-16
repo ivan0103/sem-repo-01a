@@ -82,6 +82,10 @@ public class Post {
     public Post() {
     }
 
+    protected Post(String author) {
+        this.author = author;
+    }
+
     public Long getId() {
         return this.id;
     }

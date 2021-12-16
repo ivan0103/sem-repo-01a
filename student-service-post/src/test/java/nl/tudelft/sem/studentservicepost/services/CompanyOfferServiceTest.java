@@ -77,12 +77,12 @@ class CompanyOfferServiceTest {
         when(postRepository.getPostById(1L)).thenReturn(post);
 
         when(requirementRepository.existsById(any())).thenReturn(false);
-        when(requirementRepository.existsById(reqString)).thenReturn(true);
+        when(requirementRepository.existsById(reqString)).thenReturn(false, true);
         when(requirementRepository.getRequirementByRequirementString(reqString)).thenReturn(
             new Requirement(reqString));
 
         when(expertiseRepository.existsById(any())).thenReturn(false);
-        when(expertiseRepository.existsById(expString)).thenReturn(true);
+        when(expertiseRepository.existsById(expString)).thenReturn(false, true);
         when(expertiseRepository.getExpertiseByExpertiseString(expString)).thenReturn(
             new Expertise(expString));
 
@@ -113,6 +113,12 @@ class CompanyOfferServiceTest {
         CompanyOffer inserted = companyOfferService.createOffer(companyOffer, postId);
 
         assertThat(inserted).isEqualTo(companyOffer);
+
+        //insert a very similar second one
+        inserted.setCompanyId("another company");
+        inserted = companyOfferService.createOffer(companyOffer, postId);
+        assertThat(inserted.getCompanyId()).isEqualTo("another company");
+
     }
 
     @Test
@@ -308,6 +314,12 @@ class CompanyOfferServiceTest {
     }
 
     @Test
+    void getChangesNoOffer() {
+        assertThatThrownBy(() -> companyOfferService.getChanges("12345")).isInstanceOf(
+            OfferNotFoundException.class);
+    }
+
+    @Test
     void acceptChange() {
         CompanyOffer companyOffer = new CompanyOffer();
 
@@ -341,6 +353,17 @@ class CompanyOfferServiceTest {
             Percentage.withPercentage(1));
     }
 
+    @Test
+    void acceptChangesNoOffer() {
+        assertThatThrownBy(() -> companyOfferService.acceptChange("12345")).isInstanceOf(
+            OfferNotFoundException.class);
+    }
+
+    @Test
+    void acceptChangesNaN() {
+        assertThatThrownBy(() -> companyOfferService.acceptChange("gabbiano")).isInstanceOf(
+            OfferNotFoundException.class);
+    }
 
     @Test
     void acceptOffer() {
