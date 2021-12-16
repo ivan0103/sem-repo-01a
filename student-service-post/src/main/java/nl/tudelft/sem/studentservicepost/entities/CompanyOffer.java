@@ -60,7 +60,7 @@ public class CompanyOffer {
     private Integer weeklyHours;
 
     @NotNull(message = "Price per hour cannot be null!")
-    @DecimalMin(value = "0.0", inclusive = true, message = "Price per hour must be a decimal >= 0!")
+    @DecimalMin(value = "0.0", message = "Price per hour must be a decimal >= 0!")
     @Column(name = "price_per_hour")
     private BigDecimal pricePerHour;
 
@@ -88,6 +88,9 @@ public class CompanyOffer {
     @OneToMany(mappedBy = "parent", fetch = FetchType.EAGER)
     @JsonIgnore
     private Set<ChangedOffer> changedOffers = new HashSet<>();
+
+    @JsonIgnore
+    private boolean accepted = false;
 
     public CompanyOffer() {
     }
@@ -158,6 +161,14 @@ public class CompanyOffer {
 
     public Set<ChangedOffer> getChangedOffers() {
         return changedOffers;
+    }
+
+    public boolean isAccepted() {
+        return accepted;
+    }
+
+    public void setAccepted(boolean accepted) {
+        this.accepted = accepted;
     }
 
     public void setChangedOffers(
