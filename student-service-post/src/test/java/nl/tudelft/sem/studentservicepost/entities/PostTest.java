@@ -2,6 +2,7 @@ package nl.tudelft.sem.studentservicepost.entities;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -36,5 +37,44 @@ class PostTest {
     void testEqualsNull() {
         Post p = new Post();
         assertThat(p).isNotEqualTo(null);
+    }
+
+    @Test
+    void testEqualsSameUntilPrice() {
+        Post p = new Post("1");
+        Post q = new Post("1");
+        p.setPricePerHour(new BigDecimal("14.00"));
+        q.setPricePerHour(new BigDecimal("14.00"));
+        Set<Expertise> e = Set.of(new Expertise("exp"), new Expertise("exp1"));
+        p.setExpertiseSet(e);
+        assertThat(p).isNotEqualTo(q);
+    }
+
+    @Test
+    void testEqualsSameUntilExpertise() {
+        Post p = new Post("2");
+        Post q = new Post("2");
+        p.setPricePerHour(new BigDecimal("12.00"));
+        q.setPricePerHour(new BigDecimal("12.00"));
+        Set<Expertise> e = Set.of(new Expertise("abc"), new Expertise("bcd"));
+        p.setExpertiseSet(e);
+        q.setExpertiseSet(e);
+        p.setCompetencySet(Set.of());
+        q.setCompetencySet(Set.of(new Competency("efg")));
+        assertThat(p).isNotEqualTo(q);
+    }
+
+    @Test
+    void testEqualsSameEverything() {
+        Post p = new Post("3");
+        Post q = new Post("3");
+        p.setPricePerHour(new BigDecimal("18.00"));
+        q.setPricePerHour(new BigDecimal("18.00"));
+        Set<Expertise> e = Set.of(new Expertise("abc"), new Expertise("bcd"));
+        p.setExpertiseSet(e);
+        q.setExpertiseSet(e);
+        p.setCompetencySet(Set.of(new Competency("efg")));
+        q.setCompetencySet(Set.of(new Competency("efg")));
+        assertThat(p).isEqualTo(q);
     }
 }
