@@ -152,11 +152,11 @@ public class CompanyOfferService {
                 CompanyOffer tmp = companyOfferRepository.getById(id);
                 return tmp.getChangedOffers();
             } else {
-                throw new PostNotFoundException();
+                throw new OfferNotFoundException();
             }
 
         } catch (NumberFormatException e) {
-            throw new PostNotFoundException();
+            throw new OfferNotFoundException();
         }
     }
 
@@ -188,11 +188,33 @@ public class CompanyOfferService {
                 //  changedOfferRepository.deleteChangedOfferById(id);
                 return companyOfferRepository.save(toChange);
             } else {
-                throw new PostNotFoundException();
+                throw new OfferNotFoundException();
             }
 
         } catch (NumberFormatException e) {
-            throw new PostNotFoundException();
+            throw new OfferNotFoundException();
         }
+    }
+
+    public CompanyOffer acceptOffer(String offerId) {
+
+        long id;
+        try {
+            id = Long.parseLong(offerId);
+
+            if (companyOfferRepository.existsById(id)) {
+                CompanyOffer offer = companyOfferRepository.getById(id);
+                offer.setAccepted(true);
+                return offer;
+
+            } else {
+                throw new OfferNotFoundException();
+            }
+
+        } catch (NumberFormatException e) {
+            throw new OfferNotFoundException();
+        }
+
+
     }
 }
