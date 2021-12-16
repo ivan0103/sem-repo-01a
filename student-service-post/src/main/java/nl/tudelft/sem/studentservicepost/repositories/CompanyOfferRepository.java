@@ -2,7 +2,6 @@ package nl.tudelft.sem.studentservicepost.repositories;
 
 import java.util.Collection;
 import java.util.Set;
-import nl.tudelft.sem.studentservicepost.entities.ChangedOffer;
 import nl.tudelft.sem.studentservicepost.entities.CompanyOffer;
 import nl.tudelft.sem.studentservicepost.entities.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
