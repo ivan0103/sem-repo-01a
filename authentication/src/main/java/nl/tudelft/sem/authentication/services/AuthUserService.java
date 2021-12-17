@@ -70,7 +70,7 @@ public class AuthUserService {
 
         AuthUser authUser = authUserRepository.findById(netID).get();
 
-        if (authUser.getPassword().equals(password)) {
+        if (!authUser.getPassword().equals(password)) {
             return null;
         }
 
