@@ -45,20 +45,16 @@ public class AuthUserService {
             throw new IllegalArgumentException("Role mustn't be null!");
         }
 
-        AuthUser authUser = new AuthUser(netID, password, role);
-        Student student = null;
-        Company company = null;
-
         if (role.equals("student")) {
             try {
-                student = restTemplate.getForObject(
+                Student student = restTemplate.getForObject(
                         usersApi + netID, Student.class
                 );
 
                 if (student != null) {
                     return null;
                 } else {
-                    company = restTemplate.getForObject(
+                    Company company = restTemplate.getForObject(
                             usersApi + netID, Company.class
                     );
 
@@ -74,14 +70,14 @@ public class AuthUserService {
 
         if (role.equals("company")) {
             try {
-                company = restTemplate.getForObject(
+                Company company = restTemplate.getForObject(
                         usersApi + netID, Company.class
                 );
 
                 if (company != null) {
                     return null;
                 } else {
-                    student = restTemplate.getForObject(
+                    Student student = restTemplate.getForObject(
                             usersApi + netID, Student.class
                     );
 
@@ -100,6 +96,7 @@ public class AuthUserService {
                 HttpMethod.POST, null, null
         );
 
+        AuthUser authUser = new AuthUser(netID, password, role);
         authUserRepository.save(authUser);
         return authUser;
     }
