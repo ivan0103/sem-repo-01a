@@ -2,6 +2,8 @@ package nl.tudelft.sem.genericservicepost.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -22,11 +24,12 @@ public class Expertise {
     @Id
     @Column(name = "expertise")
     @NotNull
-    @Size(min =2,max = 20)
+    @Size(min = 2, max = 20)
     private String expertiseString;
 
     @JsonIgnore
     @ManyToMany(mappedBy = "expertiseSet", fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Set<GenericPost> genericPostSet = new HashSet<>();
 
     public String getExpertiseString() {
@@ -64,6 +67,6 @@ public class Expertise {
 
     @Override
     public int hashCode() {
-        return Objects.hash(expertiseString);
+        return Objects.hash(getExpertiseString(), getGenericPostSet());
     }
 }

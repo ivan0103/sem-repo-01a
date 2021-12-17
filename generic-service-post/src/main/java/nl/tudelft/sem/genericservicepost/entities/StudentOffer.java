@@ -1,21 +1,21 @@
 package nl.tudelft.sem.genericservicepost.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
 @Entity
+@EnableTransactionManagement
+@Table(name = "student_offers")
 public class StudentOffer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     @Column(name = "offer_id")
     private Long id;
 
@@ -24,7 +24,8 @@ public class StudentOffer {
     @Column(name = "student_id")
     private String studentId;
 
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "generic_post_id", referencedColumnName = "generic_post_id")
     private GenericPost genericPost;
 
@@ -66,10 +67,9 @@ public class StudentOffer {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         StudentOffer that = (StudentOffer) o;
-        return Objects.equals(getId(),
-                that.getId()) && Objects.equals(getStudentId(),
-                that.getStudentId()) && Objects.equals(getGenericPost(),
-                that.getGenericPost());
+        return Objects.equals(getId(), that.getId())
+                && Objects.equals(getStudentId(), that.getStudentId())
+                && Objects.equals(getGenericPost(), that.getGenericPost());
     }
 
     @Override
