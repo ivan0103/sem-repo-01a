@@ -9,7 +9,7 @@ repositories {
 }
 
 ext {
-    set('springCloudVersion', "2020.0.4")
+    set('springCloudVersion', "Hoxton.SR12")
 }
 
 dependencies {
