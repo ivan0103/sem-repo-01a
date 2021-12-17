@@ -2,6 +2,7 @@ package nl.tudelft.sem.authentication.services;
 
 import java.util.Optional;
 import nl.tudelft.sem.authentication.entities.AuthUser;
+import nl.tudelft.sem.authentication.entities.Company;
 import nl.tudelft.sem.authentication.entities.Student;
 import nl.tudelft.sem.authentication.entities.User;
 import nl.tudelft.sem.authentication.entities.UserFactory;
@@ -45,6 +46,54 @@ public class AuthUserService {
         }
 
         AuthUser authUser = new AuthUser(netID, password, role);
+        Student student = null;
+        Company company = null;
+
+        if (role.equals("student")) {
+            try {
+                student = restTemplate.getForObject(
+                        usersApi + netID, Student.class
+                );
+
+                if (student != null) {
+                    return null;
+                } else {
+                    company = restTemplate.getForObject(
+                            usersApi + netID, Company.class
+                    );
+
+                    if (company != null) {
+                        return null;
+                    }
+                }
+
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+        if (role.equals("company")) {
+            try {
+                company = restTemplate.getForObject(
+                        usersApi + netID, Company.class
+                );
+
+                if (company != null) {
+                    return null;
+                } else {
+                    student = restTemplate.getForObject(
+                            usersApi + netID, Student.class
+                    );
+
+                    if (student != null) {
+                        return null;
+                    }
+                }
+
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
 
         restTemplate.execute(
                 usersApi + netID + "/" + name + "/" + role,
