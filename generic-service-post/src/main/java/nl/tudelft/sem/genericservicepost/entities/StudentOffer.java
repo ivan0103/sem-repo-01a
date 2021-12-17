@@ -9,11 +9,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import java.util.Objects;
 
-@Getter
-@Setter
 @Entity
 public class StudentOffer {
 
@@ -31,4 +28,52 @@ public class StudentOffer {
     @JoinColumn(name = "generic_post_id", referencedColumnName = "generic_post_id")
     private GenericPost genericPost;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(String studentId) {
+        this.studentId = studentId;
+    }
+
+    public GenericPost getGenericPost() {
+        return genericPost;
+    }
+
+    public void setGenericPost(GenericPost genericPost) {
+        this.genericPost = genericPost;
+    }
+
+    @Override
+    public String toString() {
+        return "StudentOffer{"
+                + "id=" + id
+                + ", studentId='" + studentId + '\''
+                + ", genericPost=" + genericPost
+                + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        StudentOffer that = (StudentOffer) o;
+        return Objects.equals(getId(),
+                that.getId()) && Objects.equals(getStudentId(),
+                that.getStudentId()) && Objects.equals(getGenericPost(),
+                that.getGenericPost());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getStudentId(), getGenericPost());
+    }
 }
