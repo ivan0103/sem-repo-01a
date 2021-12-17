@@ -23,7 +23,7 @@ public class GatewayController {
         return "HOORAY! You have successfully logged in!";
     }
 
-    @GetMapping
+    @GetMapping("/isAuthenticated")
     public Boolean isAuthenticated(String netID, String password) {
         return gatewayService.isAuthenticated(netID, password);
     }

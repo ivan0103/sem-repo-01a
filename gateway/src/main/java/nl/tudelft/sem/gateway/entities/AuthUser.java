@@ -1,10 +1,6 @@
 package nl.tudelft.sem.gateway.entities;
 
 import java.util.Objects;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
 
 public class AuthUser {
 
