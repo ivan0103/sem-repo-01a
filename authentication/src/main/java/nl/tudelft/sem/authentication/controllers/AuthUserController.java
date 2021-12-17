@@ -1,7 +1,6 @@
 package nl.tudelft.sem.authentication.controllers;
 
 import nl.tudelft.sem.authentication.entities.AuthUser;
-import nl.tudelft.sem.authentication.entities.User;
 import nl.tudelft.sem.authentication.services.AuthUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

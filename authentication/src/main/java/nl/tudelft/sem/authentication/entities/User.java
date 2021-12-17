@@ -5,12 +5,13 @@ import java.util.List;
 import java.util.Objects;
 
 
-public abstract class User {
+public class User {
 
     private String netID;
     private String name;
     private Float rating;
     private List<Feedback> feedbacks;
+    private String role;
 
     /**
      * Default constructor.
@@ -26,13 +27,15 @@ public abstract class User {
      * @param netID netId of the user - acts as primary key
      * @param name name of the user
      * @param rating rating of the user
+     * @param role role of the user
      */
 
-    protected User(String netID, String name, Float rating) {
+    protected User(String netID, String name, Float rating, String role) {
         this.netID = netID;
         this.name = name;
         this.rating = rating;
         this.feedbacks = new ArrayList<>();
+        this.role = role;
     }
 
     /**
@@ -44,11 +47,14 @@ public abstract class User {
      * @param feedbacks list of feedbacks received by the user from other users
      */
 
-    protected User(String netID, String name, Float rating, List<Feedback> feedbacks) {
+    protected User(String netID, String name, Float rating,
+                   List<Feedback> feedbacks, String role) {
+
         this.netID = netID;
         this.name = name;
         this.rating = rating;
         this.feedbacks = feedbacks;
+        this.role = role;
     }
 
     /**
@@ -154,9 +160,27 @@ public abstract class User {
     }
 
     /**
+     * Getter for role.
+     *
+     * @return the role of the user
+     */
+
+    public String getRole() {
+        return role;
+    }
+
+    /**
+     * Setter for role.
+     *
+     * @param role the new role of the user
+     */
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    /**
      * Equals method - checks whether the users are the same or not.
-     * NOTE! Since this is an abstract class an equal method does not make much sense
-     * to have it, but pmd complained about it, unfortunately.
      *
      * @param o the object used to compare the user
      * @return true - the users represent the same instance
@@ -178,7 +202,8 @@ public abstract class User {
         return Objects.equals(netID, user.netID)
                 && Objects.equals(name, user.name)
                 && Objects.equals(rating, user.rating)
-                && Objects.equals(feedbacks, user.feedbacks);
+                && Objects.equals(feedbacks, user.feedbacks)
+                && Objects.equals(role, user.role);
     }
 
     /**
@@ -189,7 +214,7 @@ public abstract class User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(netID, name, rating, feedbacks);
+        return Objects.hash(netID, name, rating, feedbacks, role);
     }
 
     /**
@@ -205,6 +230,7 @@ public abstract class User {
                 + ", name='" + name + '\''
                 + ", rating=" + rating
                 + ", feedbacks=" + feedbacks
+                + ", role=" + role
                 + '}';
     }
 }

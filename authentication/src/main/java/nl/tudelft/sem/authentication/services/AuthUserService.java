@@ -1,11 +1,7 @@
 package nl.tudelft.sem.authentication.services;
 
-import java.util.Optional;
 import nl.tudelft.sem.authentication.entities.AuthUser;
-import nl.tudelft.sem.authentication.entities.Company;
-import nl.tudelft.sem.authentication.entities.Student;
 import nl.tudelft.sem.authentication.entities.User;
-import nl.tudelft.sem.authentication.entities.UserFactory;
 import nl.tudelft.sem.authentication.repositories.AuthUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
@@ -45,50 +41,16 @@ public class AuthUserService {
             throw new IllegalArgumentException("Role mustn't be null!");
         }
 
-        if (role.equals("student")) {
-            try {
-                Student student = restTemplate.getForObject(
-                        usersApi + netID, Student.class
-                );
+        try {
+            User user = restTemplate.getForObject(
+                    usersApi + netID, User.class
+            );
 
-                if (student != null) {
-                    return null;
-                } else {
-                    Company company = restTemplate.getForObject(
-                            usersApi + netID, Company.class
-                    );
-
-                    if (company != null) {
-                        return null;
-                    }
-                }
-
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
+            if (user != null) {
+                return null;
             }
-        }
-
-        if (role.equals("company")) {
-            try {
-                Company company = restTemplate.getForObject(
-                        usersApi + netID, Company.class
-                );
-
-                if (company != null) {
-                    return null;
-                } else {
-                    Student student = restTemplate.getForObject(
-                            usersApi + netID, Student.class
-                    );
-
-                    if (student != null) {
-                        return null;
-                    }
-                }
-
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
 
         restTemplate.execute(
