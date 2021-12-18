@@ -13,9 +13,9 @@ ext {
 }
 
 dependencies {
-    // SPRING SECURITY
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.security:spring-security-test'
+    //    // SPRING SECURITY
+    //    implementation 'org.springframework.boot:spring-boot-starter-security'
+    //    implementation 'org.springframework.security:spring-security-test'
 
     // GATEWAY
     implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
