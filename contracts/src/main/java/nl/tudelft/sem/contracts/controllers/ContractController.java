@@ -7,8 +7,12 @@ import nl.tudelft.sem.contracts.services.ContractService;
 import nl.tudelft.sem.contracts.services.DetailsCheckService;
 import nl.tudelft.sem.contracts.services.PdfGeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -23,7 +27,7 @@ public class ContractController {
     /**
      * This auto-wires different services to allow this controller class to use their functions.
      *
-     * @param contractService - the functions needed for contracts
+     * @param contractService     - the functions needed for contracts
      * @param pdfGeneratorService - the functions needed for pdfGeneration of contract
      */
     @Autowired
@@ -43,17 +47,19 @@ public class ContractController {
      * @throws Exception - if contract details are invalid.
      */
     @PostMapping("/create")
-    public Contract create(@RequestParam Contract contract) throws Exception {
+    public ResponseEntity<Contract> create(
+        @RequestBody @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            Contract contract) throws Exception {
 
         if (!detailsCheckService.checkContractDates(contract.getStartDate(),
-                contract.getEndDate())) {
+            contract.getEndDate())) {
             throw new Exception("Invalid start or end dates for contract");
         }
 
         if (!detailsCheckService.checkContractWorkHours(contract.getHoursPerWeek())) {
             throw new Exception("hours per week is more than allowed 20h");
         }
-        return contractService.create(contract);
+        return new ResponseEntity<>(contractService.create(contract), HttpStatus.CREATED);
     }
 
     /**
@@ -64,22 +70,22 @@ public class ContractController {
      * @throws Exception - in case no contract matches the id.
      */
     @PostMapping("/getContract")
-    public Contract getContract(@RequestParam long contractId) throws Exception {
+    public ResponseEntity<Contract> getContract(@RequestParam long contractId) throws Exception {
         if (!contractService.exists(contractId)) {
             throw new Exception("Invalid contract id. Contract Id does not exist in database.");
         }
 
-        return contractService.getContract(contractId);
+        return new ResponseEntity<>(contractService.getContract(contractId), HttpStatus.FOUND);
     }
 
     /**
      * This method uses contractService and pdfGeneratorService to return a PDF
      * of a contract to the client, given its id.
      *
-     * @param response -the HTTP response to send back to client.
+     * @param response   -the HTTP response to send back to client.
      * @param contractId - the id of contract to return pdf of.
      * @throws Exception - if either id is invalid or there is an IO exception
-     *              during PDF generation.
+     *                   during PDF generation.
      */
     @PostMapping("/getPdf")
     public void getContractPdf(HttpServletResponse response,
@@ -118,7 +124,7 @@ public class ContractController {
         }
 
         if (!detailsCheckService.checkContractDates(contract.getStartDate(),
-                contract.getEndDate())) {
+            contract.getEndDate())) {
             throw new Exception("Invalid start or end dates for contract");
         }
 

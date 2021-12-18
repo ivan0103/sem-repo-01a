@@ -21,9 +21,8 @@ public class PdfGeneratorService {
      *
      * @param response - the HTTPServlet to attach PDF to.
      * @param contract - the contract we want to generate PDF of.
-     * @throws IOException - stream is corrupted or error occurs when reading data for response.
      */
-    public void exportContract(HttpServletResponse response, Contract contract) throws IOException {
+    public void exportContract(HttpServletResponse response, Contract contract) {
 
         //Make an A4 document since that's the standard page size.
         try (Document document = new Document(PageSize.A4)) {
@@ -44,6 +43,7 @@ public class PdfGeneratorService {
             Paragraph contractDetails = formatDetails(contract, normalFont);
 
             //add the paragraphs to the document and close the document.
+            document.open();
             document.add(title);
             document.add(intro);
             document.add(detailsHeader);
@@ -76,30 +76,31 @@ public class PdfGeneratorService {
     /**
      * Makes intro for PDF contract.
      *
-     * @param contract - used to extract information for intro.
+     * @param contract   - used to extract information for intro.
      * @param normalFont - font to use.
      * @return Paragraph representing the intro
      */
     public Paragraph formatIntro(Contract contract, Font normalFont) {
         Paragraph intro = new Paragraph("This is an agreement made between "
-                + contract.getCompanyName()
-                + "[username: "
-                + contract.getCompanyId()
-                + "] and "
-                + contract.getFreelancerName()
-                + "[NetID: "
-                + contract.getFreelancerId()
-                + "] made on "
-                + contract.getAgreementDate().toString()
-                + ". The details of this agreement may be modified(to an extent) in"
-                + " the future upon the approval of both parties.", normalFont);
+            + contract.getCompanyName()
+            + "[username: "
+            + contract.getCompanyId()
+            + "] and "
+            + contract.getFreelancerName()
+            + "[NetID: "
+            + contract.getFreelancerId()
+            + "] made on "
+            + contract.getAgreementDate().toString()
+            + ". The details of this agreement may be modified(to an extent) in"
+            + " the future upon the approval of both parties.", normalFont);
         intro.setAlignment(Paragraph.ALIGN_CENTER);
         intro.setExtraParagraphSpace(5);
 
         return intro;
     }
 
-    /**Makes a header for details part of PDF contract.
+    /**
+     * Makes a header for details part of PDF contract.
      *
      * @return Paragraph representing the header for details
      */
@@ -116,19 +117,19 @@ public class PdfGeneratorService {
     /**
      * Makes details part of PDF contract.
      *
-     * @param contract - used to extract information for intro.
+     * @param contract   - used to extract information for intro.
      * @param normalFont - font to use.
      * @return Paragraph representing the details of contract
      */
     public Paragraph formatDetails(Contract contract, Font normalFont) {
         Paragraph contractDetails = new Paragraph("-Start date: "
-                + contract.getStartDate().toString()
-                + "\n-End date: "
-                + contract.getEndDate().toString()
-                + "\n-Hours per week: "
-                + contract.getHoursPerWeek().toString()
-                + "\n-Hourly rate: €"
-                + contract.getPayPerWeek(), normalFont);
+            + contract.getStartDate().toString()
+            + "\n-End date: "
+            + contract.getEndDate().toString()
+            + "\n-Hours per week: "
+            + contract.getHoursPerWeek().toString()
+            + "\n-Hourly rate: €"
+            + contract.getPayPerWeek(), normalFont);
 
         contractDetails.setAlignment(Paragraph.ALIGN_LEFT);
         contractDetails.setIndentationRight(5);
