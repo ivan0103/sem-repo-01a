@@ -60,7 +60,7 @@ public class CompanyOfferController {
         return new ResponseEntity<>(result, HttpStatus.ACCEPTED);
     }
 
-    @PutMapping(value = "/acceptOffer")
+    @PatchMapping(value = "/acceptOffer")
     public ResponseEntity<CompanyOffer> acceptOffer(
         @Valid @RequestParam("offerId") String offerId) {
         CompanyOffer result = companyOfferService.acceptOffer(offerId);
