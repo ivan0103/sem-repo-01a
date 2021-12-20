@@ -65,6 +65,9 @@ public class GenericPost {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<StudentOffer> studentOfferSet = new HashSet<>();
 
+    public GenericPost() {
+    }
+
     public Long getId() {
         return id;
     }
@@ -117,13 +120,11 @@ public class GenericPost {
     public String toString() {
         return "GenericPost{"
                 + "id=" + id
-                + ", author='"
-                + author + '\''
-                + ", hoursPerWeek="
-                + hoursPerWeek + ", duration="
-                + duration + ", expertiseSet="
-                + expertiseSet + ", studentOfferSet="
-                + studentOfferSet + '}';
+                + ", author='" + author + '\''
+                + ", hoursPerWeek=" + hoursPerWeek
+                + ", duration=" + duration
+                + ", expertiseSet=" + expertiseSet
+                + '}';
     }
 
     @Override
@@ -139,17 +140,14 @@ public class GenericPost {
                 && getDuration() == that.getDuration()
                 && Objects.equals(getId(), that.getId())
                 && Objects.equals(getAuthor(), that.getAuthor())
-                && Objects.equals(getExpertiseSet(), that.getExpertiseSet())
-                && Objects.equals(getStudentOfferSet(), that.getStudentOfferSet());
+                && Objects.equals(getExpertiseSet(), that.getExpertiseSet());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(),
-                getAuthor(),
+        return Objects.hash(getAuthor(),
                 getHoursPerWeek(),
                 getDuration(),
-                getExpertiseSet(),
-                getStudentOfferSet());
+                getExpertiseSet());
     }
 }
