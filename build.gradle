@@ -1,0 +1,102 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        //Needed only for SNAPSHOT versions
+        //maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+    }
+    dependencies {
+        classpath 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.5.2'
+    }
+}
+
+plugins {
+    id 'java'
+    // Test coverage
+    id 'jacoco'
+
+    // Code style
+    id 'checkstyle'
+
+    // PMD
+    id 'pmd'
+
+    // PITest
+    id 'info.solidsoft.pitest' version '1.5.2' apply false
+}
+
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+    buildscript {
+        repositories {
+            mavenCentral()
+            //Needed only for SNAPSHOT versions
+            //maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+        }
+
+    }
+    apply plugin: 'java'
+    apply plugin: 'jacoco'
+    apply plugin: 'checkstyle'
+
+    group = 'nl.tudelft.sem'
+    sourceCompatibility = 11
+    targetCompatibility = 11
+}
+
+subprojects {
+    repositories {
+        mavenCentral()
+    }
+
+    test {
+        useJUnitPlatform()
+        jacoco {
+            enabled = true
+            //includes = ['nl.tudelft.sem.*']
+            excludes = []
+        }
+    }
+
+    jacocoTestCoverageVerification() {
+        dependsOn test
+        violationRules {
+            rule {
+                enabled = true
+                element = 'CLASS'
+                includes = ['nl.tudelft.sem.*']
+
+                limit {
+                    counter = 'BRANCH'
+                    value = 'COVEREDRATIO'
+                    minimum = 0.1
+                }
+            }
+        }
+    }
+
+    checkstyle {
+        toolVersion "8.37"
+        configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+    }
+
+    apply plugin: 'pmd'
+    pmd {
+        incrementalAnalysis = true
+    }
+
+    apply plugin: 'info.solidsoft.pitest'
+    pitest {
+        //adds dependency to org.pitest:pitest-junit5-plugin and sets "testPlugin" to "junit5"
+        junit5PluginVersion = '0.12'
+
+        targetClasses = ['nl.tudelft.sem.*']  //by default "${project.group}.*"
+        pitestVersion = '1.5.1' //not needed when a default PIT version should be used
+        threads = 4
+        outputFormats = ['XML', 'HTML']
+        timestampedReports = false
+    }
+
+}

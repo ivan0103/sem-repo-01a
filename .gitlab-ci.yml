@@ -1,0 +1,5 @@
+include:
+  - users/.gitlab-ci.yml
+  - contracts/.gitlab-ci.yml
+  - student-service-post/.gitlab-ci.yml
+  - generic-service-post/.gitlab-ci.yml

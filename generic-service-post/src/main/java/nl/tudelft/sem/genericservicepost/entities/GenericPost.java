@@ -1,0 +1,137 @@
+package nl.tudelft.sem.genericservicepost.entities;
+
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+@Entity
+@Table(name = "generic_posts")
+public class GenericPost {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "generic_post_id")
+    private Long id;
+
+    @Column(name = "author_id")
+    private String author;
+
+    @NotNull(message = "Minimum weekly hours cannot be null!")
+    @Min(value = 0, message = "Minimum weekly hours cannot be negative!")
+    @Max(value = 20, message = "Maximum weekly hours cannot be above 20!")
+    @Column(name = "hours_per_week")
+    private int hoursPerWeek;
+
+    @NotNull(message = "Duration cannot be null!")
+    @Min(value = 1, message = "Duration must be above 1 month!")
+    @Max(value = 6, message = "Duration cannot be above 6 months!")
+    @Column(name = "duration")
+    private int duration;
+
+    @NotEmpty(message = "At least 1 expertise must be provided!")
+    @Valid
+    @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "generic_post_expertise",
+            joinColumns = {@JoinColumn(name = "generic_post_id")},
+            inverseJoinColumns = {@JoinColumn(name = "expertise")}
+    )
+    private Set<Expertise> expertiseSet = new HashSet<>();
+
+    @OneToMany
+    private Set<StudentOffer> studentOfferSet = new HashSet<>();
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public int getHoursPerWeek() {
+        return hoursPerWeek;
+    }
+
+    public void setHoursPerWeek(int hoursPerWeek) {
+        this.hoursPerWeek = hoursPerWeek;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    public Set<Expertise> getExpertiseSet() {
+        return expertiseSet;
+    }
+
+    public void setExpertiseSet(Set<Expertise> expertiseSet) {
+        this.expertiseSet = expertiseSet;
+    }
+
+    public Set<StudentOffer> getStudentOfferSet() {
+        return studentOfferSet;
+    }
+
+    public void setStudentOfferSet(Set<StudentOffer> studentOfferSet) {
+        this.studentOfferSet = studentOfferSet;
+    }
+
+    @Override
+    public String toString() {
+        return "GenericPost{"
+                + "id=" + id
+                + ", author='"
+                + author + '\''
+                + ", hoursPerWeek="
+                + hoursPerWeek + ", duration="
+                + duration + ", expertiseSet="
+                + expertiseSet + ", studentOfferSet="
+                + studentOfferSet + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        GenericPost that = (GenericPost) o;
+        return getHoursPerWeek() == that.getHoursPerWeek()
+                && getDuration() == that.getDuration()
+                && Objects.equals(getId(), that.getId())
+                && Objects.equals(getAuthor(), that.getAuthor())
+                && Objects.equals(getExpertiseSet(), that.getExpertiseSet())
+                && Objects.equals(getStudentOfferSet(), that.getStudentOfferSet());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(),
+                getAuthor(),
+                getHoursPerWeek(),
+                getDuration(),
+                getExpertiseSet(),
+                getStudentOfferSet());
+    }
+}
