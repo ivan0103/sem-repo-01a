@@ -26,11 +26,11 @@ public class SpringCloudConfig {
 
                 // Route for student service post
                 .route("offers", r -> r.path("/offers/**")
-                        .uri("http://localhost:8082"))
+                        .uri("http://localhost:9090"))
 
                 // Route for student service post
                 .route("servicepost", r -> r.path("/servicepost/**")
-                        .uri("http://localhost:8082"))
+                        .uri("http://localhost:9090"))
 
                 // Route for generic service post
                 .route("genericpost", r -> r.path("/genericpost/**")
