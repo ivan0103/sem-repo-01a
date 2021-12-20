@@ -2,12 +2,16 @@ package nl.tudelft.sem.genericservicepost.services;
 
 import nl.tudelft.sem.genericservicepost.entities.Expertise;
 import nl.tudelft.sem.genericservicepost.entities.GenericPost;
+import nl.tudelft.sem.genericservicepost.entities.Student;
 import nl.tudelft.sem.genericservicepost.exceptions.GenericPostNotFoundException;
 import nl.tudelft.sem.genericservicepost.exceptions.InvalidEditException;
 import nl.tudelft.sem.genericservicepost.repositories.ExpertiseRepository;
 import nl.tudelft.sem.genericservicepost.repositories.GenericPostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class GenericPostService {
@@ -47,7 +51,7 @@ public class GenericPostService {
      *
      * @param genericPost the generic Post
      * @return the generic Post
-     * @throws GenericPostNotFoundException if id of the generic post was not found.
+     * @throws GenericPostNotFoundException if id of the generic post was not found / doesn't exist.
      */
     public GenericPost editGenericPost(GenericPost genericPost){
         if (genericPostRepository.existsById(genericPost.getId())){
@@ -62,5 +66,25 @@ public class GenericPostService {
         else{
             throw new GenericPostNotFoundException();
         }
+    }
+
+    /**
+     * Issue #6
+     * Companies Access to Student Info
+     * Companies can view all the Students and their Data, that have applied for one of their Job posts
+     *
+     * @param genericPost the Post to collect the students from
+     * @return a Set of all Students
+     * @throws GenericPostNotFoundException if id of the generic post was not found / doesn't exist.
+     */
+    public Set<Student> retrieveStudentsInPost(GenericPost genericPost){
+        Set<Student> result = new HashSet<>();
+        if (genericPostRepository.existsById(genericPost.getId())){
+            result.addAll(genericPost.getStudentOfferSet());
+        }
+        else {
+            throw new GenericPostNotFoundException();
+        }
+        return result;
     }
 }
