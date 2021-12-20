@@ -175,7 +175,7 @@ class CompanyOfferControllerTest {
     void acceptOffer() {
         String url = baseUrl + "/acceptOffer?offerId=1";
         try {
-            this.mockMvc.perform(put(url)).andDo(print())
+            this.mockMvc.perform(patch(url)).andDo(print())
                 .andExpect(status().isAccepted());
             verify(companyOfferService).acceptOffer("1");
         } catch (Exception e) {
