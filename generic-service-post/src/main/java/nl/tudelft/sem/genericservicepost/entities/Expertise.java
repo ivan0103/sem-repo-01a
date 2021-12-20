@@ -67,6 +67,6 @@ public class Expertise {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getExpertiseString(), getGenericPostSet());
+        return Objects.hash(getExpertiseString());
     }
 }
