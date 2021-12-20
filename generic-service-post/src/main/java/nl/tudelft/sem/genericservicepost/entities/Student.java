@@ -31,4 +31,33 @@ public class Student {
     @JoinColumn(name = "generic_post_id", referencedColumnName = "generic_post_id")
     private GenericPost genericPost;
 
+    public Student(Long id, String studentId, GenericPost genericPost) {
+        this.id = id;
+        this.studentId = studentId;
+        this.genericPost = genericPost;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(String studentId) {
+        this.studentId = studentId;
+    }
+
+    public GenericPost getGenericPost() {
+        return genericPost;
+    }
+
+    public void setGenericPost(GenericPost genericPost) {
+        this.genericPost = genericPost;
+    }
 }

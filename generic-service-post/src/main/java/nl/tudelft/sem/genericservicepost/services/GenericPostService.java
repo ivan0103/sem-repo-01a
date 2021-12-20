@@ -80,7 +80,11 @@ public class GenericPostService {
     public Set<Student> retrieveStudentsInPost(GenericPost genericPost){
         Set<Student> result = new HashSet<>();
         if (genericPostRepository.existsById(genericPost.getId())){
-            result.addAll(genericPost.getStudentOfferSet());
+            for (Student volunteer : genericPost.getStudentOfferSet()){
+                if (volunteer.getGenericPost().getId() == genericPost.getId()){
+                    result.add(volunteer);
+                }
+            }
         }
         else {
             throw new GenericPostNotFoundException();
