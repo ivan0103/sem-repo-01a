@@ -4,6 +4,7 @@ package nl.tudelft.sem.genericservicepost.services;
 import nl.tudelft.sem.genericservicepost.entities.Expertise;
 import nl.tudelft.sem.genericservicepost.entities.GenericPost;
 import nl.tudelft.sem.genericservicepost.entities.StudentOffer;
+import nl.tudelft.sem.genericservicepost.exceptions.GenericPostNotFoundException;
 import nl.tudelft.sem.genericservicepost.repositories.GenericPostRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 public class GenericPostServiceTest  {
@@ -109,5 +111,14 @@ public class GenericPostServiceTest  {
         students1 = genericPostService.retrieveStudentsInPost(tmp1);
 
         assertThat(result1).isEqualTo(students1);
+
+        // Test for exception
+        GenericPost genericPost2 = new GenericPost();
+        genericPost2.setId(10L);
+        Set<StudentOffer> input = new HashSet<>();
+        input.add(ivan);
+        genericPost2.setStudentOfferSet(input);
+        assertThatThrownBy(() -> genericPostService.retrieveStudentsInPost(genericPost2))
+                .isInstanceOf(GenericPostNotFoundException.class);
     }
 }
