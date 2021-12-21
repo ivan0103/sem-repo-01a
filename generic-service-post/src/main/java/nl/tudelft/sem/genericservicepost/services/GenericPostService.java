@@ -2,7 +2,7 @@ package nl.tudelft.sem.genericservicepost.services;
 
 import nl.tudelft.sem.genericservicepost.entities.Expertise;
 import nl.tudelft.sem.genericservicepost.entities.GenericPost;
-import nl.tudelft.sem.genericservicepost.entities.Student;
+import nl.tudelft.sem.genericservicepost.entities.StudentOffer;
 import nl.tudelft.sem.genericservicepost.exceptions.GenericPostNotFoundException;
 import nl.tudelft.sem.genericservicepost.exceptions.InvalidEditException;
 import nl.tudelft.sem.genericservicepost.repositories.ExpertiseRepository;
@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Service
@@ -77,11 +78,11 @@ public class GenericPostService {
      * @return a Set of all Students
      * @throws GenericPostNotFoundException if id of the generic post was not found / doesn't exist.
      */
-    public Set<Student> retrieveStudentsInPost(GenericPost genericPost){
-        Set<Student> result = new HashSet<>();
+    public Set<StudentOffer> retrieveStudentsInPost(GenericPost genericPost){
+        Set<StudentOffer> result = new HashSet<>();
         if (genericPostRepository.existsById(genericPost.getId())){
-            for (Student volunteer : genericPost.getStudentOfferSet()){
-                if (volunteer.getGenericPost().getId() == genericPost.getId()){
+            for (StudentOffer volunteer : genericPost.getStudentOfferSet()){
+                if (Objects.equals(volunteer.getGenericPost().getId(), genericPost.getId())){
                     result.add(volunteer);
                 }
             }

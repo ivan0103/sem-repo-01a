@@ -3,14 +3,13 @@ package nl.tudelft.sem.genericservicepost.services;
 
 import nl.tudelft.sem.genericservicepost.entities.Expertise;
 import nl.tudelft.sem.genericservicepost.entities.GenericPost;
-import nl.tudelft.sem.genericservicepost.entities.Student;
+import nl.tudelft.sem.genericservicepost.entities.StudentOffer;
 import nl.tudelft.sem.genericservicepost.repositories.GenericPostRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -71,29 +70,29 @@ public class GenericPostServiceTest  {
     @Test
     void retrieveStudentsInPostTest(){
 
-        Set<Student> students = new HashSet<>();
-        Set<Student> students1 = new HashSet<>();
-        Student ivan = new Student(1L, "IvanV", genericPost);
-        Student marie = new Student(2L, "Marie", genericPost1);
-        Student todor = new Student(3L, "Todor", genericPost);
-        Student tudor = new Student(4L, "Tudor", genericPost1);
+        Set<StudentOffer> studentOffers = new HashSet<>();
+        Set<StudentOffer> students1 = new HashSet<>();
+        StudentOffer ivan = new StudentOffer(1L, "IvanV", genericPost);
+        StudentOffer marie = new StudentOffer(2L, "Marie", genericPost1);
+        StudentOffer todor = new StudentOffer(3L, "Todor", genericPost);
+        StudentOffer tudor = new StudentOffer(4L, "Tudor", genericPost1);
 
 
         // Test for students in post 1.
-        students.add(ivan);
-        students.add(marie);
-        students.add(todor);
-        students.add(tudor);
+        studentOffers.add(ivan);
+        studentOffers.add(marie);
+        studentOffers.add(todor);
+        studentOffers.add(tudor);
 
-        Set<Student> result = new HashSet<>();
+        Set<StudentOffer> result = new HashSet<>();
         result.add(ivan);
         result.add(todor);
 
         GenericPost tmp = genericPostService.createGenericPost(genericPost);
-        tmp.setStudentOfferSet(students);
-        students = genericPostService.retrieveStudentsInPost(tmp);
+        tmp.setStudentOfferSet(studentOffers);
+        studentOffers = genericPostService.retrieveStudentsInPost(tmp);
 
-        assertThat(result).isEqualTo(students);
+        assertThat(result).isEqualTo(studentOffers);
 
         // Test for students in post 2.
         students1.add(ivan);
@@ -101,7 +100,7 @@ public class GenericPostServiceTest  {
         students1.add(todor);
         students1.add(tudor);
 
-        Set<Student> result1 = new HashSet<>();
+        Set<StudentOffer> result1 = new HashSet<>();
         result1.add(marie);
         result1.add(tudor);
 

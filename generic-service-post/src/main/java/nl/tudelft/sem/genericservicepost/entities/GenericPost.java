@@ -45,7 +45,7 @@ public class GenericPost {
     private Set<Expertise> expertiseSet = new HashSet<>();
 
     @OneToMany
-    private Set<Student> studentOfferSet = new HashSet<>();
+    private Set<StudentOffer> studentOfferOfferSet = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -87,12 +87,12 @@ public class GenericPost {
         this.expertiseSet = expertiseSet;
     }
 
-    public Set<Student> getStudentOfferSet() {
-        return studentOfferSet;
+    public Set<StudentOffer> getStudentOfferSet() {
+        return studentOfferOfferSet;
     }
 
-    public void setStudentOfferSet(Set<Student> studentOfferSet) {
-        this.studentOfferSet = studentOfferSet;
+    public void setStudentOfferSet(Set<StudentOffer> studentOfferOfferSet) {
+        this.studentOfferOfferSet = studentOfferOfferSet;
     }
 
     @Override
@@ -105,7 +105,7 @@ public class GenericPost {
                 + hoursPerWeek + ", duration="
                 + duration + ", expertiseSet="
                 + expertiseSet + ", studentOfferSet="
-                + studentOfferSet + '}';
+                + studentOfferOfferSet + '}';
     }
 
     @Override

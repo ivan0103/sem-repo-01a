@@ -15,7 +15,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Student {
+public class StudentOffer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +31,7 @@ public class Student {
     @JoinColumn(name = "generic_post_id", referencedColumnName = "generic_post_id")
     private GenericPost genericPost;
 
-    public Student(Long id, String studentId, GenericPost genericPost) {
+    public StudentOffer(Long id, String studentId, GenericPost genericPost) {
         this.id = id;
         this.studentId = studentId;
         this.genericPost = genericPost;
