@@ -1,0 +1,30 @@
+image: gradle:6.7-jdk15
+
+stages:
+  - build
+  - staticAnalysis
+  - test
+
+registry-build:
+  stage: build
+  script:
+    gradle :registry:classes :registry:testClasses
+
+registry-checkStyle:
+  stage: staticAnalysis
+  script:
+    gradle :registry:checkstyleMain :registry:checkStyleTest
+  allow_failure: true
+
+registry-PMD:
+  stage: staticAnalysis
+  script:
+      gradle :registry:pmdMain :registry:pmdTest
+  allow_failure: true
+
+registry-test:
+  stage: test
+  script:
+    - gradle :registry:test :registry:jacocoTestReport :registry:pitest
+    - cat registry/build/reports/jacoco/test/html/index.html | grep -Po "Total.*?([0-9]{1,3})%"
+  coverage: /([0-9]{1,3})%/

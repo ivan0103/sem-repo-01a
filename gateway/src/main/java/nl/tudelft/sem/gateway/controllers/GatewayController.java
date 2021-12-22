@@ -3,6 +3,7 @@ package nl.tudelft.sem.gateway.controllers;
 import nl.tudelft.sem.gateway.services.GatewayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,8 +24,9 @@ public class GatewayController {
         return "HOORAY! You have successfully logged in!";
     }
 
-    @GetMapping("/isAuthenticated")
-    public Boolean isAuthenticated(String netID, String password) {
+    @GetMapping("/isAuthenticated/{netID}/{password}")
+    public Boolean isAuthenticated(@PathVariable(value = "netID") String netID,
+                                   @PathVariable(value = "password") String password) {
         return gatewayService.isAuthenticated(netID, password);
     }
 }

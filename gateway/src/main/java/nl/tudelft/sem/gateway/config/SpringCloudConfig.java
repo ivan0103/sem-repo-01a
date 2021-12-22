@@ -22,27 +22,27 @@ public class SpringCloudConfig {
 
                 //Route for users
                 .route("users", r -> r.path("/users/**")
-                        .uri("http://localhost:8081"))
+                        .uri("lb://USERS"))
 
                 // Route for student service post
                 .route("offers", r -> r.path("/offers/**")
-                        .uri("http://localhost:9090"))
+                        .uri("lb://STUDENT-SERVICE-POST"))
 
                 // Route for student service post
                 .route("servicepost", r -> r.path("/servicepost/**")
-                        .uri("http://localhost:9090"))
+                        .uri("lb://STUDENT-SERVICE-POST"))
 
                 // Route for generic service post
                 .route("genericpost", r -> r.path("/genericpost/**")
-                        .uri("http://localhost:8083"))
+                        .uri("lb://GENERIC-SERVICE-POST"))
 
                 // Route for contracts
                 .route("contracts", r -> r.path("/contract/**")
-                        .uri("http://localhost:8084"))
+                        .uri("lb://CONTRACTS"))
 
                 // Route for authentication
                 .route("authentication", r -> r.path("/authentication/**")
-                        .uri("http://localhost:8085"))
+                        .uri("lb://AUTHENTICATION"))
 
                 .build();
     }
