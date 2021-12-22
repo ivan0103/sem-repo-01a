@@ -19,7 +19,7 @@ registry-checkStyle:
 registry-PMD:
   stage: staticAnalysis
   script:
-      gradle :registry:pmdMain :registry:pmdTest
+    gradle :registry:pmdMain :registry:pmdTest
   allow_failure: true
 
 registry-test:
