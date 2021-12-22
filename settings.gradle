@@ -1,3 +1,2 @@
 rootProject.name = 'sem-repo-01a'
-include("users", "student-service-post", "contracts", "generic-service-post", "gateway", "authentication",
-        "registry")
+include("users", "student-service-post", "contracts", "generic-service-post", "gateway", "authentication", "eureka")
