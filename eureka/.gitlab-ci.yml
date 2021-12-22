@@ -19,7 +19,7 @@ eureka-checkStyle:
 eureka-PMD:
   stage: staticAnalysis
   script:
-    gradle :eureka:pmdMain :eureka:pmdTest
+      gradle :eureka:pmdMain :eureka:pmdTest
   allow_failure: true
 
 eureka-test:

@@ -22,13 +22,13 @@ ext {
 }
 
 dependencies {
-	// EUREKA SERVER
-	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
+	// EUREKA CLIENT
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'junit:junit:4.13.1'
-	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+    implementation 'junit:junit:4.13.1'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
 	testImplementation('org.junit.jupiter:junit-jupiter:5.5.2')
