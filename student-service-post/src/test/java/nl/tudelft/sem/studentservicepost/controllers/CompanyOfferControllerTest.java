@@ -183,4 +183,21 @@ class CompanyOfferControllerTest {
             fail("Exception in accepting offer");
         }
     }
+
+    /**
+     * Invalid offer test.
+     * Validator is the same for each endpoint, so we test it once
+     */
+    @Test
+    void invalidOffer() {
+        String url = baseUrl + "/create?postId=1";
+        try {
+            this.mockMvc.perform(post(url).content("serializedOffer")
+                    .contentType(MediaType.APPLICATION_JSON)).andDo(print())
+                .andExpect(status().is4xxClientError());
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail("Exception in creating offer");
+        }
+    }
 }

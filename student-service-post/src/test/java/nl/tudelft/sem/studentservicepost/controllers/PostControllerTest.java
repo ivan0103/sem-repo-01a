@@ -24,6 +24,7 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
+import javax.swing.text.html.ObjectView;
 import nl.tudelft.sem.studentservicepost.entities.Competency;
 import nl.tudelft.sem.studentservicepost.entities.Expertise;
 import nl.tudelft.sem.studentservicepost.entities.Post;
@@ -33,8 +34,6 @@ import nl.tudelft.sem.studentservicepost.services.PostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.AdditionalAnswers;
-import org.mockito.ArgumentMatchers;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -59,6 +58,8 @@ class PostControllerTest {
 
     private transient UserImpl user;
 
+    private transient String serializedUser;
+
     @Autowired
     private transient MockMvc mockMvc;
 
@@ -75,6 +76,7 @@ class PostControllerTest {
         user.setNetID("abcd");
         try {
             serializedPost = new ObjectMapper().writer(filters).writeValueAsString(post);
+            serializedUser = new ObjectMapper().writeValueAsString(user);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             fail();
@@ -144,7 +146,7 @@ class PostControllerTest {
         server.start();
         configureFor("localhost", 8080);
         stubFor(WireMock.get("/users/abcd").willReturn(
-            ok().withBody(serializedPost).withHeader("Content-Type", "application/json")));
+            ok().withBody(serializedUser).withHeader("Content-Type", "application/json")));
         try {
             this.mockMvc.perform(get(url)).andDo(print()).andExpect(status().isFound());
         } catch (Exception e) {
@@ -153,5 +155,22 @@ class PostControllerTest {
         }
 
         server.stop();
+    }
+
+    /**
+     * Invalid post test.
+     * Validator is the same for each endpoint, so we test it once
+     */
+    @Test
+    void invalidPost() {
+        String url = baseUrl + "/create";
+        try {
+            this.mockMvc.perform(post(url).content("not_a_post")
+                    .contentType(MediaType.APPLICATION_JSON)).andDo(print())
+                .andExpect(status().is4xxClientError());
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail("Exception in creating post");
+        }
     }
 }
