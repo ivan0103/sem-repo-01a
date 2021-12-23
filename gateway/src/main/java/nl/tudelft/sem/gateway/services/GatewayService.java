@@ -1,5 +1,6 @@
 package nl.tudelft.sem.gateway.services;
 
+import java.util.ArrayList;
 import nl.tudelft.sem.gateway.entities.AuthUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -7,13 +8,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.URI;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.util.ArrayList;
 
 @Service
 public class GatewayService implements UserDetailsService {
@@ -80,7 +76,7 @@ public class GatewayService implements UserDetailsService {
     public AuthUser getAuthUserByUsername(String username) throws UsernameNotFoundException {
 
         try {
-            AuthUser user = restTemplate.getForObject("http://users/" + "{" +username +"}", AuthUser.class);
+            AuthUser user = restTemplate.getForObject("http://users/" + "{" + username + "}", AuthUser.class);
             return user;
         } catch (Exception e) {
             e.printStackTrace();
