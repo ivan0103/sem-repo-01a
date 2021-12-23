@@ -1,5 +1,6 @@
 package nl.tudelft.sem.genericservicepost.services;
 
+import static org.assertj.core.api.Assertions.assertThat;
 
 import nl.tudelft.sem.genericservicepost.entities.Expertise;
 import nl.tudelft.sem.genericservicepost.entities.GenericPost;
@@ -18,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
-public class GenericPostServiceTest  {
+public class GenericPostServiceTest {
     transient GenericPost genericPost;
     transient GenericPost genericPost1;
 
@@ -29,7 +30,7 @@ public class GenericPostServiceTest  {
     transient GenericPostService genericPostService;
 
     @BeforeEach
-    void setup(){
+    void setup() {
         genericPost = new GenericPost();
         genericPost1 = new GenericPost();
 
@@ -50,13 +51,13 @@ public class GenericPostServiceTest  {
     }
 
     @Test
-    void createGenericPost(){
+    void createGenericPost() {
         GenericPost post = genericPostService.createGenericPost(genericPost);
         assertThat(post).isEqualTo(genericPost);
     }
 
     @Test
-    void editGenericPost(){
+    void editGenericPost() {
         GenericPost tmp = genericPostService.createGenericPost(genericPost);
 
         tmp.setDuration(3);

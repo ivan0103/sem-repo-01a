@@ -10,7 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
+import org.springframework.format.annotation.DateTimeFormat;
 
 
 @Entity
@@ -51,15 +51,20 @@ public class Contract {
     @Column(name = "payPerWeek")
     private float payPerWeek;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @Column(name = "startDate")
     private LocalDate startDate;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @Column(name = "endDate")
     private LocalDate endDate;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @Column(name = "agreementDate")
     private LocalDate agreementDate;
 
+    public Contract() {
+    }
 
     /**
      * Instantiates a new Contract.

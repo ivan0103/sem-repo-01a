@@ -6,7 +6,9 @@ import static org.mockito.ArgumentMatchers.any;
 
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import nl.tudelft.sem.studentservicepost.entities.Competency;
 import nl.tudelft.sem.studentservicepost.entities.Expertise;
 import nl.tudelft.sem.studentservicepost.entities.Post;
@@ -17,6 +19,7 @@ import nl.tudelft.sem.studentservicepost.repositories.ExpertiseRepository;
 import nl.tudelft.sem.studentservicepost.repositories.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.AdditionalAnswers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -40,6 +43,7 @@ class PostServiceTest {
 
 
     transient Expertise exp1;
+    transient Expertise exp2;
 
 
     @InjectMocks
@@ -61,6 +65,8 @@ class PostServiceTest {
         comp2 = new Competency(competency2);
 
         exp1 = new Expertise("exp1");
+        exp2 = new Expertise("exp2");
+
         post = new Post();
         postReturned = new Post();
 
@@ -73,12 +79,15 @@ class PostServiceTest {
         post.setPricePerHour(new BigDecimal("15.00"));
         postReturned.setPricePerHour(new BigDecimal("15.00"));
 
-        postReturned.getCompetencySet().add(comp1);
+        post.getCompetencySet().add(comp1);
         postReturned.getCompetencySet().add(comp1);
 
-        postReturned.getExpertiseSet().add(exp1);
+        post.getExpertiseSet().add(exp1);
         postReturned.getExpertiseSet().add(exp1);
 
+        Set<Post> tmpSet = new HashSet<>();
+        tmpSet.add(post);
+        comp1.setPostSet(tmpSet);
 
         post1 = new Post();
         post1Returned = new Post();
@@ -98,15 +107,25 @@ class PostServiceTest {
         post1.getExpertiseSet().add(exp1);
         post1Returned.getExpertiseSet().add(exp1);
 
+        tmpSet = new HashSet<>();
+        tmpSet.add(post1);
+        comp2.setPostSet(tmpSet);
+        tmpSet = new HashSet<>();
+        tmpSet.add(post);
+        tmpSet.add(post1);
+        exp1.setPostSet(tmpSet);
 
         Mockito.when(postRepository.getPostById(1L)).thenReturn(postReturned);
         Mockito.when(postRepository.getPostById(2L)).thenReturn(post1Returned);
-        Mockito.when(postRepository.save(any())).thenAnswer(i -> i.getArguments()[0]);
+        Mockito.when(postRepository.save(any())).thenAnswer(AdditionalAnswers.returnsFirstArg());
 
         Mockito.when(postRepository.save(post)).thenReturn(postReturned);
         Mockito.when(postRepository.save(post1)).thenReturn(post1Returned);
-        Mockito.when(expertiseRepository.existsById(any())).thenReturn(false, true);
-        Mockito.when(competencyRepository.existsById(any())).thenReturn(false, true);
+        Mockito.when(expertiseRepository.existsById(any())).thenReturn(false);
+        Mockito.when(expertiseRepository.existsById("exp1")).thenReturn(false, true);
+        Mockito.when(competencyRepository.existsById(any())).thenReturn(false);
+        Mockito.when(competencyRepository.existsById(competency1)).thenReturn(false, true);
+        Mockito.when(competencyRepository.existsById(competency2)).thenReturn(false, true);
         Mockito.when(postRepository.existsById(any())).thenReturn(false);
         Mockito.when(postRepository.existsById(1L)).thenReturn(true);
         Mockito.when(postRepository.existsById(2L)).thenReturn(true);
@@ -114,18 +133,16 @@ class PostServiceTest {
         Mockito.when(postRepository.findAll()).thenReturn(List.of(postReturned, post1Returned));
 
         Mockito.when(competencyRepository.getAllBySearchableStringContaining(competency1))
-            .thenReturn(
-                List.of(comp1)
-            );
+            .thenReturn(List.of(comp1));
 
         Mockito.when(competencyRepository.getAllBySearchableStringContaining(competency2))
-            .thenReturn(
-                List.of(comp2)
-            );
+            .thenReturn(List.of(comp2));
 
-        Mockito.when(expertiseRepository.getAllBySearchableStringContaining(expertise1)).thenReturn(
-            List.of(exp1)
-        );
+        Mockito.when(expertiseRepository.getAllBySearchableStringContaining(expertise1))
+            .thenReturn(List.of(exp1));
+
+        Mockito.when(expertiseRepository.getAllBySearchableStringContaining(""))
+            .thenReturn(List.of(exp1, exp2));
 
         Mockito.when(postRepository.getAllByCompetencySetContaining(comp1))
             .thenReturn(List.of(postReturned));
@@ -135,6 +152,14 @@ class PostServiceTest {
         Mockito.when(postRepository.getAllByExpertiseSetContaining(exp1))
             .thenReturn(List.of(postReturned, post1Returned));
 
+        Mockito.when(competencyRepository.getCompetencyByCompetencyString(competency1))
+            .thenReturn(comp1);
+        Mockito.when(competencyRepository.getCompetencyByCompetencyString(competency2))
+            .thenReturn(comp2);
+
+        Mockito.when(expertiseRepository.getExpertiseByExpertiseString(expertise1))
+            .thenReturn(exp1);
+
 
     }
 
@@ -142,13 +167,15 @@ class PostServiceTest {
     void createPost() {
         Post tmp = postService.createPost(post);
         assertThat(tmp).isEqualTo(postReturned);
-    }
 
-    @Test
-    void createPostSameExpertise() {
+        tmp.setAuthor("anotherguy");
+        tmp = postService.createPost(tmp);
+
+        assertThat(tmp.getAuthor()).isEqualTo("anotherguy");
         Post tmp2 = postService.createPost(post1);
         assertThat(tmp2).isEqualTo(post1);
     }
+
 
     @Test
     void editPost() {
@@ -171,12 +198,17 @@ class PostServiceTest {
     }
 
     @Test
+    void editPostNaN() {
+        assertThatThrownBy(() -> postService.editPost(null, "agagaga"));
+    }
+
+    @Test
     void editNonExistentPost() {
         Post toEdit = new Post();
         //toEdit.setId(realId + 100L); // set id to something different from existing post
 
-        assertThatThrownBy(() -> postService.editPost(toEdit, "999999"))
-            .isInstanceOf(PostNotFoundException.class);
+        assertThatThrownBy(() -> postService.editPost(toEdit, "999999")).isInstanceOf(
+            PostNotFoundException.class);
         postRepository.delete(toEdit);
 
     }
@@ -195,22 +227,27 @@ class PostServiceTest {
         toEdit.setAuthor("anotherguy");
 
 
-        assertThatThrownBy(() -> postService.editPost(toEdit, "1"))
-            .isInstanceOf(InvalidEditException.class);
+        assertThatThrownBy(() -> postService.editPost(toEdit, "1")).isInstanceOf(
+            InvalidEditException.class);
 
     }
 
     @Test
-    void testSearchByKeywordFound() {
+    void testSearchByKeywordFoundComp() {
         Post tmp = postService.createPost(post);
         Collection<Post> result = postService.searchByKeyword("cOmp  1");
         assertThat(result).containsOnlyOnce(tmp).hasSize(1);
     }
 
     @Test
+    void testSearchByKeywordFoundExp() {
+        Post tmp = postService.createPost(post);
+        Collection<Post> result = postService.searchByKeyword("EXp  1");
+        assertThat(result).containsOnlyOnce(tmp).hasSize(2);
+    }
+
+    @Test
     void testSearchByKeywordNotFound() {
-        // postService.createPost(post);
-        // postService.createPost(post1);
         Collection<Post> result = postService.searchByKeyword("cOmp  4");
         assertThat(result).isEmpty();
     }
