@@ -2,6 +2,7 @@ package nl.tudelft.sem.studentservicepost.controllers;
 
 import java.util.Set;
 import javax.validation.Valid;
+import nl.tudelft.sem.studentservicepost.entities.ChangedOffer;
 import nl.tudelft.sem.studentservicepost.entities.CompanyOffer;
 import nl.tudelft.sem.studentservicepost.services.CompanyOfferService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,4 +39,32 @@ public class CompanyOfferController {
         Set<CompanyOffer> result = companyOfferService.getByPostId(postId);
         return new ResponseEntity<>(result, HttpStatus.FOUND);
     }
+
+    @PatchMapping(value = "/suggestChange")
+    public ResponseEntity<ChangedOffer> suggestChange(@Valid @RequestBody CompanyOffer changed) {
+        ChangedOffer possibleChange = companyOfferService.suggestChange(changed);
+        return new ResponseEntity<>(possibleChange, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/getChanges")
+    public ResponseEntity<Set<ChangedOffer>> getChangedOffers(
+        @Valid @RequestParam("offerId") String offerId) {
+        Set<ChangedOffer> result = companyOfferService.getChanges(offerId);
+        return new ResponseEntity<>(result, HttpStatus.FOUND);
+    }
+
+    @PatchMapping(value = "/acceptChanges")
+    public ResponseEntity<CompanyOffer> acceptChangedOffer(
+        @Valid @RequestParam("changedId") String changedId) {
+        CompanyOffer result = companyOfferService.acceptChange(changedId);
+        return new ResponseEntity<>(result, HttpStatus.ACCEPTED);
+    }
+
+    @PatchMapping(value = "/acceptOffer")
+    public ResponseEntity<CompanyOffer> acceptOffer(
+        @Valid @RequestParam("offerId") String offerId) {
+        CompanyOffer result = companyOfferService.acceptOffer(offerId);
+        return new ResponseEntity<>(result, HttpStatus.ACCEPTED);
+    }
+
 }

@@ -77,9 +77,7 @@ public class Competency {
             return false;
         }
         Competency that = (Competency) o;
-        String thatC = makeSearchable(that.competencyString);
-        String thisC = makeSearchable(this.competencyString);
-        return thisC.equalsIgnoreCase(thatC);
+        return this.searchableString.equalsIgnoreCase(that.searchableString);
     }
 
     @Override

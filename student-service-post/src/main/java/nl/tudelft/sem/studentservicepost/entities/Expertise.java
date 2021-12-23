@@ -2,7 +2,6 @@ package nl.tudelft.sem.studentservicepost.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 import javax.persistence.Column;
