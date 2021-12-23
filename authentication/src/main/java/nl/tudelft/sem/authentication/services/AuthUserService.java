@@ -14,7 +14,7 @@ public class AuthUserService {
 
     private final transient AuthUserRepository authUserRepository;
     private final transient RestTemplate restTemplate;
-    private final transient String usersApi = "http://localhost:8081/users/";
+    private final transient String usersApi = "http://USERS/users/";
 
     @Autowired
     public AuthUserService(AuthUserRepository authUserRepository, RestTemplate restTemplate) {

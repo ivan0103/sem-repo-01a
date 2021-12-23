@@ -22,8 +22,8 @@ ext {
 }
 
 dependencies {
-	// EUREKA CLIENT
-	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+	// EUREKA SERVER
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
 
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
