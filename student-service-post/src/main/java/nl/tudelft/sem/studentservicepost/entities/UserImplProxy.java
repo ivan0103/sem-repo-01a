@@ -1,5 +1,6 @@
 package nl.tudelft.sem.studentservicepost.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import javax.persistence.Transient;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -13,6 +14,7 @@ public class UserImplProxy implements User {
     private transient String netID;
 
     @Transient
+    @JsonIgnore
     private final transient RestTemplate restTemplate;
 
     @Transient

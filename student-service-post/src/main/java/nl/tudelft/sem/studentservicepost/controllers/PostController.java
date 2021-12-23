@@ -10,7 +10,9 @@ import javax.validation.Valid;
 import nl.tudelft.sem.studentservicepost.entities.Post;
 import nl.tudelft.sem.studentservicepost.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -28,10 +30,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/servicepost")
 public class PostController {
 
+    private final transient String filterName = "postFilter";
+    
+    private final transient String userType = "user";
     @Autowired
     private transient PostService postService;
-
-    private final transient String filterName = "postFilter";
 
     /**
      * Instantiates a new Post controller.
@@ -49,18 +52,18 @@ public class PostController {
      * @return the mapping jackson value
      */
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public MappingJacksonValue createPost(@Valid @RequestBody Post post) {
+    public ResponseEntity<MappingJacksonValue> createPost(@Valid @RequestBody Post post) {
         Post savedPost = postService.createPost(post);
 
         SimpleBeanPropertyFilter simpleBeanPropertyFilter =
-                SimpleBeanPropertyFilter.serializeAllExcept("user");
+            SimpleBeanPropertyFilter.serializeAllExcept(userType);
         FilterProvider filterProvider = new SimpleFilterProvider()
-                .addFilter(filterName, simpleBeanPropertyFilter);
+            .addFilter(filterName, simpleBeanPropertyFilter);
 
         MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(savedPost);
         mappingJacksonValue.setFilters(filterProvider);
 
-        return mappingJacksonValue;
+        return new ResponseEntity<>(mappingJacksonValue, HttpStatus.CREATED);
     }
 
     /**
@@ -70,20 +73,23 @@ public class PostController {
      * @param postId the post id
      * @return the mapping jackson value
      */
-    @PatchMapping(value = "/edit", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public MappingJacksonValue editPost(@Valid @RequestBody Post post,
-                                         @RequestParam("postId") String postId) {
+    @PatchMapping(value = "/edit", consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<MappingJacksonValue> editPost(@Valid @RequestBody Post post,
+                                                        @RequestParam("postId") String postId) {
         Post editedPost = postService.editPost(post, postId);
 
         SimpleBeanPropertyFilter simpleBeanPropertyFilter =
-                SimpleBeanPropertyFilter.serializeAll();
+            SimpleBeanPropertyFilter.serializeAllExcept(userType);
         FilterProvider filterProvider = new SimpleFilterProvider()
-                .addFilter(filterName, simpleBeanPropertyFilter);
+            .addFilter(filterName, simpleBeanPropertyFilter);
 
         MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(editedPost);
         mappingJacksonValue.setFilters(filterProvider);
 
-        return mappingJacksonValue;
+
+        return ResponseEntity.accepted().contentType(MediaType.APPLICATION_JSON)
+            .body(mappingJacksonValue);
     }
 
     /**
@@ -93,17 +99,17 @@ public class PostController {
      * @return the post by post id
      */
     @GetMapping(value = "/retrieve/{postId}")
-    public MappingJacksonValue getPostByPostId(@PathVariable String postId) {
+    public ResponseEntity<MappingJacksonValue> getPostByPostId(@PathVariable String postId) {
         Post post = postService.getById(postId);
         SimpleBeanPropertyFilter simpleBeanPropertyFilter =
-                SimpleBeanPropertyFilter.serializeAll();
+            SimpleBeanPropertyFilter.serializeAll();
         FilterProvider filterProvider = new SimpleFilterProvider()
-                .addFilter(filterName, simpleBeanPropertyFilter);
+            .addFilter(filterName, simpleBeanPropertyFilter);
 
         MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(post);
         mappingJacksonValue.setFilters(filterProvider);
 
-        return mappingJacksonValue;
+        return new ResponseEntity<>(mappingJacksonValue, HttpStatus.FOUND);
     }
 
     /**
@@ -113,7 +119,7 @@ public class PostController {
      * @return the response
      */
     @GetMapping(value = "/search", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public MappingJacksonValue searchPostsByKeywords(
+    public ResponseEntity<MappingJacksonValue> searchPostsByKeywords(
         @RequestBody Set<String> keywords) {
         Collection<Post> found = new HashSet<>();
         for (String keyword : keywords) {
@@ -121,14 +127,14 @@ public class PostController {
         }
 
         SimpleBeanPropertyFilter simpleBeanPropertyFilter =
-                SimpleBeanPropertyFilter.serializeAllExcept("user");
+            SimpleBeanPropertyFilter.serializeAllExcept(userType);
         FilterProvider filterProvider = new SimpleFilterProvider()
-                .addFilter(filterName, simpleBeanPropertyFilter);
+            .addFilter(filterName, simpleBeanPropertyFilter);
 
         MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(found);
         mappingJacksonValue.setFilters(filterProvider);
 
-        return mappingJacksonValue;
+        return new ResponseEntity<>(mappingJacksonValue, HttpStatus.FOUND);
     }
 
     /**
@@ -137,18 +143,18 @@ public class PostController {
      * @return the all
      */
     @GetMapping(value = "/getall")
-    public MappingJacksonValue getAll() {
+    public ResponseEntity<MappingJacksonValue> getAll() {
         Collection<Post> found = postService.getAll();
 
         SimpleBeanPropertyFilter simpleBeanPropertyFilter =
-                SimpleBeanPropertyFilter.serializeAllExcept("user");
+            SimpleBeanPropertyFilter.serializeAllExcept(userType);
         FilterProvider filterProvider = new SimpleFilterProvider()
-                .addFilter(filterName, simpleBeanPropertyFilter);
+            .addFilter(filterName, simpleBeanPropertyFilter);
 
         MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(found);
         mappingJacksonValue.setFilters(filterProvider);
 
-        return mappingJacksonValue;
+        return new ResponseEntity<>(mappingJacksonValue, HttpStatus.FOUND);
     }
 
 }
