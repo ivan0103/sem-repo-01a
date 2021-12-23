@@ -1,5 +1,9 @@
 package nl.tudelft.sem.genericservicepost.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -44,8 +48,10 @@ public class GenericPost {
     )
     private Set<Expertise> expertiseSet = new HashSet<>();
 
-    @OneToMany
-    private Set<StudentOffer> studentOfferOfferSet = new HashSet<>();
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    transient private Set<StudentOffer> studentOfferOfferSet = new HashSet<>();
 
     public Long getId() {
         return id;

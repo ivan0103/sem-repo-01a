@@ -82,9 +82,7 @@ public class GenericPostServiceTest  {
 
         // Test for students in post 1.
         studentOffers.add(ivan);
-        studentOffers.add(marie);
         studentOffers.add(todor);
-        studentOffers.add(tudor);
 
         Set<StudentOffer> result = new HashSet<>();
         result.add(ivan);
@@ -97,9 +95,7 @@ public class GenericPostServiceTest  {
         assertThat(result).isEqualTo(studentOffers);
 
         // Test for students in post 2.
-        students1.add(ivan);
         students1.add(marie);
-        students1.add(todor);
         students1.add(tudor);
 
         Set<StudentOffer> result1 = new HashSet<>();
@@ -121,4 +117,5 @@ public class GenericPostServiceTest  {
         assertThatThrownBy(() -> genericPostService.retrieveStudentsInPost(genericPost2))
                 .isInstanceOf(GenericPostNotFoundException.class);
     }
+
 }
