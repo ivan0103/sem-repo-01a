@@ -1,6 +1,7 @@
 package nl.tudelft.sem.studentservicepost.entities;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -79,7 +80,7 @@ public class Post {
     private Set<Competency> competencySet = new HashSet<>();
 
     // Prevent company offer spoofing when creating a new post
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonIgnore
     @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<CompanyOffer> companyOfferSet = new HashSet<>();
@@ -94,6 +95,10 @@ public class Post {
      * Instantiates a new Post.
      */
     public Post() {
+    }
+
+    protected Post(String author) {
+        this.author = author;
     }
 
     /**

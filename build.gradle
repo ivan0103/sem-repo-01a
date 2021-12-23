@@ -67,6 +67,7 @@ subprojects {
                 enabled = true
                 element = 'CLASS'
                 includes = ['nl.tudelft.sem.*']
+                excludes = ['nl.tudelft.sem.studentservicepost']
 
                 limit {
                     counter = 'BRANCH'
@@ -76,6 +77,19 @@ subprojects {
             }
         }
     }
+
+    jacocoTestReport {
+        afterEvaluate {
+            classDirectories.setFrom(files(classDirectories.files.collect {
+                fileTree(dir: it, exclude: ['nl/tudelft/sem/studentservicepost/*.class',
+                                            'nl/tudelft/sem/users/*.class',
+                                            'nl/tudelft/sem/genericservicepost/*.class',
+                                            'nl/tudelft/sem/contracts/*.class'
+                ])
+            }))
+        }
+    }
+
 
     checkstyle {
         toolVersion "8.37"

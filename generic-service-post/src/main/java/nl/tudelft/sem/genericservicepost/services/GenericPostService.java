@@ -30,7 +30,7 @@ public class GenericPostService {
         for (Expertise expertise : genericPost.getExpertiseSet()) {
             if (expertiseRepository.existsById(expertise.getExpertiseString())) {
                 Expertise tmp = expertiseRepository.getExpertiseByExpertiseString(
-                        expertise.getExpertiseString());
+                    expertise.getExpertiseString());
                 tmp.getGenericPostSet().add(genericPost);
                 expertiseRepository.save(tmp);
             } else {

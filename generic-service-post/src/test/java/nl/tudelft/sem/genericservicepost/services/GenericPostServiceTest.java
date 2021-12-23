@@ -1,6 +1,5 @@
 package nl.tudelft.sem.genericservicepost.services;
 
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 import nl.tudelft.sem.genericservicepost.entities.Expertise;
@@ -13,7 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 
 @SpringBootTest
-public class GenericPostServiceTest  {
+public class GenericPostServiceTest {
     transient GenericPost genericPost;
     transient GenericPost genericPost1;
 
@@ -28,8 +27,8 @@ public class GenericPostServiceTest  {
         genericPost = new GenericPost();
         genericPost1 = new GenericPost();
 
-        genericPost.setId((long) 0);
-        genericPost1.setId((long) 1);
+        genericPost.setId(0L);
+        genericPost1.setId(1L);
 
         genericPost.setAuthor("The Rock");
         genericPost1.setAuthor("The Wok");
