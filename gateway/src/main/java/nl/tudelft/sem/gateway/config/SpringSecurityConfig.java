@@ -1,53 +1,68 @@
-package nl.tudelft.sem.gateway.security;
+package nl.tudelft.sem.gateway.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
+
+import lombok.RequiredArgsConstructor;
+import nl.tudelft.sem.gateway.filters.CustomAuthenticationFilter;
+import nl.tudelft.sem.gateway.filters.CustomAuthorizationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final PasswordEncoder passwordEncoder;
+    private final UserDetailsService userDetailsService;
+    private final BCryptPasswordEncoder encoder;
 
-    private final L
-
-    @Autowired
-    public  SpringSecurityConfig(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
-
+    /**
+     * Configures the security of the application with customized filters for JWT tokens
+     * and permission restrictions based on role of user.
+     *
+     * @param http - the http we are configuring
+     * @throws Exception When a user is not authorized or authenticated.
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .authorizeRequests()
-                .anyRequest()
-                .authenticated()
-                .and()
-                .httpBasic();
+        http.csrf().disable();
+        http.sessionManagement().sessionCreationPolicy(STATELESS);
+        http.authorizeRequests().antMatchers("/users/addUser/**", "/refreshToken/**").permitAll();
+        http.authorizeRequests().antMatchers("/student/**").hasAnyAuthority("Student");
+        http.authorizeRequests().antMatchers("/company/**").hasAnyAuthority("Company");
+        http.authorizeRequests().anyRequest().authenticated();
+        http.addFilter(new CustomAuthenticationFilter(authenticationManager()));
+        http.addFilterBefore(
+                new CustomAuthorizationFilter(),
+                UsernamePasswordAuthenticationFilter.class);
+
     }
 
+    /**
+     * Configure security so that passwords are encoded.
+     *
+     * @param auth - the authentication manager builder.
+     * @throws Exception When something wrong with the userDetails.
+     */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
-                .inMemoryAuthentication()
-                .withUser("todor")
-                .password(passwordEncoder.encode("123456"))
-                .roles("STUDENT")
-                .and()
-                .withUser("samsung")
-                .password(passwordEncoder.encode("cannabis"))
-                .roles("COMPANY");
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(encoder);
+    }
+
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManager() throws Exception {
+        return super.authenticationManager();
     }
 }
