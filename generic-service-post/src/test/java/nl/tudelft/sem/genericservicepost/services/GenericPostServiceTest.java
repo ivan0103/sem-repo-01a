@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+
 @SpringBootTest
 public class GenericPostServiceTest {
     transient GenericPost genericPost;
@@ -26,8 +27,8 @@ public class GenericPostServiceTest {
         genericPost = new GenericPost();
         genericPost1 = new GenericPost();
 
-        genericPost.setId((long) 0);
-        genericPost1.setId((long) 1);
+        genericPost.setId(0L);
+        genericPost1.setId(1L);
 
         genericPost.setAuthor("The Rock");
         genericPost1.setAuthor("The Wok");

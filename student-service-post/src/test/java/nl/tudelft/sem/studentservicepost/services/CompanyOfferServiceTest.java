@@ -219,7 +219,7 @@ class CompanyOfferServiceTest {
             new HashSet<>(List.of(inserted)));
 
         assertThatThrownBy(() -> companyOfferService.getByPostId("lmao")).isInstanceOf(
-            PostNotFoundException.class);
+                PostNotFoundException.class);
 
     }
 
