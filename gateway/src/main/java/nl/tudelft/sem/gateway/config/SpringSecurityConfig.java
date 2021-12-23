@@ -20,8 +20,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final UserDetailsService userDetailsService;
-    private final BCryptPasswordEncoder encoder;
+    private final transient UserDetailsService userDetailsService;
+    private final transient BCryptPasswordEncoder encoder;
 
     public SpringSecurityConfig(
             UserDetailsService userDetailsService,
