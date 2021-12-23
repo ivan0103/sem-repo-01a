@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import nl.tudelft.sem.gateway.communication.UserServiceCommunication;
 import nl.tudelft.sem.gateway.entities.AuthUser;
 import nl.tudelft.sem.gateway.services.GatewayService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,13 +29,10 @@ public class GatewayController {
 
     private final transient GatewayService gatewayService;
 
-    private final transient UserServiceCommunication userServiceCommunication;
 
     @Autowired
-    public GatewayController(GatewayService gatewayService,
-                             UserServiceCommunication userServiceCommunication) {
+    public GatewayController(GatewayService gatewayService) {
         this.gatewayService = gatewayService;
-        this.userServiceCommunication = userServiceCommunication;
     }
 
     @GetMapping
@@ -78,7 +74,7 @@ public class GatewayController {
 
                 //Make a new access token with user information
                 String username = decodedJWT.getSubject();
-                AuthUser user = UserServiceCommunication.getAuthUserByUsername(username);
+                AuthUser user = gatewayService.getAuthUserByUsername(username);
 
                 String accessToken = JWT.create()
                         .withSubject(user.getNetID())

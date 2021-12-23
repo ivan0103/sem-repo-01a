@@ -1,5 +1,6 @@
 package nl.tudelft.sem.gateway;
 
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +17,7 @@ public class Gateway {
     }
 
     @Bean
-    PasswordEncoder passwordEncoder() {
+    BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -24,4 +25,5 @@ public class Gateway {
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
+
 }

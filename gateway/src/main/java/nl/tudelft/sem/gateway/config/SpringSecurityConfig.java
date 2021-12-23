@@ -2,7 +2,6 @@ package nl.tudelft.sem.gateway.config;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
-import lombok.RequiredArgsConstructor;
 import nl.tudelft.sem.gateway.filters.CustomAuthenticationFilter;
 import nl.tudelft.sem.gateway.filters.CustomAuthorizationFilter;
 import org.springframework.context.annotation.Bean;
@@ -19,11 +18,17 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
     private final BCryptPasswordEncoder encoder;
+
+    public SpringSecurityConfig(
+            UserDetailsService userDetailsService,
+            BCryptPasswordEncoder encoder) {
+        this.userDetailsService = userDetailsService;
+        this.encoder = encoder;
+    }
 
     /**
      * Configures the security of the application with customized filters for JWT tokens
