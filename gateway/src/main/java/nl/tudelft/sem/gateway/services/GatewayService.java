@@ -22,7 +22,7 @@ public class GatewayService implements UserDetailsService {
         this.restTemplate = restTemplate;
     }
 
-    /**
+    /*
      * Checks whether the user is truly authenticated.
      *
      * @param netID the net id
@@ -30,15 +30,14 @@ public class GatewayService implements UserDetailsService {
      * @return true - if the user is indeed authenticated
      *         false -  otherwise
      */
-
-    public Boolean isAuthenticated(String netID, String password) {
+    /*public Boolean isAuthenticated(String netID, String password) {
         AuthUser authUser = restTemplate.getForObject(
                urlAuth + netID + "/" + password,
                AuthUser.class
         );
 
         return authUser != null;
-    }
+    }*/
 
     /**
      * This method loads user's details from the user microservice to be used by

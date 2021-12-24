@@ -41,11 +41,12 @@ public class GatewayController {
         return "HOORAY! You have successfully logged in!";
     }
 
+    /*
     @GetMapping("/isAuthenticated/{netID}/{password}")
     public Boolean isAuthenticated(@PathVariable(value = "netID") String netID,
                                    @PathVariable(value = "password") String password) {
         return gatewayService.isAuthenticated(netID, password);
-    }
+    }*/
 
     /**
      * Endpoint for refreshing expired JWT tokens.

@@ -23,7 +23,7 @@ public class AuthUser {
     public AuthUser(String netID, String password, String role) {
         this.netID = netID;
         this.password = password;
-        if (role.equals("student") || role.equals("company")) {
+        if (role.equals("Student") || role.equals("Company")) {
             this.role = role;
         }
     }

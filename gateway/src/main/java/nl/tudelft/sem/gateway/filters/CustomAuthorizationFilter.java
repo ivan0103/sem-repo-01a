@@ -48,7 +48,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
             //Check if we have the correct header
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
                 try {
-                    // gets the token from header
+                    // gets the token from header skipping 'Bearer' part
                     String token = authorizationHeader.substring("Bearer ".length());
 
                     // The algorithm used for signature of token
