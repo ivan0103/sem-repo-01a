@@ -19,12 +19,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class PostService {
 
+    /**
+     * The Post repository.
+     */
     @Autowired
     transient PostRepository postRepository;
 
+    /**
+     * The Expertise repository.
+     */
     @Autowired
     transient ExpertiseRepository expertiseRepository;
 
+    /**
+     * The Competency repository.
+     */
     @Autowired
     transient CompetencyRepository competencyRepository;
 
@@ -67,7 +76,8 @@ public class PostService {
     /**
      * Edit post.
      *
-     * @param post the post
+     * @param post   the post
+     * @param postId the post id
      * @return the post
      * @throws PostNotFoundException id the post is not found in the database.
      */
@@ -91,6 +101,27 @@ public class PostService {
                 throw new PostNotFoundException();
             }
 
+        } catch (NumberFormatException e) {
+            throw new PostNotFoundException();
+        }
+    }
+
+    /**
+     * Gets by id.
+     *
+     * @param postId the post id
+     * @return the by id
+     */
+    public Post getById(String postId) {
+        long id;
+
+        try {
+            id = Long.parseLong(postId);
+            if (postRepository.existsById(id)) {
+                return postRepository.getPostById(id);
+            } else {
+                throw new PostNotFoundException();
+            }
         } catch (NumberFormatException e) {
             throw new PostNotFoundException();
         }
@@ -125,6 +156,11 @@ public class PostService {
         return result;
     }
 
+    /**
+     * Gets all.
+     *
+     * @return the all
+     */
     public Collection<Post> getAll() {
         return postRepository.findAll();
     }
