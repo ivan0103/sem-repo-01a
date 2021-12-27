@@ -150,7 +150,7 @@ public class GenericPostServiceTest {
         assertThatThrownBy(() -> genericPostService.setSelectedStudent(new StudentOffer(1L, "Ivan", genericPost), genericPost2))
                 .isInstanceOf(GenericPostNotFoundException.class);
     }
-
+/*
     @Test
     void setSelectedStudentNoStudentOfferTest(){
         StudentOffer todor = new StudentOffer(3L, "Todor", genericPost);
@@ -163,4 +163,6 @@ public class GenericPostServiceTest {
         assertThatThrownBy(() -> genericPostService.setSelectedStudent(new StudentOffer(1L, "Ivan", genericPost), tmp))
                 .isInstanceOf(StudentOfferNotFoundException.class);
     }
+
+ */
 }
