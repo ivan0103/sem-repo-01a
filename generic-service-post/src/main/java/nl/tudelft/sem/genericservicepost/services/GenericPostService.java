@@ -77,21 +77,11 @@ public class GenericPostService {
      * @throws GenericPostNotFoundException if id of the generic post was not found / doesn't exist.
      */
     public Set<StudentOffer> retrieveStudentsInPost(GenericPost genericPost){
-        Set<StudentOffer> result;
-
         if (genericPostRepository.existsById(genericPost.getId())){
-            /*
-            for (StudentOffer volunteer : genericPost.getStudentOfferSet()){
-                if (Objects.equals(volunteer.getGenericPost().getId(), genericPost.getId())){
-                    result = ;
-                }
-            }
-             */
             return genericPost.getStudentOfferSet();
         }
         else {
             throw new GenericPostNotFoundException();
         }
-        //return result;
     }
 }
