@@ -1,6 +1,8 @@
 package nl.tudelft.sem.genericservicepost.controllers;
 
 import javax.validation.Valid;
+
+import net.bytebuddy.description.type.TypeList;
 import nl.tudelft.sem.genericservicepost.entities.GenericPost;
 import nl.tudelft.sem.genericservicepost.entities.StudentOffer;
 import nl.tudelft.sem.genericservicepost.services.GenericPostService;
@@ -32,5 +34,11 @@ public class GenericPostController {
     public ResponseEntity<Set<StudentOffer>> getStudentsByPost(@Valid @RequestBody GenericPost post) {
         Set<StudentOffer> result = genericPostService.retrieveStudentsInPost(post);
         return new ResponseEntity<>(result, HttpStatus.FOUND);
+    }
+
+    @PostMapping("/setSelectedStudent")
+    public ResponseEntity<StudentOffer> setSelectedStudent(@Valid @RequestBody StudentOffer studentOffer, GenericPost post){
+        StudentOffer result = genericPostService.setSelectedStudent(studentOffer, post);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 }

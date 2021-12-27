@@ -5,6 +5,7 @@ import nl.tudelft.sem.genericservicepost.entities.GenericPost;
 import nl.tudelft.sem.genericservicepost.entities.StudentOffer;
 import nl.tudelft.sem.genericservicepost.exceptions.GenericPostNotFoundException;
 import nl.tudelft.sem.genericservicepost.exceptions.InvalidEditException;
+import nl.tudelft.sem.genericservicepost.exceptions.StudentOfferNotFoundException;
 import nl.tudelft.sem.genericservicepost.repositories.ExpertiseRepository;
 import nl.tudelft.sem.genericservicepost.repositories.GenericPostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,5 +84,30 @@ public class GenericPostService {
         else {
             throw new GenericPostNotFoundException();
         }
+    }
+
+    /**
+     * Issue #16
+     * Company can choose a student from StudentOffer
+     * After viewing all their parameters in the above method
+     * Method receives the selected student and assignes it to the posts paramter.
+     *
+     * @param student the selected student.
+     * @param post the post from which the student was selected and to which it will be assigned
+     * @return the student.
+     * @throws StudentOfferNotFoundException if the Student Offer was not found in the generic post.
+     * @throws GenericPostNotFoundException if the post does not exist or not found.
+     */
+
+    public StudentOffer setSelectedStudent(StudentOffer student, GenericPost post){
+        if (genericPostRepository.existsById(post.getId())){
+            if (post.getStudentOfferSet().contains(student)){
+                post.setSelectedStudentOffer(student);
+                genericPostRepository.save(post);
+                return student;
+            }
+            else throw new StudentOfferNotFoundException();
+        }
+        else throw new GenericPostNotFoundException();
     }
 }

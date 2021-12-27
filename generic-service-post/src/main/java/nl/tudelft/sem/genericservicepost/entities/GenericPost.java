@@ -7,18 +7,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -63,6 +52,10 @@ public class GenericPost {
     @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
     transient private Set<StudentOffer> studentOfferOfferSet = new HashSet<>();
+
+    @OneToOne
+    @Column(name = "candidate")
+    transient private StudentOffer selectedStudentOffer = new StudentOffer();
 
     public Long getId() {
         return id;
@@ -112,6 +105,10 @@ public class GenericPost {
         this.studentOfferOfferSet = studentOfferOfferSet;
     }
 
+    public StudentOffer getSelectedStudentOffer() { return selectedStudentOffer; }
+
+    public void setSelectedStudentOffer(StudentOffer studentOffer){ this.selectedStudentOffer = studentOffer; }
+
     @Override
     public String toString() {
         return "GenericPost{"
@@ -127,28 +124,25 @@ public class GenericPost {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         GenericPost that = (GenericPost) o;
-        return getHoursPerWeek() == that.getHoursPerWeek()
-                && getDuration() == that.getDuration()
-                && Objects.equals(getId(), that.getId())
-                && Objects.equals(getAuthor(), that.getAuthor())
-                && Objects.equals(getExpertiseSet(), that.getExpertiseSet())
-                && Objects.equals(getStudentOfferSet(), that.getStudentOfferSet());
+        return hoursPerWeek == that.hoursPerWeek
+                && duration == that.duration
+                && id.equals(that.id)
+                && author.equals(that.author)
+                && expertiseSet.equals(that.expertiseSet)
+                && studentOfferOfferSet.equals(that.studentOfferOfferSet);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(),
-                getAuthor(),
-                getHoursPerWeek(),
-                getDuration(),
-                getExpertiseSet(),
-                getStudentOfferSet());
+        return Objects.hash(id,
+                author,
+                hoursPerWeek,
+                duration,
+                expertiseSet,
+                studentOfferOfferSet,
+                selectedStudentOffer);
     }
 }

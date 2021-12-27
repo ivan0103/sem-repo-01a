@@ -12,6 +12,8 @@ import javax.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Objects;
+
 @Getter
 @Setter
 @Entity
@@ -31,6 +33,9 @@ public class StudentOffer {
     @JoinColumn(name = "generic_post_id", referencedColumnName = "generic_post_id")
     private GenericPost genericPost;
 
+    public StudentOffer(){
+
+    }
     public StudentOffer(Long id, String studentId, GenericPost genericPost) {
         this.id = id;
         this.studentId = studentId;
