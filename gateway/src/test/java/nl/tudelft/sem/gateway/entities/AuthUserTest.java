@@ -1,24 +1,23 @@
 package nl.tudelft.sem.gateway.entities;
 
-import org.junit.jupiter.api.AfterEach;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.Objects;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Objects;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class AuthUserTest {
 
-    AuthUser user;
+    private transient AuthUser user;
+    private final transient String baboon = "Baboon";
+    private final transient String baboon2 = "Baboon2";
+    private final transient String student = "Student";
 
     @BeforeEach
     void setUp() {
-        user = new AuthUser("Baboon", "Baboon2", "Student");
+        user = new AuthUser(baboon, baboon2, student);
     }
-
-
 
     @Test
     void constructorNullTest() {
@@ -27,43 +26,43 @@ class AuthUserTest {
 
     @Test
     void getNetIDTest() {
-        assertThat(user.getNetID()).isEqualTo("Baboon");
+        assertThat(user.getNetID()).isEqualTo(baboon);
     }
 
     @Test
     void setNetIDTest() {
         user.setNetID("Human");
         assertThat(user.getNetID()).isEqualTo("Human");
-        user.setNetID("Baboon");
+        user.setNetID(baboon);
     }
 
     @Test
     void getPasswordTest() {
-        assertThat(user.getPassword()).isEqualTo("Baboon2");
+        assertThat(user.getPassword()).isEqualTo(baboon2);
     }
 
     @Test
     void setPasswordTest() {
         user.setPassword("Baboon3");
         assertThat(user.getPassword()).isEqualTo("Baboon3");
-        user.setPassword("Baboon2");
+        user.setPassword(baboon2);
     }
 
     @Test
     void getRoleTest() {
-        assertThat(user.getRole()).isEqualTo("Student");
+        assertThat(user.getRole()).isEqualTo(student);
     }
 
     @Test
     void setRoleTest() {
         user.setRole("Company");
         assertThat(user.getRole()).isEqualTo("Company");
-        user.setRole("Student");
+        user.setRole(student);
     }
 
     @Test
     void equalsTestDifferentUsername() {
-        AuthUser user2 = new AuthUser("Orangutan", "Baboon2", "Student");
+        AuthUser user2 = new AuthUser("Orangutan", baboon2, student);
         assertThat(user.equals(user2)).isFalse();
     }
 
@@ -80,7 +79,7 @@ class AuthUserTest {
 
     @Test
     void equalsTestTrue() {
-        AuthUser user2 = new AuthUser("Baboon", "Baboon2", "Student");
+        AuthUser user2 = new AuthUser(baboon, baboon2, student);
         assertThat(user.equals(user2)).isTrue();
     }
 

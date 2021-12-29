@@ -2,7 +2,6 @@ package nl.tudelft.sem.gateway.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
 
 import java.util.ArrayList;
 import nl.tudelft.sem.gateway.entities.AuthUser;
@@ -15,18 +14,21 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.client.RestTemplate;
 
+
 class GatewayServiceTest {
 
-    AuthUser user;
-
-    GatewayService underTest;
+    private transient AuthUser user;
+    private transient GatewayService underTest;
+    private final transient String baboon = "Baboon";
+    private final transient String baboon2 = "Baboon2";
+    private final transient String student = "Student";
 
     @Mock
-    RestTemplate restTemplate;
+    private transient RestTemplate restTemplate;
 
     @BeforeEach
     void setUp() {
-        user = new AuthUser("Baboon", "Baboon2", "Student");
+        user = new AuthUser(baboon, baboon2, student);
 
         underTest = new GatewayService(restTemplate);
 
@@ -37,12 +39,12 @@ class GatewayServiceTest {
     @Test
     void loadUserByUsernameTest() {
         ArrayList<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("Student"));
+        authorities.add(new SimpleGrantedAuthority(student));
 
-        User expected = new User("Baboon", "Baboon2", authorities);
+        User expected = new User(baboon, baboon2, authorities);
 
         //when
-        UserDetails testCase = underTest.loadUserByUsername("Baboon");
+        UserDetails testCase = underTest.loadUserByUsername(baboon);
 
         //then
         assertThat(testCase).isEqualTo(expected);
@@ -52,7 +54,7 @@ class GatewayServiceTest {
     @Test
     void getAuthUserByUsernameTest() {
         //when
-        AuthUser testCase = underTest.getAuthUserByUsername("Baboon");
+        AuthUser testCase = underTest.getAuthUserByUsername(baboon);
 
         //then
         assertThat(testCase).isEqualTo(user);
