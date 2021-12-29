@@ -42,8 +42,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(STATELESS);
         http.authorizeRequests().antMatchers("/users/addUser/**", "/refreshToken/**").permitAll();
-        http.authorizeRequests().antMatchers("/student/**").hasAnyAuthority("Student");
-        http.authorizeRequests().antMatchers("/company/**").hasAnyAuthority("Company");
+        http.authorizeRequests().antMatchers("/student/**").hasAnyAuthority("student");
+        http.authorizeRequests().antMatchers("/company/**").hasAnyAuthority("company");
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(new CustomAuthenticationFilter(authenticationManager()));
         http.addFilterBefore(
