@@ -1,11 +1,14 @@
 package nl.tudelft.sem.studentservicepost.controllers;
 
+import java.time.LocalDate;
 import java.util.Set;
 import javax.validation.Valid;
 import nl.tudelft.sem.studentservicepost.entities.ChangedOffer;
 import nl.tudelft.sem.studentservicepost.entities.CompanyOffer;
+import nl.tudelft.sem.studentservicepost.entities.Contract;
 import nl.tudelft.sem.studentservicepost.services.CompanyOfferService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -72,6 +75,16 @@ public class CompanyOfferController {
     ) {
         Set<CompanyOffer> returnSet = companyOfferService.getAcceptedOffers(companyId);
         return new ResponseEntity(returnSet, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/createContract")
+    public ResponseEntity<Contract> createContract(
+            @RequestParam @Valid String offerId,
+            @RequestParam @Valid @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @Valid @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+    ) {
+        Contract returnContract = companyOfferService.createContract(offerId, startDate, endDate);
+        return new ResponseEntity<>(returnContract, HttpStatus.CREATED);
     }
 
 }

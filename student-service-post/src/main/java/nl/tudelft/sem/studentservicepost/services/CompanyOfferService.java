@@ -1,8 +1,12 @@
 package nl.tudelft.sem.studentservicepost.services;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Set;
+import javax.validation.Valid;
 import nl.tudelft.sem.studentservicepost.entities.ChangedOffer;
 import nl.tudelft.sem.studentservicepost.entities.CompanyOffer;
+import nl.tudelft.sem.studentservicepost.entities.Contract;
 import nl.tudelft.sem.studentservicepost.entities.Expertise;
 import nl.tudelft.sem.studentservicepost.entities.Post;
 import nl.tudelft.sem.studentservicepost.entities.Requirement;
@@ -14,7 +18,12 @@ import nl.tudelft.sem.studentservicepost.repositories.ExpertiseRepository;
 import nl.tudelft.sem.studentservicepost.repositories.PostRepository;
 import nl.tudelft.sem.studentservicepost.repositories.RequirementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 
 /**
@@ -249,6 +258,45 @@ public class CompanyOfferService {
                     .getAllByCompanyIdAndAcceptedIsTrue(companyId);
             return companyOffer;
         } else {
+            throw new OfferNotFoundException();
+        }
+    }
+
+
+    /**
+     * Create contract contract.
+     *
+     * @param offerId   the offer id
+     * @param startDate the start date
+     * @param endDate   the end date
+     * @return the contract
+     */
+    public Contract createContract(
+            String offerId,
+            @Valid @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @Valid @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+    ) {
+        long id;
+        try {
+            id = Long.parseLong(offerId);
+
+            if (companyOfferRepository.existsById(id)) {
+                CompanyOffer offer = companyOfferRepository.getById(id);
+                Post post = offer.getPost();
+
+                String url = "http://localhost:7070/contract/create";
+                RestTemplate restTemplate = new RestTemplate();
+                Contract contract = new Contract(post.getAuthor(),
+                        offer.getCompanyId(), post.getAuthor(), offer.getCompanyId(),
+                        LocalTime.of(offer.getWeeklyHours().intValue(), 0),
+                        offer.getPricePerHour().floatValue(), startDate, endDate);
+                HttpEntity<Contract> request = new HttpEntity<>(contract);
+                Contract response = restTemplate.postForObject(url, request, Contract.class);
+                return response;
+            } else {
+                throw new OfferNotFoundException();
+            }
+        } catch (NumberFormatException e) {
             throw new OfferNotFoundException();
         }
     }

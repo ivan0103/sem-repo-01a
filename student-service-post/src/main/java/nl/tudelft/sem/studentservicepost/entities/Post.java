@@ -97,6 +97,11 @@ public class Post {
     public Post() {
     }
 
+    /**
+     * Instantiates a new Post.
+     *
+     * @param author the author
+     */
     protected Post(String author) {
         this.author = author;
     }
@@ -212,7 +217,6 @@ public class Post {
         this.companyOfferSet = companyOfferSet;
     }
 
-
     @Override
     public String toString() {
         return "Post{"
@@ -222,6 +226,18 @@ public class Post {
             + ", expertiseSet=" + expertiseSet
             + ", competencySet=" + competencySet
             + '}';
+    }
+
+    /**
+     * Gets user.
+     *
+     * @return the user
+     */
+    public User getUser() {
+        if (this.user == null) {
+            this.user = new UserImplProxy(this.author, new RestTemplateBuilder());
+        }
+        return this.user;
     }
 
     @Override
