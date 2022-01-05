@@ -10,6 +10,7 @@ import nl.tudelft.sem.studentservicepost.entities.Contract;
 import nl.tudelft.sem.studentservicepost.entities.Expertise;
 import nl.tudelft.sem.studentservicepost.entities.Post;
 import nl.tudelft.sem.studentservicepost.entities.Requirement;
+import nl.tudelft.sem.studentservicepost.exceptions.OfferNotAcceptedException;
 import nl.tudelft.sem.studentservicepost.exceptions.OfferNotFoundException;
 import nl.tudelft.sem.studentservicepost.exceptions.PostNotFoundException;
 import nl.tudelft.sem.studentservicepost.repositories.ChangedOfferRepository;
@@ -282,6 +283,11 @@ public class CompanyOfferService {
 
             if (companyOfferRepository.existsById(id)) {
                 CompanyOffer offer = companyOfferRepository.getById(id);
+                if (!offer.isAccepted()) {
+                    throw new OfferNotAcceptedException();
+                }
+
+
                 Post post = offer.getPost();
 
                 String url = "http://localhost:7070/contract/create";
