@@ -23,18 +23,33 @@ import org.springframework.stereotype.Service;
 @Service
 public class CompanyOfferService {
 
+    /**
+     * The Company offer repository.
+     */
     @Autowired
     transient CompanyOfferRepository companyOfferRepository;
 
+    /**
+     * The Post repository.
+     */
     @Autowired
     transient PostRepository postRepository;
 
+    /**
+     * The Expertise repository.
+     */
     @Autowired
     transient ExpertiseRepository expertiseRepository;
 
+    /**
+     * The Requirement repository.
+     */
     @Autowired
     transient RequirementRepository requirementRepository;
 
+    /**
+     * The Changed offer repository.
+     */
     @Autowired
     transient ChangedOfferRepository changedOfferRepository;
 
@@ -44,6 +59,7 @@ public class CompanyOfferService {
      * @param companyOffer the company offer
      * @param postId       the post id
      * @return the company offer
+     * @throws PostNotFoundException the post not found exception
      */
     public CompanyOffer createOffer(CompanyOffer companyOffer, String postId)
         throws PostNotFoundException {
@@ -219,7 +235,21 @@ public class CompanyOfferService {
         } catch (NumberFormatException e) {
             throw new OfferNotFoundException();
         }
+    }
 
-
+    /**
+     * Gets accepted offers.
+     *
+     * @param companyId the company id
+     * @return the accepted offers
+     */
+    public Set<CompanyOffer> getAcceptedOffers(String companyId) {
+        if (companyOfferRepository.existsByCompanyId(companyId)) {
+            Set<CompanyOffer> companyOffer = companyOfferRepository
+                    .getAllByCompanyIdAndAcceptedIsTrue(companyId);
+            return companyOffer;
+        } else {
+            throw new OfferNotFoundException();
+        }
     }
 }

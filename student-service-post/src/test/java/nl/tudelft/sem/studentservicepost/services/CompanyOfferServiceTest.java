@@ -416,4 +416,47 @@ class CompanyOfferServiceTest {
             OfferNotFoundException.class);
 
     }
+
+    @Test
+    void getAcceptedOffersFoundOneOutOfTwo() {
+
+        CompanyOffer companyOffer = new CompanyOffer();
+
+        companyOffer.setCompanyId(companyName);
+        companyOffer.getExpertise().add(new Expertise(expString));
+        companyOffer.getRequirementsSet().add(new Requirement(reqString));
+
+        companyOffer.setTotalHours(420);
+        companyOffer.setWeeklyHours(12);
+
+        companyOffer.setPricePerHour(new BigDecimal(price));
+
+        companyOffer.setAccepted(true);
+
+        // Company offer 2 is not accepted
+        CompanyOffer companyOffer2 = new CompanyOffer();
+
+        companyOffer2.setCompanyId(companyName);
+        companyOffer2.getExpertise().add(new Expertise(expString));
+        companyOffer2.getRequirementsSet().add(new Requirement(reqString));
+
+        companyOffer2.setTotalHours(420);
+        companyOffer2.setWeeklyHours(12);
+
+        companyOffer2.setPricePerHour(new BigDecimal(price));
+
+        String postId = post.getId().toString();
+
+        CompanyOffer inserted = companyOfferService.createOffer(companyOffer, postId);
+        CompanyOffer inserted2 = companyOfferService.createOffer(companyOffer2, postId);
+
+        Set<CompanyOffer> returnSet = new HashSet<>();
+        returnSet.add(inserted);
+        when(companyOfferRepository.getAllByCompanyIdAndAcceptedIsTrue(companyName))
+                .thenReturn(returnSet);
+        when(companyOfferRepository.existsByCompanyId(companyName)).thenReturn(true);
+
+        assertThat(companyOfferService.getAcceptedOffers(companyName)).isEqualTo(returnSet);
+
+    }
 }
