@@ -12,6 +12,7 @@ import java.util.Set;
 import nl.tudelft.sem.studentservicepost.entities.ChangedOffer;
 import nl.tudelft.sem.studentservicepost.entities.CompanyOffer;
 import nl.tudelft.sem.studentservicepost.entities.Competency;
+import nl.tudelft.sem.studentservicepost.entities.Contract;
 import nl.tudelft.sem.studentservicepost.entities.Expertise;
 import nl.tudelft.sem.studentservicepost.entities.Post;
 import nl.tudelft.sem.studentservicepost.entities.Requirement;
@@ -29,6 +30,8 @@ import org.mockito.AdditionalAnswers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 @SpringBootTest
 class CompanyOfferServiceTest {
@@ -53,6 +56,10 @@ class CompanyOfferServiceTest {
     transient ExpertiseRepository expertiseRepository;
     @Mock
     transient ChangedOfferRepository changedOfferRepository;
+    @Mock
+    transient RestTemplate restTemplate;
+    @Mock
+    transient ResponseEntity<Contract> responseEntity;
 
     @BeforeEach
     void setup() {
@@ -457,6 +464,50 @@ class CompanyOfferServiceTest {
         when(companyOfferRepository.existsByCompanyId(companyName)).thenReturn(true);
 
         assertThat(companyOfferService.getAcceptedOffers(companyName)).isEqualTo(returnSet);
-
     }
+
+    @Test
+    void getAcceptedOffersNotFound() {
+        when(companyOfferRepository.existsByCompanyId(companyName)).thenReturn(false);
+
+        assertThatThrownBy(() -> {
+            companyOfferService.getAcceptedOffers(companyName);
+        }).isInstanceOf(OfferNotFoundException.class);
+    }
+
+    /*    @Test
+    void createValidContract() {
+        CompanyOffer companyOffer = new CompanyOffer();
+        companyOffer.setCompanyId(companyName);
+        companyOffer.getExpertise().add(new Expertise(expString));
+        companyOffer.getRequirementsSet().add(new Requirement(reqString));
+        companyOffer.setTotalHours(420);
+        companyOffer.setWeeklyHours(12);
+        companyOffer.setAccepted(true);
+        companyOffer.setPricePerHour(new BigDecimal(price));
+
+        String postId = post.getId().toString();
+
+        CompanyOffer offer = companyOfferService.createOffer(companyOffer, postId);
+
+        LocalDate startDate = LocalDate.of(2022,01,01);
+        LocalDate endDate = LocalDate.of(2022,02,01);
+
+        Contract contract = new Contract(post.getAuthor(),
+                offer.getCompanyId(), post.getAuthor(), offer.getCompanyId(),
+                LocalTime.of(offer.getWeeklyHours().intValue(), 0),
+                offer.getPricePerHour().floatValue(), startDate, endDate);
+
+        String url = "http://localhost:7070/contract/create";
+        when(restTemplate.postForEntity(anyString(), eq(HttpEntity.class), eq(Contract.class) ))
+                .thenReturn(responseEntity);
+        when(responseEntity.getBody()).thenReturn(contract);
+        when(companyOfferRepository.existsById(1L)).thenReturn(true);
+        when(companyOfferRepository.getById(1L)).thenReturn(offer);
+
+        Contract response = companyOfferService.createContract("1", startDate, endDate);
+        assertThat(response).isEqualTo(contract);
+    }*/
+
+
 }
