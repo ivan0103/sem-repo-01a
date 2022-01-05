@@ -448,7 +448,7 @@ class CompanyOfferServiceTest {
         String postId = post.getId().toString();
 
         CompanyOffer inserted = companyOfferService.createOffer(companyOffer, postId);
-        CompanyOffer inserted2 = companyOfferService.createOffer(companyOffer2, postId);
+        companyOfferService.createOffer(companyOffer2, postId);
 
         Set<CompanyOffer> returnSet = new HashSet<>();
         returnSet.add(inserted);

@@ -122,7 +122,7 @@ class CompanyOfferControllerTest {
         String url = baseUrl + "/getByPostId?postId=1";
         try {
             this.mockMvc.perform(get(url)).andDo(print())
-                .andExpect(status().isFound());
+                .andExpect(status().isOk());
             verify(companyOfferService).getByPostId("1");
 
         } catch (Exception e) {
@@ -150,7 +150,7 @@ class CompanyOfferControllerTest {
         String url = baseUrl + "/getChanges?offerId=1";
         try {
             this.mockMvc.perform(get(url)).andDo(print())
-                .andExpect(status().isFound());
+                .andExpect(status().isOk());
             verify(companyOfferService).getChanges("1");
         } catch (Exception e) {
             e.printStackTrace();
@@ -163,7 +163,7 @@ class CompanyOfferControllerTest {
         String url = baseUrl + "/acceptChanges?changedId=2";
         try {
             this.mockMvc.perform(patch(url)).andDo(print())
-                .andExpect(status().isAccepted());
+                .andExpect(status().isOk());
             verify(companyOfferService).acceptChange("2");
         } catch (Exception e) {
             e.printStackTrace();
@@ -176,7 +176,7 @@ class CompanyOfferControllerTest {
         String url = baseUrl + "/acceptOffer?offerId=1";
         try {
             this.mockMvc.perform(patch(url)).andDo(print())
-                .andExpect(status().isAccepted());
+                .andExpect(status().isOk());
             verify(companyOfferService).acceptOffer("1");
         } catch (Exception e) {
             e.printStackTrace();
