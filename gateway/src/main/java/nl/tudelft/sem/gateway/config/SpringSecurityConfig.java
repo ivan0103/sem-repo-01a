@@ -1,73 +1,69 @@
-package nl.tudelft.sem.gateway.config;
-
-import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
-
-import nl.tudelft.sem.gateway.filters.CustomAuthenticationFilter;
-import nl.tudelft.sem.gateway.filters.CustomAuthorizationFilter;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-
-@Configuration
-@EnableWebSecurity
-public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
-
-    private final transient UserDetailsService userDetailsService;
-    private final transient BCryptPasswordEncoder encoder;
-
-    public SpringSecurityConfig(
-            UserDetailsService userDetailsService,
-            BCryptPasswordEncoder encoder) {
-        this.userDetailsService = userDetailsService;
-        this.encoder = encoder;
-    }
-
-    /**
-     * Configures the security of the application with customized filters for JWT tokens
-     * and permission restrictions based on role of user.
-     *
-     * @param http - the http we are configuring
-     * @throws Exception When a user is not authorized or authenticated.
-     */
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable();
-        http.sessionManagement().sessionCreationPolicy(STATELESS);
-        http.authorizeRequests().antMatchers("/users/addUser/**", "/refreshToken/**").permitAll();
-        http.authorizeRequests().antMatchers("/student/**").hasAnyAuthority("student");
-        http.authorizeRequests().antMatchers("/company/**").hasAnyAuthority("company");
-        http.authorizeRequests().anyRequest().authenticated();
-        http.addFilter(new CustomAuthenticationFilter(authenticationManager()));
-        http.addFilterBefore(
-                new CustomAuthorizationFilter(),
-                UsernamePasswordAuthenticationFilter.class);
-
-    }
-
-    /**
-     * Configure security so that passwords are encoded.
-     *
-     * @param auth - the authentication manager builder.
-     * @throws Exception When something wrong with the userDetails.
-     */
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-                .userDetailsService(userDetailsService)
-                .passwordEncoder(encoder);
-    }
-
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManager() throws Exception {
-        return super.authenticationManager();
-    }
-}
+//package nl.tudelft.sem.gateway.config;
+//
+//import nl.tudelft.sem.gateway.services.GatewayService;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+//import org.springframework.context.annotation.Bean;
+//import org.springframework.context.annotation.Configuration;
+//import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+//import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+//import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+//import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+//import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+//import org.springframework.security.core.userdetails.UserDetailsService;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.web.client.RestTemplate;
+//
+//
+//@Configuration
+//@EnableWebSecurity
+//public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
+//
+//    private final transient RestTemplate restTemplate;
+//
+//    @Autowired
+//    public SpringSecurityConfig(RestTemplate restTemplate) {
+//        this.restTemplate = restTemplate;
+//    }
+//
+//    @Bean
+//    public UserDetailsService userDetailsService() {
+//        return new GatewayService(restTemplate);
+//    }
+//
+//    @Bean
+//    public BCryptPasswordEncoder passwordEncoder() {
+//        return new BCryptPasswordEncoder();
+//    }
+//
+//    @Bean
+//    public DaoAuthenticationProvider authenticationProvider() {
+//        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+//        authProvider.setUserDetailsService(userDetailsService());
+//        authProvider.setPasswordEncoder(passwordEncoder());
+//        return authProvider;
+//    }
+//
+//    @Override
+//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.authenticationProvider(authenticationProvider());
+//    }
+//
+//    @Override
+//    protected void configure(HttpSecurity httpSecurity) throws Exception {
+//        //super.configure(httpSecurity);
+//        httpSecurity//.authorizeRequests()
+//                //.antMatchers("/").permitAll().and()
+//                .authorizeRequests()
+//                .antMatchers("/h2-console/**").permitAll().and()
+//                .authorizeRequests()
+//                .antMatchers("/authentication/create/**").permitAll()
+//                .anyRequest().authenticated();
+//
+//        httpSecurity.csrf().disable();
+//        httpSecurity.headers().frameOptions().disable();
+//        httpSecurity.formLogin().and()
+//                .logout().invalidateHttpSession(true)
+//                .clearAuthentication(true).permitAll();
+//    }
+//}

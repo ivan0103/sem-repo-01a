@@ -41,7 +41,7 @@ public class SpringCloudConfig {
                         .uri("lb://CONTRACTS"))
 
                 // Route for authentication
-                .route("login", r -> r.path("/login/**")
+                .route("authentication", r -> r.path("/authentication/**")
                         .uri("lb://AUTHENTICATION"))
 
                 .build();

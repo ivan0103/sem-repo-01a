@@ -12,7 +12,7 @@ class AuthUserTest {
     private transient AuthUser user;
     private final transient String baboon = "Baboon";
     private final transient String baboon2 = "Baboon2";
-    private final transient String student = "Student";
+    private final transient String student = "student";
 
     @BeforeEach
     void setUp() {
@@ -95,6 +95,6 @@ class AuthUserTest {
     @Test
     void testToStringTest() {
         assertThat(user.toString()).isEqualTo(
-                "AuthUser{netID='Baboon', password='Baboon2', role='Student'}");
+                "AuthUser{netID='Baboon', password='Baboon2', role='student'}");
     }
 }
