@@ -40,9 +40,9 @@ public class SpringCloudConfig {
                 .route("contracts", r -> r.path("/contract/**")
                         .uri("lb://CONTRACTS"))
 
-                // Route for authentication
-                .route("authentication", r -> r.path("/authentication/**")
-                        .uri("lb://AUTHENTICATION"))
+                //                // Route for authentication
+                //                .route("authentication", r -> r.path("/authentication/**")
+                //                        .uri("lb://AUTHENTICATION"))
 
                 .build();
     }
