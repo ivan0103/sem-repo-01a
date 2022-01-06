@@ -150,7 +150,7 @@ public class CompanyOfferIntegrationTest {
         String url = baseUrl + "/getByPostId?postId=" + id;
         try {
             String body =
-                this.mockMvc.perform(get(url)).andDo(print()).andExpect(status().isFound())
+                this.mockMvc.perform(get(url)).andDo(print()).andExpect(status().isOk())
                     .andReturn().getResponse().getContentAsString();
             return new ObjectMapper().readValue(body,
                 new TypeReference<>() {
@@ -182,7 +182,7 @@ public class CompanyOfferIntegrationTest {
         String url = baseUrl + "/getChanges?offerId=" + id;
         try {
             String body =
-                this.mockMvc.perform(get(url)).andDo(print()).andExpect(status().isFound())
+                this.mockMvc.perform(get(url)).andDo(print()).andExpect(status().isOk())
                     .andReturn().getResponse().getContentAsString();
             return new ObjectMapper().readValue(body,
                 new TypeReference<>() {
@@ -196,7 +196,7 @@ public class CompanyOfferIntegrationTest {
         String url = baseUrl + "/acceptChanges?changedId=" + id;
         try {
             String body =
-                this.mockMvc.perform(patch(url)).andDo(print()).andExpect(status().isAccepted())
+                this.mockMvc.perform(patch(url)).andDo(print()).andExpect(status().isOk())
                     .andReturn().getResponse().getContentAsString();
             return new ObjectMapper().readValue(body, CompanyOffer.class);
         } catch (Exception e) {
@@ -209,7 +209,7 @@ public class CompanyOfferIntegrationTest {
         String url = baseUrl + "/acceptOffer?offerId=" + changedId;
         try {
             String body =
-                this.mockMvc.perform(patch(url)).andDo(print()).andExpect(status().isAccepted())
+                this.mockMvc.perform(patch(url)).andDo(print()).andExpect(status().isOk())
                     .andReturn().getResponse().getContentAsString();
             return new ObjectMapper().readValue(body, CompanyOffer.class);
         } catch (Exception e) {

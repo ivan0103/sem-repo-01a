@@ -1,18 +1,20 @@
 package nl.tudelft.sem.studentservicepost.controllers;
 
+import java.time.LocalDate;
 import java.util.Set;
 import javax.validation.Valid;
 import nl.tudelft.sem.studentservicepost.entities.ChangedOffer;
 import nl.tudelft.sem.studentservicepost.entities.CompanyOffer;
+import nl.tudelft.sem.studentservicepost.entities.Contract;
 import nl.tudelft.sem.studentservicepost.services.CompanyOfferService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,7 +39,7 @@ public class CompanyOfferController {
     public ResponseEntity<Set<CompanyOffer>> getOffers(
         @Valid @RequestParam("postId") String postId) {
         Set<CompanyOffer> result = companyOfferService.getByPostId(postId);
-        return new ResponseEntity<>(result, HttpStatus.FOUND);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PatchMapping(value = "/suggestChange")
@@ -50,21 +52,39 @@ public class CompanyOfferController {
     public ResponseEntity<Set<ChangedOffer>> getChangedOffers(
         @Valid @RequestParam("offerId") String offerId) {
         Set<ChangedOffer> result = companyOfferService.getChanges(offerId);
-        return new ResponseEntity<>(result, HttpStatus.FOUND);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PatchMapping(value = "/acceptChanges")
     public ResponseEntity<CompanyOffer> acceptChangedOffer(
         @Valid @RequestParam("changedId") String changedId) {
         CompanyOffer result = companyOfferService.acceptChange(changedId);
-        return new ResponseEntity<>(result, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PatchMapping(value = "/acceptOffer")
     public ResponseEntity<CompanyOffer> acceptOffer(
         @Valid @RequestParam("offerId") String offerId) {
         CompanyOffer result = companyOfferService.acceptOffer(offerId);
-        return new ResponseEntity<>(result, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/getAcceptedOffers")
+    public ResponseEntity<Set<CompanyOffer>> getAcceptedOffers(
+            @Valid @RequestParam String companyId
+    ) {
+        Set<CompanyOffer> returnSet = companyOfferService.getAcceptedOffers(companyId);
+        return new ResponseEntity(returnSet, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/createContract")
+    public ResponseEntity<Contract> createContract(
+            @RequestParam @Valid String offerId,
+            @RequestParam @Valid @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @Valid @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+    ) {
+        Contract returnContract = companyOfferService.createContract(offerId, startDate, endDate);
+        return new ResponseEntity<>(returnContract, HttpStatus.CREATED);
     }
 
 }

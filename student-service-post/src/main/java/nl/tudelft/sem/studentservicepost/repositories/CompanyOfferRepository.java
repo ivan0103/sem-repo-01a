@@ -12,8 +12,13 @@ public interface CompanyOfferRepository extends JpaRepository<CompanyOffer, Long
 
     CompanyOffer getById(Long id);
 
+    boolean existsByCompanyId(String companyId);
+
     Collection<CompanyOffer> getAllByCompanyId(String companyId);
 
     Set<CompanyOffer> getAllByPost(Post post);
+
+    Set<CompanyOffer> getAllByCompanyIdAndAcceptedIsTrue(String companyId);
+
 
 }

@@ -1,11 +1,16 @@
 package nl.tudelft.sem.studentservicepost.services;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Set;
+import javax.validation.Valid;
 import nl.tudelft.sem.studentservicepost.entities.ChangedOffer;
 import nl.tudelft.sem.studentservicepost.entities.CompanyOffer;
+import nl.tudelft.sem.studentservicepost.entities.Contract;
 import nl.tudelft.sem.studentservicepost.entities.Expertise;
 import nl.tudelft.sem.studentservicepost.entities.Post;
 import nl.tudelft.sem.studentservicepost.entities.Requirement;
+import nl.tudelft.sem.studentservicepost.exceptions.OfferNotAcceptedException;
 import nl.tudelft.sem.studentservicepost.exceptions.OfferNotFoundException;
 import nl.tudelft.sem.studentservicepost.exceptions.PostNotFoundException;
 import nl.tudelft.sem.studentservicepost.repositories.ChangedOfferRepository;
@@ -14,7 +19,12 @@ import nl.tudelft.sem.studentservicepost.repositories.ExpertiseRepository;
 import nl.tudelft.sem.studentservicepost.repositories.PostRepository;
 import nl.tudelft.sem.studentservicepost.repositories.RequirementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 
 /**
@@ -23,18 +33,33 @@ import org.springframework.stereotype.Service;
 @Service
 public class CompanyOfferService {
 
+    /**
+     * The Company offer repository.
+     */
     @Autowired
     transient CompanyOfferRepository companyOfferRepository;
 
+    /**
+     * The Post repository.
+     */
     @Autowired
     transient PostRepository postRepository;
 
+    /**
+     * The Expertise repository.
+     */
     @Autowired
     transient ExpertiseRepository expertiseRepository;
 
+    /**
+     * The Requirement repository.
+     */
     @Autowired
     transient RequirementRepository requirementRepository;
 
+    /**
+     * The Changed offer repository.
+     */
     @Autowired
     transient ChangedOfferRepository changedOfferRepository;
 
@@ -44,6 +69,7 @@ public class CompanyOfferService {
      * @param companyOffer the company offer
      * @param postId       the post id
      * @return the company offer
+     * @throws PostNotFoundException the post not found exception
      */
     public CompanyOffer createOffer(CompanyOffer companyOffer, String postId)
         throws PostNotFoundException {
@@ -219,7 +245,67 @@ public class CompanyOfferService {
         } catch (NumberFormatException e) {
             throw new OfferNotFoundException();
         }
+    }
+
+    /**
+     * Gets accepted offers.
+     *
+     * @param companyId the company id
+     * @return the accepted offers
+     */
+    public Set<CompanyOffer> getAcceptedOffers(String companyId) {
+        if (companyOfferRepository.existsByCompanyId(companyId)) {
+            Set<CompanyOffer> companyOffer = companyOfferRepository
+                    .getAllByCompanyIdAndAcceptedIsTrue(companyId);
+            return companyOffer;
+        } else {
+            throw new OfferNotFoundException();
+        }
+    }
 
 
+    /**
+     * Create contract contract.
+     *
+     * @param offerId   the offer id
+     * @param startDate the start date
+     * @param endDate   the end date
+     * @return the contract
+     */
+    public Contract createContract(
+            String offerId,
+            @Valid @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @Valid @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+    ) {
+        long id;
+        try {
+            id = Long.parseLong(offerId);
+
+            if (companyOfferRepository.existsById(id)) {
+                CompanyOffer offer = companyOfferRepository.getById(id);
+                if (!offer.isAccepted()) {
+                    throw new OfferNotAcceptedException();
+                }
+
+
+                Post post = offer.getPost();
+
+                String url = "http://localhost:7070/contract/create";
+                RestTemplate restTemplate = new RestTemplate();
+                Contract contract = new Contract(post.getAuthor(),
+                        offer.getCompanyId(), post.getAuthor(), offer.getCompanyId(),
+                        LocalTime.of(offer.getWeeklyHours().intValue(), 0),
+                        offer.getPricePerHour().floatValue(), startDate, endDate);
+                HttpEntity<Contract> request = new HttpEntity<>(contract);
+                //Contract response = restTemplate.postForObject(url, request, Contract.class);
+                ResponseEntity<Contract> response = restTemplate
+                        .postForEntity(url, request, Contract.class);
+                return response.getBody();
+            } else {
+                throw new OfferNotFoundException();
+            }
+        } catch (NumberFormatException e) {
+            throw new OfferNotFoundException();
+        }
     }
 }

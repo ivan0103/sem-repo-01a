@@ -70,6 +70,41 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     /**
+     * Handle offer not found response entity.
+     *
+     * @param ex the ex
+     * @return the response entity
+     */
+    @ExceptionHandler(OfferNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    protected ResponseEntity<Object> handleOfferNotFound(
+            OfferNotFoundException ex
+    ) {
+        ErrorResponse error = new ErrorResponse(
+                "Offer does not exist",
+                HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Handle offer not accepted response entity.
+     *
+     * @param ex the ex
+     * @return the response entity
+     */
+    @ExceptionHandler(OfferNotAcceptedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    protected ResponseEntity<Object> handleOfferNotAccepted(
+            OfferNotAcceptedException ex
+    ) {
+        ErrorResponse error = new ErrorResponse(
+                "The offer has not been accepted yet!",
+                HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
+    }
+
+
+    /**
      * Handle all uncaught exceptions.
      *
      * @param exception the exception
