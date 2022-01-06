@@ -66,7 +66,7 @@ public class UserController {
      * @return a new user
      */
 
-    @PostMapping(path = "{" + valueId + "}/{" + valueName + "}/{role}")
+    @PostMapping(path = "addUser/{" + valueId + "}/{" + valueName + "}/{role}")
     public User addUser(@PathVariable(value = valueId) String netID,
                         @PathVariable(value = valueName) String name,
                         @PathVariable(value = "role") String role) {
