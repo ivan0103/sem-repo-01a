@@ -72,7 +72,7 @@ class ContractControllerTest {
                 .willReturn(true);
 
         //when
-        Contract testCase = underTest.create(contract);
+        Contract testCase = underTest.create(contract).getBody();
 
         //then
         verify(contractService).create(contractArgumentCaptor.capture());
@@ -121,7 +121,7 @@ class ContractControllerTest {
 
 
         //when
-        Contract result = underTest.getContract(contract.getId());
+        Contract result = underTest.getContract(contract.getId()).getBody();
 
         //then
         verify(contractService).getContract(idArgumentCaptor.capture());

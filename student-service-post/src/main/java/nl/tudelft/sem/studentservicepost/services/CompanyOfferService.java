@@ -1,13 +1,14 @@
 package nl.tudelft.sem.studentservicepost.services;
 
 import java.util.Set;
-import java.util.regex.Pattern;
-
+import nl.tudelft.sem.studentservicepost.entities.ChangedOffer;
 import nl.tudelft.sem.studentservicepost.entities.CompanyOffer;
 import nl.tudelft.sem.studentservicepost.entities.Expertise;
 import nl.tudelft.sem.studentservicepost.entities.Post;
 import nl.tudelft.sem.studentservicepost.entities.Requirement;
+import nl.tudelft.sem.studentservicepost.exceptions.OfferNotFoundException;
 import nl.tudelft.sem.studentservicepost.exceptions.PostNotFoundException;
+import nl.tudelft.sem.studentservicepost.repositories.ChangedOfferRepository;
 import nl.tudelft.sem.studentservicepost.repositories.CompanyOfferRepository;
 import nl.tudelft.sem.studentservicepost.repositories.ExpertiseRepository;
 import nl.tudelft.sem.studentservicepost.repositories.PostRepository;
@@ -34,6 +35,9 @@ public class CompanyOfferService {
     @Autowired
     transient RequirementRepository requirementRepository;
 
+    @Autowired
+    transient ChangedOfferRepository changedOfferRepository;
+
     /**
      * Create offer company offer.
      *
@@ -42,7 +46,7 @@ public class CompanyOfferService {
      * @return the company offer
      */
     public CompanyOffer createOffer(CompanyOffer companyOffer, String postId)
-            throws PostNotFoundException {
+        throws PostNotFoundException {
         // Find post using PostId, add to companyOffer obj then save, do something if not found
 
         companyOffer.setId(null);
@@ -56,7 +60,7 @@ public class CompanyOfferService {
                 for (Expertise expertise : companyOffer.getExpertise()) {
                     if (expertiseRepository.existsById(expertise.getExpertiseString())) {
                         Expertise tmp = expertiseRepository.getExpertiseByExpertiseString(
-                                expertise.getExpertiseString());
+                            expertise.getExpertiseString());
                         tmp.getOfferSet().add(companyOffer);
                         expertiseRepository.save(tmp);
                     } else {
@@ -67,7 +71,7 @@ public class CompanyOfferService {
                 for (Requirement requirement : companyOffer.getRequirementsSet()) {
                     if (requirementRepository.existsById(requirement.getRequirementString())) {
                         Requirement tmp = requirementRepository.getRequirementByRequirementString(
-                                requirement.getRequirementString());
+                            requirement.getRequirementString());
                         tmp.getCompanyOfferSet().add(companyOffer);
                         requirementRepository.save(tmp);
                     } else {
@@ -105,6 +109,115 @@ public class CompanyOfferService {
             return result;
         } catch (NumberFormatException e) {
             throw new PostNotFoundException();
+        }
+
+
+    }
+
+    /**
+     * Suggest change to an offer.
+     *
+     * @param changed the offer to be changed
+     * @return the changed offer
+     */
+    public ChangedOffer suggestChange(CompanyOffer changed) {
+        long offerId = changed.getId();
+
+        ChangedOffer result;
+
+        if (companyOfferRepository.existsById(offerId)) {
+            result = new ChangedOffer(changed);
+            result.setId(null);
+            companyOfferRepository.save(result);
+        } else {
+            throw new OfferNotFoundException();
+        }
+
+        return result;
+    }
+
+    /**
+     * Gets changes.
+     *
+     * @param offerId the offer id
+     * @return the changes
+     */
+    public Set<ChangedOffer> getChanges(String offerId) {
+
+        long id;
+        try {
+            id = Long.parseLong(offerId);
+
+            if (companyOfferRepository.existsById(id)) {
+                CompanyOffer tmp = companyOfferRepository.getById(id);
+                return tmp.getChangedOffers();
+            } else {
+                throw new OfferNotFoundException();
+            }
+
+        } catch (NumberFormatException e) {
+            throw new OfferNotFoundException();
+        }
+    }
+
+    /**
+     * Accept change company offer.
+     *
+     * @param changedId the changed id
+     * @return the company offer
+     */
+    public CompanyOffer acceptChange(String changedId) {
+
+        long id;
+        try {
+            id = Long.parseLong(changedId);
+
+            if (changedOfferRepository.existsById(id)) {
+                ChangedOffer tmp = changedOfferRepository.getById(id);
+                CompanyOffer toChange = tmp.getParent();
+
+                toChange.setPricePerHour(tmp.getPricePerHour());
+                toChange.setTotalHours(tmp.getTotalHours());
+                toChange.setWeeklyHours(tmp.getWeeklyHours());
+
+                //other stuff should never be changed
+
+                toChange.getChangedOffers().remove(tmp);
+
+                // deleting changed offer? it's complicated, so let's keep it for now
+                //  changedOfferRepository.deleteChangedOfferById(id);
+                return companyOfferRepository.save(toChange);
+            } else {
+                throw new OfferNotFoundException();
+            }
+
+        } catch (NumberFormatException e) {
+            throw new OfferNotFoundException();
+        }
+    }
+
+    /**
+     * Accepts a company offer.
+     *
+     * @param offerId the offer id
+     * @return the accepted company offer
+     */
+    public CompanyOffer acceptOffer(String offerId) {
+        long id;
+        try {
+            id = Long.parseLong(offerId);
+
+            if (companyOfferRepository.existsById(id)) {
+                CompanyOffer offer = companyOfferRepository.getById(id);
+                offer.setAccepted(true);
+                return companyOfferRepository.save(offer);
+
+            } else {
+                throw new OfferNotFoundException();
+            }
+
+        } catch (NumberFormatException e) {
+            throw new OfferNotFoundException();
         }
 
 
