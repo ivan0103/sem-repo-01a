@@ -33,4 +33,11 @@ public class GenericPostController {
         Set<StudentOffer> result = genericPostService.retrieveStudentsInPost(post);
         return new ResponseEntity<>(result, HttpStatus.FOUND);
     }
+
+    @PostMapping("/setSelectedStudent")
+    public ResponseEntity<StudentOffer> setSelectedStudent(
+        @Valid @RequestBody StudentOffer studentOffer, GenericPost post) {
+        StudentOffer result = genericPostService.setSelectedStudent(studentOffer, post);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
+    }
 }

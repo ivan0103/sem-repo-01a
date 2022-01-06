@@ -6,6 +6,7 @@ import nl.tudelft.sem.genericservicepost.entities.GenericPost;
 import nl.tudelft.sem.genericservicepost.entities.StudentOffer;
 import nl.tudelft.sem.genericservicepost.exceptions.GenericPostNotFoundException;
 import nl.tudelft.sem.genericservicepost.exceptions.InvalidEditException;
+import nl.tudelft.sem.genericservicepost.exceptions.StudentOfferNotFoundException;
 import nl.tudelft.sem.genericservicepost.repositories.ExpertiseRepository;
 import nl.tudelft.sem.genericservicepost.repositories.GenericPostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,27 +69,43 @@ public class GenericPostService {
      * Issue #6
      * Companies Access to Student Info
      * Companies can view all the Students and their Data,
-     *  that have applied for one of their Job posts.
+     * that have applied for one of their Job posts.
      *
      * @param genericPost the Post to collect the students from
      * @return a Set of all Students
      * @throws GenericPostNotFoundException if id of the generic post was not found / doesn't exist.
      */
     public Set<StudentOffer> retrieveStudentsInPost(GenericPost genericPost) {
-        Set<StudentOffer> result;
-
         if (genericPostRepository.existsById(genericPost.getId())) {
-            /*
-            for (StudentOffer volunteer : genericPost.getStudentOfferSet()){
-                if (Objects.equals(volunteer.getGenericPost().getId(), genericPost.getId())){
-                    result = ;
-                }
-            }
-             */
             return genericPost.getStudentOfferSet();
         } else {
             throw new GenericPostNotFoundException();
         }
-        //return result;
+    }
+
+    /**
+     * Issue #16
+     * Company can choose a student from StudentOffer
+     * After viewing all their parameters in the above method
+     * Method receives the selected student and assignes it to the posts paramter.
+     *
+     * @param student the selected student.
+     * @param post    the post from which the student was selected and to which it will be assigned
+     * @return the student.
+     * @throws StudentOfferNotFoundException if the Student Offer was not found in the generic post.
+     * @throws GenericPostNotFoundException  if the post does not exist or not found.
+     */
+
+    public StudentOffer setSelectedStudent(StudentOffer student, GenericPost post) {
+        if (genericPostRepository.existsById(post.getId())) {
+            if (post.getStudentOfferSet().contains(student)) {
+                post.setSelectedStudentOffer(student);
+                return student;
+            } else {
+                throw new StudentOfferNotFoundException();
+            }
+        } else {
+            throw new GenericPostNotFoundException();
+        }
     }
 }

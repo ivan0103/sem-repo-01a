@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
@@ -67,6 +68,9 @@ public class GenericPost {
     @OneToMany(mappedBy = "genericPost", fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<StudentOffer> studentOfferSet = new HashSet<>();
+    @OneToOne
+    @Column(name = "candidate")
+    private transient StudentOffer selectedStudentOffer = new StudentOffer();
 
     public GenericPost() {
     }
@@ -112,11 +116,19 @@ public class GenericPost {
     }
 
     public Set<StudentOffer> getStudentOfferSet() {
-        return studentOfferOfferSet;
+        return studentOfferSet;
     }
 
-    public void setStudentOfferSet(Set<StudentOffer> studentOfferOfferSet) {
-        this.studentOfferOfferSet = studentOfferOfferSet;
+    public void setStudentOfferSet(Set<StudentOffer> studentOfferSet) {
+        this.studentOfferSet = studentOfferSet;
+    }
+
+    public StudentOffer getSelectedStudentOffer() {
+        return selectedStudentOffer;
+    }
+
+    public void setSelectedStudentOffer(StudentOffer studentOffer) {
+        this.selectedStudentOffer = studentOffer;
     }
 
     @Override
@@ -139,20 +151,22 @@ public class GenericPost {
             return false;
         }
         GenericPost that = (GenericPost) o;
-        return getHoursPerWeek() == that.getHoursPerWeek()
-            && getDuration() == that.getDuration()
-            && Objects.equals(getId(), that.getId())
-            && Objects.equals(getAuthor(), that.getAuthor())
-            && Objects.equals(getExpertiseSet(), that.getExpertiseSet());
+        return hoursPerWeek == that.hoursPerWeek
+            && duration == that.duration
+            && id.equals(that.id)
+            && author.equals(that.author)
+            && expertiseSet.equals(that.expertiseSet)
+            && studentOfferSet.equals(that.studentOfferSet);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(),
-            getAuthor(),
-            getHoursPerWeek(),
-            getDuration(),
-            getExpertiseSet(),
-            getStudentOfferSet());
+        return Objects.hash(id,
+            author,
+            hoursPerWeek,
+            duration,
+            expertiseSet,
+            studentOfferSet,
+            selectedStudentOffer);
     }
 }
