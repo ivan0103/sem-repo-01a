@@ -1,5 +1,13 @@
 package nl.tudelft.sem.genericservicepost.services;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import nl.tudelft.sem.genericservicepost.entities.Expertise;
 import nl.tudelft.sem.genericservicepost.entities.GenericPost;
 import nl.tudelft.sem.genericservicepost.entities.StudentOffer;
@@ -13,15 +21,6 @@ import org.mockito.AdditionalAnswers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class StudentOfferServiceTest {
@@ -46,10 +45,11 @@ public class StudentOfferServiceTest {
     transient ExpertiseRepository expertiseRepository;
 
     @BeforeEach
-    void setup(){
+    void setup() {
         when(genericPostRepository.existsById(any())).thenReturn(false);
         when(genericPostRepository.existsById(1L)).thenReturn(true);
-        when(genericPostService.createGenericPost(any())).thenAnswer(AdditionalAnswers.returnsFirstArg());
+        when(genericPostService.createGenericPost(any()))
+                .thenAnswer(AdditionalAnswers.returnsFirstArg());
         when(studentOfferRepository.save(any())).thenAnswer(AdditionalAnswers.returnsFirstArg());
 
         genericPost = new GenericPost();
@@ -69,13 +69,14 @@ public class StudentOfferServiceTest {
     }
 
     @Test
-    void createStudentOfferTest(){
+    void createStudentOfferTest() {
         assertThat(applied).isEqualTo(studentOffer);
     }
 
     @Test
-    void getByGenericPostIdTest(){
-        when(studentOfferRepository.getAllByGenericPost(genericPost)).thenReturn(new HashSet<>(List.of(applied)));
+    void getByGenericPostIdTest() {
+        when(studentOfferRepository.getAllByGenericPost(genericPost))
+                .thenReturn(new HashSet<>(List.of(applied)));
 
         Set<StudentOffer> result = studentOfferService.getByGenericPostId(postId);
 
@@ -83,8 +84,9 @@ public class StudentOfferServiceTest {
     }
 
     @Test
-    void getByGenericPostInvalidIdTest(){
-        when(studentOfferRepository.getAllByGenericPost(genericPost)).thenReturn(new HashSet<>(List.of(applied)));
+    void getByGenericPostInvalidIdTest() {
+        when(studentOfferRepository.getAllByGenericPost(genericPost))
+                .thenReturn(new HashSet<>(List.of(applied)));
         assertThatThrownBy(() -> studentOfferService.getByGenericPostId(postId + 1)).isInstanceOf(
                 GenericPostNotFoundException.class);
     }
