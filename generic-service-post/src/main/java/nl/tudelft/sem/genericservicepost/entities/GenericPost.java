@@ -1,9 +1,6 @@
 package nl.tudelft.sem.genericservicepost.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -25,6 +22,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "generic_posts")
@@ -57,9 +56,9 @@ public class GenericPost {
     @Valid
     @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
-            name = "generic_post_expertise",
-            joinColumns = {@JoinColumn(name = "generic_post_id")},
-            inverseJoinColumns = {@JoinColumn(name = "expertise")}
+        name = "generic_post_expertise",
+        joinColumns = {@JoinColumn(name = "generic_post_id")},
+        inverseJoinColumns = {@JoinColumn(name = "expertise")}
     )
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Set<Expertise> expertiseSet = new HashSet<>();
@@ -123,12 +122,12 @@ public class GenericPost {
     @Override
     public String toString() {
         return "GenericPost{"
-                + "id=" + id
-                + ", author='" + author + '\''
-                + ", hoursPerWeek=" + hoursPerWeek
-                + ", duration=" + duration
-                + ", expertiseSet=" + expertiseSet
-                + '}';
+            + "id=" + id
+            + ", author='" + author + '\''
+            + ", hoursPerWeek=" + hoursPerWeek
+            + ", duration=" + duration
+            + ", expertiseSet=" + expertiseSet
+            + '}';
     }
 
     @Override
@@ -141,17 +140,17 @@ public class GenericPost {
         }
         GenericPost that = (GenericPost) o;
         return getHoursPerWeek() == that.getHoursPerWeek()
-                && getDuration() == that.getDuration()
-                && Objects.equals(getId(), that.getId())
-                && Objects.equals(getAuthor(), that.getAuthor())
-                && Objects.equals(getExpertiseSet(), that.getExpertiseSet());
+            && getDuration() == that.getDuration()
+            && Objects.equals(getId(), that.getId())
+            && Objects.equals(getAuthor(), that.getAuthor())
+            && Objects.equals(getExpertiseSet(), that.getExpertiseSet());
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(getAuthor(),
-                getHoursPerWeek(),
-                getDuration(),
-                getExpertiseSet());
+            getHoursPerWeek(),
+            getDuration(),
+            getExpertiseSet());
     }
 }

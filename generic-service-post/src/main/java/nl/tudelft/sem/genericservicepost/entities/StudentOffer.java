@@ -1,12 +1,19 @@
 package nl.tudelft.sem.genericservicepost.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
-
-import javax.persistence.*;
+import java.util.Objects;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Objects;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Entity
 @EnableTransactionManagement
@@ -56,20 +63,24 @@ public class StudentOffer {
     @Override
     public String toString() {
         return "StudentOffer{"
-                + "id=" + id
-                + ", studentId='" + studentId + '\''
-                + ", genericPost=" + genericPost
-                + '}';
+            + "id=" + id
+            + ", studentId='" + studentId + '\''
+            + ", genericPost=" + genericPost
+            + '}';
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         StudentOffer that = (StudentOffer) o;
         return Objects.equals(getId(), that.getId())
-                && Objects.equals(getStudentId(), that.getStudentId())
-                && Objects.equals(getGenericPost(), that.getGenericPost());
+            && Objects.equals(getStudentId(), that.getStudentId())
+            && Objects.equals(getGenericPost(), that.getGenericPost());
     }
 
     @Override

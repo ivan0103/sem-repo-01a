@@ -1,5 +1,7 @@
 package nl.tudelft.sem.genericservicepost.controllers;
 
+import java.util.Set;
+import javax.validation.Valid;
 import nl.tudelft.sem.genericservicepost.entities.StudentOffer;
 import nl.tudelft.sem.genericservicepost.services.StudentOfferService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.util.Set;
-
 @RestController
 @RequestMapping("/studentoffers")
 public class StudentOfferController {
@@ -23,16 +22,25 @@ public class StudentOfferController {
     @Autowired
     private transient StudentOfferService studentOfferService;
 
+    /**
+     * Create student offer response entity.
+     *
+     * @param studentOffer  the student offer
+     * @param genericPostId the generic post id
+     * @return the response entity
+     */
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<StudentOffer> createStudentOffer (@Valid @RequestBody StudentOffer studentOffer,
-                                      @RequestParam("genericPostId") String genericPostId) {
-        StudentOffer savedStudentOffer = studentOfferService.createStudentOffer(studentOffer, genericPostId);
+    public ResponseEntity<StudentOffer> createStudentOffer(
+        @Valid @RequestBody StudentOffer studentOffer,
+        @RequestParam("genericPostId") String genericPostId) {
+        StudentOffer savedStudentOffer =
+            studentOfferService.createStudentOffer(studentOffer, genericPostId);
         return new ResponseEntity<>(savedStudentOffer, HttpStatus.CREATED);
     }
 
     @GetMapping(value = "/getByGenericPostId")
     public ResponseEntity<Set<StudentOffer>> getStudentOffers(
-            @Valid @RequestParam("genericPostId") String genericPostId) {
+        @Valid @RequestParam("genericPostId") String genericPostId) {
         Set<StudentOffer> result = studentOfferService.getByGenericPostId(genericPostId);
         return new ResponseEntity<>(result, HttpStatus.FOUND);
     }
