@@ -63,13 +63,16 @@ public class UserController {
      *
      * @param netID the id of the new user
      * @param name the name of the new user
+     * @param role the role of the new user
      * @return a new user
+     * @throws IllegalArgumentException if we try to add the same user twice
      */
 
     @PostMapping(path = "addUser/{" + valueId + "}/{" + valueName + "}/{role}")
     public User addUser(@PathVariable(value = valueId) String netID,
                         @PathVariable(value = valueName) String name,
-                        @PathVariable(value = "role") String role) {
+                        @PathVariable(value = "role") String role)
+                        throws IllegalArgumentException {
 
         return userService.addUser(netID, name, role);
     }

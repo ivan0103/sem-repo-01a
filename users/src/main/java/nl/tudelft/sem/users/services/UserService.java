@@ -65,11 +65,15 @@ public class UserService {
      * @param name the name of the new user
      * @param role the role of the user
      * @return a new user
+     * @throws IllegalArgumentException if we try to add the same user twice
      */
 
-    public User addUser(String netID, String name, String role) {
+    public User addUser(String netID, String name, String role) throws IllegalArgumentException {
         if (userRepository.findById(netID).isPresent()) {
-            return userRepository.findById(netID).get();
+            throw new IllegalArgumentException("User with this netID already exists!");
+        }
+        if (name == null) {
+            throw new IllegalArgumentException("Name cannot be null!");
         }
 
         User user = new UserFactory().createUser(netID, name, 0.0f, role);

@@ -36,7 +36,7 @@ public class SecurityConfig {
         return http.authorizeExchange()
                 .pathMatchers("/h2-console/**").permitAll().and()
                 .authorizeExchange()
-                .pathMatchers("/authentication/create/**").permitAll()
+                .pathMatchers("/create").permitAll()
                 .anyExchange().authenticated().and()
                 .csrf().disable()
                 .headers().frameOptions().disable().and()
