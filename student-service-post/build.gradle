@@ -48,6 +48,10 @@ dependencies {
 
 	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-validation
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '2.6.1'
+
+	// https://mvnrepository.com/artifact/com.github.tomakehurst/wiremock
+	testImplementation 'com.github.tomakehurst:wiremock:2.27.2'
+
 }
 
 dependencyManagement {
