@@ -105,11 +105,11 @@ public class GenericPost {
     }
 
     public Set<StudentOffer> getStudentOfferSet() {
-        return studentOfferOfferSet;
+        return studentOfferSet;
     }
 
-    public void setStudentOfferSet(Set<StudentOffer> studentOfferOfferSet) {
-        this.studentOfferOfferSet = studentOfferOfferSet;
+    public void setStudentOfferSet(Set<StudentOffer> studentOfferSet) {
+        this.studentOfferSet = studentOfferSet;
     }
 
     public StudentOffer getSelectedStudentOffer() { return selectedStudentOffer; }
@@ -137,7 +137,7 @@ public class GenericPost {
                 && id.equals(that.id)
                 && author.equals(that.author)
                 && expertiseSet.equals(that.expertiseSet)
-                && studentOfferOfferSet.equals(that.studentOfferOfferSet);
+                && studentOfferSet.equals(that.studentOfferSet);
     }
 
     @Override
@@ -147,7 +147,7 @@ public class GenericPost {
                 hoursPerWeek,
                 duration,
                 expertiseSet,
-                studentOfferOfferSet,
+                studentOfferSet,
                 selectedStudentOffer);
     }
 }

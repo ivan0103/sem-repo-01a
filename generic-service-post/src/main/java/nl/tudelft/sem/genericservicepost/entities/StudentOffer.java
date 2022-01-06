@@ -17,8 +17,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.util.Objects;
 
-@Getter
-@Setter
 @Entity
 @EnableTransactionManagement
 @Table(name = "student_offers")
