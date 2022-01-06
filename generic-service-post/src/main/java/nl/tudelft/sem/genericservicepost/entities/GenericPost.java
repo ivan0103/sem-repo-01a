@@ -10,6 +10,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -19,9 +20,12 @@ public class GenericPost {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY, value = "id")
     @Column(name = "generic_post_id")
     private Long id;
 
+    @NotNull(message = "NetID cannot be null!")
+    @Size(min = 4, max = 24, message = "NetID must be between 4-24 characters!")
     @Column(name = "author_id")
     private String author;
 
@@ -45,12 +49,16 @@ public class GenericPost {
         joinColumns = {@JoinColumn(name = "generic_post_id")},
         inverseJoinColumns = {@JoinColumn(name = "expertise")}
     )
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Set<Expertise> expertiseSet = new HashSet<>();
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "genericPost", fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private transient Set<StudentOffer> studentOfferOfferSet = new HashSet<>();
+    private Set<StudentOffer> studentOfferSet = new HashSet<>();
+
+    public GenericPost() {
+    }
 
     @OneToOne
     @Column(name = "candidate")
@@ -112,13 +120,11 @@ public class GenericPost {
     public String toString() {
         return "GenericPost{"
             + "id=" + id
-            + ", author='"
-            + author + '\''
-            + ", hoursPerWeek="
-            + hoursPerWeek + ", duration="
-            + duration + ", expertiseSet="
-            + expertiseSet + ", studentOfferSet="
-            + studentOfferOfferSet + '}';
+            + ", author='" + author + '\''
+            + ", hoursPerWeek=" + hoursPerWeek
+            + ", duration=" + duration
+            + ", expertiseSet=" + expertiseSet
+            + '}';
     }
 
     @Override

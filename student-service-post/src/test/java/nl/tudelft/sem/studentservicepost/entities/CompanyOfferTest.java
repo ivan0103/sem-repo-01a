@@ -2,7 +2,6 @@ package nl.tudelft.sem.studentservicepost.entities;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.HashSet;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 
@@ -21,15 +20,17 @@ class CompanyOfferTest {
     void testToString() {
         CompanyOffer c = new CompanyOffer("bcde");
 
-        assertThat(c.toString()).isEqualTo("CompanyOffer{"
-            + "id=" + null
-            + ", companyId='" + "bcde" + '\''
-            + ", requirementsSet=" + new HashSet<>()
-            + ", weeklyHours=" + null
-            + ", totalHours=" + null
-            + ", expertise=" + new HashSet<>()
-            + ", post=" + null
-            + '}');
+        assertThat(c.toString()).isEqualTo(
+            "CompanyOffer{id=null,"
+                + " companyId='bcde',"
+                + " requirementsSet=[],"
+                + " weeklyHours=null,"
+                + " pricePerHour=null,"
+                + " totalHours=null,"
+                + " expertise=[],"
+                + " post=null,"
+                + " changedOffers=[],"
+                + " accepted=false}");
     }
 
     @Test

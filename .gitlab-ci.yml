@@ -3,3 +3,6 @@ include:
   - contracts/.gitlab-ci.yml
   - student-service-post/.gitlab-ci.yml
   - generic-service-post/.gitlab-ci.yml
+  - gateway/.gitlab-ci.yml
+  - authentication/.gitlab-ci.yml
+  - eureka/.gitlab-ci.yml
