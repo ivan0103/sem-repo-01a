@@ -42,7 +42,7 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY, value = "id")
+    // @JsonProperty(access = JsonProperty.Access.WRITE_ONLY, value = "id")
     @Column(name = "post_id")
     private Long id;
 
@@ -212,17 +212,6 @@ public class Post {
         this.companyOfferSet = companyOfferSet;
     }
 
-    /**
-     * Gets user.
-     *
-     * @return the user
-     */
-    public User getUser() {
-        if (this.user == null) {
-            this.user = new UserImplProxy(this.author, new RestTemplateBuilder());
-        }
-        return this.user;
-    }
 
     @Override
     public String toString() {
@@ -252,6 +241,6 @@ public class Post {
 
     @Override
     public int hashCode() {
-        return Objects.hash(author, pricePerHour, expertiseSet, competencySet);
+        return Objects.hash(author);
     }
 }

@@ -260,4 +260,24 @@ class PostServiceTest {
         assertThat(result).contains(tmp).contains(tmp2).hasSize(2);
 
     }
+
+    @Test
+    void getByIdNotFound() {
+        Post tmp = postService.createPost(post);
+        assertThat(tmp).isEqualTo(postReturned);
+
+        assertThatThrownBy(
+            () -> postService.getById(Long.toString(tmp.getId() + 100L))).isInstanceOf(
+            PostNotFoundException.class);
+    }
+
+    @Test
+    void getByIdNotANumber() {
+        Post tmp = postService.createPost(post);
+        assertThat(tmp).isEqualTo(postReturned);
+
+        assertThatThrownBy(
+            () -> postService.getById("Long.toString(tmp.getId() + 100L);")).isInstanceOf(
+            PostNotFoundException.class);
+    }
 }

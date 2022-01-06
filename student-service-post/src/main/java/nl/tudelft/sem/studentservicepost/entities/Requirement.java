@@ -3,6 +3,7 @@ package nl.tudelft.sem.studentservicepost.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -21,7 +22,7 @@ public class Requirement {
     private String requirementString;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "requirementsSet", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "requirementsSet", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<CompanyOffer> companyOfferSet = new HashSet<>();
 
     public Requirement() {

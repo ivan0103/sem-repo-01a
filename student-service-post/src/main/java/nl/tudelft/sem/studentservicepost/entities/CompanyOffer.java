@@ -167,6 +167,10 @@ public class CompanyOffer {
         return changedOffers;
     }
 
+    public void setChangedOffers(Set<ChangedOffer> changedOffers) {
+        this.changedOffers = changedOffers;
+    }
+
     public boolean isAccepted() {
         return accepted;
     }
@@ -175,22 +179,24 @@ public class CompanyOffer {
         this.accepted = accepted;
     }
 
-    public void setChangedOffers(
-        Set<ChangedOffer> changedOffers) {
-        this.changedOffers = changedOffers;
-    }
-
     @Override
     public String toString() {
         return "CompanyOffer{"
-            + "id=" + id
-            + ", companyId='" + companyId + '\''
-            + ", requirementsSet=" + requirementsSet
-            + ", weeklyHours=" + weeklyHours
-            + ", totalHours=" + totalHours
-            + ", expertise=" + expertise
-            + ", post=" + post
-            + '}';
+            + "id=" + id + ", companyId='"
+            + companyId + '\''
+            + ", requirementsSet="
+            + requirementsSet
+            + ", weeklyHours="
+            + weeklyHours
+            + ", pricePerHour="
+            + pricePerHour
+            + ", totalHours="
+            + totalHours
+            + ", expertise="
+            + expertise + ", post="
+            + post + ", changedOffers="
+            + changedOffers + ", accepted="
+            + accepted + '}';
     }
 
     @Override
@@ -202,14 +208,13 @@ public class CompanyOffer {
             return false;
         }
         CompanyOffer that = (CompanyOffer) o;
-        return Objects.equals(companyId, that.companyId)
-            && Objects.equals(post, that.post);
+        return Objects.equals(companyId, that.companyId) && Objects.equals(post, that.post);
 
         //an offer is determined by poster and postee
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(companyId, requirementsSet, weeklyHours, totalHours, expertise, post);
+        return Objects.hash(companyId, post);
     }
 }
