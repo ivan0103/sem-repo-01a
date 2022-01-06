@@ -1,5 +1,6 @@
 package nl.tudelft.sem.genericservicepost.services;
 
+import java.util.Set;
 import nl.tudelft.sem.genericservicepost.entities.Expertise;
 import nl.tudelft.sem.genericservicepost.entities.GenericPost;
 import nl.tudelft.sem.genericservicepost.entities.StudentOffer;
@@ -10,10 +11,6 @@ import nl.tudelft.sem.genericservicepost.repositories.ExpertiseRepository;
 import nl.tudelft.sem.genericservicepost.repositories.GenericPostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
 
 @Service
 public class GenericPostService {
@@ -71,7 +68,8 @@ public class GenericPostService {
     /**
      * Issue #6
      * Companies Access to Student Info
-     * Companies can view all the Students and their Data, that have applied for one of their Job posts
+     * Companies can view all the Students and their Data,
+     *  that have applied for one of their Job posts.
      *
      * @param genericPost the Post to collect the students from
      * @return a Set of all Students
@@ -80,8 +78,7 @@ public class GenericPostService {
     public Set<StudentOffer> retrieveStudentsInPost(GenericPost genericPost){
         if (genericPostRepository.existsById(genericPost.getId())){
             return genericPost.getStudentOfferSet();
-        }
-        else {
+        } else {
             throw new GenericPostNotFoundException();
         }
     }

@@ -1,7 +1,10 @@
 package nl.tudelft.sem.genericservicepost.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.HashSet;
+import java.util.Set;
 import nl.tudelft.sem.genericservicepost.entities.Expertise;
 import nl.tudelft.sem.genericservicepost.entities.GenericPost;
 import nl.tudelft.sem.genericservicepost.entities.StudentOffer;
@@ -88,7 +91,6 @@ public class GenericPostServiceTest {
         StudentOffer ivan = new StudentOffer(1L, "Ivan", genericPost);
         StudentOffer marie = new StudentOffer(2L, "Marie", genericPost1);
         StudentOffer todor = new StudentOffer(3L, "Todor", genericPost);
-        StudentOffer tudor = new StudentOffer(4L, "Tudor", genericPost1);
 
 
         // Test for students in post 1.

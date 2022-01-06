@@ -1,9 +1,6 @@
 package nl.tudelft.sem.genericservicepost.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -13,6 +10,8 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "generic_posts")
@@ -42,16 +41,16 @@ public class GenericPost {
     @Valid
     @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
-            name = "generic_post_expertise",
-            joinColumns = {@JoinColumn(name = "generic_post_id")},
-            inverseJoinColumns = {@JoinColumn(name = "expertise")}
+        name = "generic_post_expertise",
+        joinColumns = {@JoinColumn(name = "generic_post_id")},
+        inverseJoinColumns = {@JoinColumn(name = "expertise")}
     )
     private Set<Expertise> expertiseSet = new HashSet<>();
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    transient private Set<StudentOffer> studentOfferOfferSet = new HashSet<>();
+    private transient Set<StudentOffer> studentOfferOfferSet = new HashSet<>();
 
     @OneToOne
     @Column(name = "candidate")
@@ -112,14 +111,14 @@ public class GenericPost {
     @Override
     public String toString() {
         return "GenericPost{"
-                + "id=" + id
-                + ", author='"
-                + author + '\''
-                + ", hoursPerWeek="
-                + hoursPerWeek + ", duration="
-                + duration + ", expertiseSet="
-                + expertiseSet + ", studentOfferSet="
-                + studentOfferOfferSet + '}';
+            + "id=" + id
+            + ", author='"
+            + author + '\''
+            + ", hoursPerWeek="
+            + hoursPerWeek + ", duration="
+            + duration + ", expertiseSet="
+            + expertiseSet + ", studentOfferSet="
+            + studentOfferOfferSet + '}';
     }
 
     @Override
