@@ -20,7 +20,7 @@ public class GenericPostController {
     @Autowired
     private transient GenericPostService genericPostService;
 
-    @PostMapping("/creategenericpost")
+    @PostMapping("/create")
     public ResponseEntity<GenericPost> createGenericPost(@Valid @RequestBody GenericPost post) {
         GenericPost savedPost = genericPostService.createGenericPost(post);
         return new ResponseEntity<>(savedPost, HttpStatus.CREATED);

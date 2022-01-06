@@ -11,12 +11,10 @@ import org.springframework.web.client.RestTemplate;
 public class UserImplProxy implements User {
 
     @Transient
-    private transient String netID;
-
-    @Transient
     @JsonIgnore
     private final transient RestTemplate restTemplate;
-
+    @Transient
+    private final transient String netID;
     @Transient
     private transient User user;
 
@@ -29,7 +27,7 @@ public class UserImplProxy implements User {
         //get user from remote location using netID field
         String url = "http://localhost:8080/users/{netID}";
         ResponseEntity<UserImpl> response = this.restTemplate.getForEntity(url,
-                UserImpl.class, netID);
+            UserImpl.class, netID);
         if (response.getStatusCode() == HttpStatus.OK) {
             user = response.getBody();
         }
@@ -39,6 +37,9 @@ public class UserImplProxy implements User {
     public String getNetID() {
         if (user == null) {
             retrieveRemoteUser();
+            if (user == null) {
+                return null;
+            }
         }
         return user.getNetID();
     }
@@ -47,6 +48,9 @@ public class UserImplProxy implements User {
     public String getName() {
         if (user == null) {
             retrieveRemoteUser();
+            if (user == null) {
+                return null;
+            }
         }
         return user.getName();
     }
@@ -55,6 +59,9 @@ public class UserImplProxy implements User {
     public Float getRating() {
         if (user == null) {
             retrieveRemoteUser();
+            if (user == null) {
+                return null;
+            }
         }
         return user.getRating();
     }
@@ -63,6 +70,9 @@ public class UserImplProxy implements User {
     public List<Feedback> getFeedbacks() {
         if (user == null) {
             retrieveRemoteUser();
+            if (user == null) {
+                return null;
+            }
         }
         return user.getFeedbacks();
     }

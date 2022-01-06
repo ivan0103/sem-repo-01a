@@ -81,7 +81,7 @@ public class UserControllerTest {
                 createdUser.getName(), ((Student) createdUser).getRole())).thenReturn(createdUser);
         this.mockMvc.perform(post(url + "/" + createdUser.getNetID()
                 + "/" + createdUser.getName() + "/" + ((Student) createdUser).getRole()))
-                .andDo(print()).andExpect(status().isOk());
+                .andDo(print()).andExpect(status().is4xxClientError());
     }
 
     @Test
