@@ -1,7 +1,6 @@
 package nl.tudelft.sem.genericservicepost.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,8 +13,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-
-import java.util.Objects;
 
 @Entity
 @EnableTransactionManagement
@@ -38,9 +35,17 @@ public class StudentOffer {
     @JoinColumn(name = "generic_post_id", referencedColumnName = "generic_post_id")
     private GenericPost genericPost;
 
-    public StudentOffer(){
+    public StudentOffer() {
 
     }
+
+    /**
+     * Instantiates a new Student offer.
+     *
+     * @param id          the id
+     * @param studentId   the student id
+     * @param genericPost the generic post
+     */
     public StudentOffer(Long id, String studentId, GenericPost genericPost) {
         this.id = id;
         this.studentId = studentId;

@@ -4,7 +4,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -56,13 +68,12 @@ public class GenericPost {
     @OneToMany(mappedBy = "genericPost", fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<StudentOffer> studentOfferSet = new HashSet<>();
+    @OneToOne
+    @Column(name = "candidate")
+    private transient StudentOffer selectedStudentOffer = new StudentOffer();
 
     public GenericPost() {
     }
-
-    @OneToOne
-    @Column(name = "candidate")
-    transient private StudentOffer selectedStudentOffer = new StudentOffer();
 
     public Long getId() {
         return id;
@@ -112,10 +123,13 @@ public class GenericPost {
         this.studentOfferSet = studentOfferSet;
     }
 
-    public StudentOffer getSelectedStudentOffer() { return selectedStudentOffer; }
+    public StudentOffer getSelectedStudentOffer() {
+        return selectedStudentOffer;
+    }
 
-    public void setSelectedStudentOffer(StudentOffer studentOffer){
-        this.selectedStudentOffer = studentOffer; }
+    public void setSelectedStudentOffer(StudentOffer studentOffer) {
+        this.selectedStudentOffer = studentOffer;
+    }
 
     @Override
     public String toString() {
@@ -130,25 +144,29 @@ public class GenericPost {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         GenericPost that = (GenericPost) o;
         return hoursPerWeek == that.hoursPerWeek
-                && duration == that.duration
-                && id.equals(that.id)
-                && author.equals(that.author)
-                && expertiseSet.equals(that.expertiseSet)
-                && studentOfferSet.equals(that.studentOfferSet);
+            && duration == that.duration
+            && id.equals(that.id)
+            && author.equals(that.author)
+            && expertiseSet.equals(that.expertiseSet)
+            && studentOfferSet.equals(that.studentOfferSet);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id,
-                author,
-                hoursPerWeek,
-                duration,
-                expertiseSet,
-                studentOfferSet,
-                selectedStudentOffer);
+            author,
+            hoursPerWeek,
+            duration,
+            expertiseSet,
+            studentOfferSet,
+            selectedStudentOffer);
     }
 }

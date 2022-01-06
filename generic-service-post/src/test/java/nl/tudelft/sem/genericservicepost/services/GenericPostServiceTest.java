@@ -9,19 +9,11 @@ import nl.tudelft.sem.genericservicepost.entities.Expertise;
 import nl.tudelft.sem.genericservicepost.entities.GenericPost;
 import nl.tudelft.sem.genericservicepost.entities.StudentOffer;
 import nl.tudelft.sem.genericservicepost.exceptions.GenericPostNotFoundException;
-import nl.tudelft.sem.genericservicepost.exceptions.StudentOfferNotFoundException;
 import nl.tudelft.sem.genericservicepost.repositories.GenericPostRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import javax.annotation.processing.Generated;
-import java.util.HashSet;
-import java.util.Set;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 public class GenericPostServiceTest {
@@ -80,11 +72,11 @@ public class GenericPostServiceTest {
         GenericPost tmp = new GenericPost();
         tmp.setId(10L);
         assertThatThrownBy(() -> genericPostService.editGenericPost(tmp))
-                .isInstanceOf(GenericPostNotFoundException.class);
+            .isInstanceOf(GenericPostNotFoundException.class);
     }
 
     @Test
-    void retrieveStudentsInPostTest(){
+    void retrieveStudentsInPostTest() {
 
         Set<StudentOffer> studentOffers = new HashSet<>();
         Set<StudentOffer> studentsOffers1 = new HashSet<>();
@@ -113,8 +105,9 @@ public class GenericPostServiceTest {
         assertThat(result).isEqualTo(studentOffers);
         assertThat(result1).isEqualTo(studentsOffers1);
     }
+
     @Test
-    void retrieveStudentsInPostExceptionTest(){
+    void retrieveStudentsInPostExceptionTest() {
         StudentOffer marie = new StudentOffer(1L, "Marie", genericPost);
         GenericPost genericPost2 = new GenericPost();
         genericPost2.setId(10L);
@@ -122,11 +115,11 @@ public class GenericPostServiceTest {
         input.add(marie);
         genericPost2.setStudentOfferSet(input);
         assertThatThrownBy(() -> genericPostService.retrieveStudentsInPost(genericPost2))
-                .isInstanceOf(GenericPostNotFoundException.class);
+            .isInstanceOf(GenericPostNotFoundException.class);
     }
 
     @Test
-    void setSelectedStudentTest(){
+    void setSelectedStudentTest() {
         Set<StudentOffer> studentOffers = new HashSet<>();
         StudentOffer tudor = new StudentOffer(1L, "Tudor", genericPost);
         StudentOffer todor = new StudentOffer(3L, "Todor", genericPost);
@@ -143,10 +136,12 @@ public class GenericPostServiceTest {
     }
 
     @Test
-    void setSelectedStudentNoPostTest(){
+    void setSelectedStudentNoPostTest() {
         GenericPost genericPost2 = new GenericPost();
         genericPost2.setId(10L);
-        assertThatThrownBy(() -> genericPostService.setSelectedStudent(new StudentOffer(1L, "Ivan", genericPost), genericPost2))
-                .isInstanceOf(GenericPostNotFoundException.class);
+        assertThatThrownBy(
+            () -> genericPostService.setSelectedStudent(new StudentOffer(1L, "Ivan", genericPost),
+                genericPost2))
+            .isInstanceOf(GenericPostNotFoundException.class);
     }
 }

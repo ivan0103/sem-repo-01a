@@ -69,14 +69,14 @@ public class GenericPostService {
      * Issue #6
      * Companies Access to Student Info
      * Companies can view all the Students and their Data,
-     *  that have applied for one of their Job posts.
+     * that have applied for one of their Job posts.
      *
      * @param genericPost the Post to collect the students from
      * @return a Set of all Students
      * @throws GenericPostNotFoundException if id of the generic post was not found / doesn't exist.
      */
-    public Set<StudentOffer> retrieveStudentsInPost(GenericPost genericPost){
-        if (genericPostRepository.existsById(genericPost.getId())){
+    public Set<StudentOffer> retrieveStudentsInPost(GenericPost genericPost) {
+        if (genericPostRepository.existsById(genericPost.getId())) {
             return genericPost.getStudentOfferSet();
         } else {
             throw new GenericPostNotFoundException();
@@ -90,20 +90,22 @@ public class GenericPostService {
      * Method receives the selected student and assignes it to the posts paramter.
      *
      * @param student the selected student.
-     * @param post the post from which the student was selected and to which it will be assigned
+     * @param post    the post from which the student was selected and to which it will be assigned
      * @return the student.
      * @throws StudentOfferNotFoundException if the Student Offer was not found in the generic post.
-     * @throws GenericPostNotFoundException if the post does not exist or not found.
+     * @throws GenericPostNotFoundException  if the post does not exist or not found.
      */
 
-    public StudentOffer setSelectedStudent(StudentOffer student, GenericPost post){
-        if (genericPostRepository.existsById(post.getId())){
-            if (post.getStudentOfferSet().contains(student)){
+    public StudentOffer setSelectedStudent(StudentOffer student, GenericPost post) {
+        if (genericPostRepository.existsById(post.getId())) {
+            if (post.getStudentOfferSet().contains(student)) {
                 post.setSelectedStudentOffer(student);
                 return student;
+            } else {
+                throw new StudentOfferNotFoundException();
             }
-            else throw new StudentOfferNotFoundException();
+        } else {
+            throw new GenericPostNotFoundException();
         }
-        else throw new GenericPostNotFoundException();
     }
 }
