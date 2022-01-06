@@ -92,19 +92,16 @@ public class GenericPostServiceTest {
         StudentOffer marie = new StudentOffer(2L, "Marie", genericPost1);
         StudentOffer todor = new StudentOffer(3L, "Todor", genericPost);
 
-
         // Test for students in post 1.
         studentOffers.add(ivan);
         studentOffers.add(todor);
         studentsOffers1.add(marie);
-        studentsOffers1.add(tudor);
 
         Set<StudentOffer> result = new HashSet<>();
         result.add(ivan);
         result.add(todor);
         Set<StudentOffer> result1 = new HashSet<>();
         result1.add(marie);
-        result1.add(tudor);
 
         GenericPost tmp = genericPostService.createGenericPost(genericPost);
         tmp.setStudentOfferSet(studentOffers);
@@ -152,19 +149,4 @@ public class GenericPostServiceTest {
         assertThatThrownBy(() -> genericPostService.setSelectedStudent(new StudentOffer(1L, "Ivan", genericPost), genericPost2))
                 .isInstanceOf(GenericPostNotFoundException.class);
     }
-/*
-    @Test
-    void setSelectedStudentNoStudentOfferTest(){
-        StudentOffer todor = new StudentOffer(3L, "Todor", genericPost);
-        Set<StudentOffer> studentOffers = new HashSet<>();
-        studentOffers.add(todor);
-
-        GenericPost tmp = genericPostService.createGenericPost(genericPost);
-        tmp.setStudentOfferSet(studentOffers);
-
-        assertThatThrownBy(() -> genericPostService.setSelectedStudent(new StudentOffer(1L, "Ivan", genericPost), tmp))
-                .isInstanceOf(StudentOfferNotFoundException.class);
-    }
-
- */
 }

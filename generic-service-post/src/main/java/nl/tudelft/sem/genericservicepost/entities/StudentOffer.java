@@ -79,23 +79,4 @@ public class StudentOffer {
             + ", genericPost=" + genericPost
             + '}';
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        StudentOffer that = (StudentOffer) o;
-        return Objects.equals(getId(), that.getId())
-            && Objects.equals(getStudentId(), that.getStudentId())
-            && Objects.equals(getGenericPost(), that.getGenericPost());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getStudentId(), getGenericPost());
-    }
 }

@@ -100,7 +100,6 @@ public class GenericPostService {
         if (genericPostRepository.existsById(post.getId())){
             if (post.getStudentOfferSet().contains(student)){
                 post.setSelectedStudentOffer(student);
-                genericPostRepository.save(post);
                 return student;
             }
             else throw new StudentOfferNotFoundException();

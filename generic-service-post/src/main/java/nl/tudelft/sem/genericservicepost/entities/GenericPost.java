@@ -114,7 +114,8 @@ public class GenericPost {
 
     public StudentOffer getSelectedStudentOffer() { return selectedStudentOffer; }
 
-    public void setSelectedStudentOffer(StudentOffer studentOffer){ this.selectedStudentOffer = studentOffer; }
+    public void setSelectedStudentOffer(StudentOffer studentOffer){
+        this.selectedStudentOffer = studentOffer; }
 
     @Override
     public String toString() {
