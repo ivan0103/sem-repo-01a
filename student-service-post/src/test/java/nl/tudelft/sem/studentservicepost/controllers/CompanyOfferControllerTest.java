@@ -11,14 +11,18 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Set;
 import nl.tudelft.sem.studentservicepost.entities.ChangedOffer;
 import nl.tudelft.sem.studentservicepost.entities.CompanyOffer;
+import nl.tudelft.sem.studentservicepost.entities.Contract;
 import nl.tudelft.sem.studentservicepost.entities.Expertise;
 import nl.tudelft.sem.studentservicepost.entities.Requirement;
 import nl.tudelft.sem.studentservicepost.exceptions.OfferNotFoundException;
@@ -200,4 +204,48 @@ class CompanyOfferControllerTest {
             fail("Exception in creating offer");
         }
     }
+
+    @Test
+    void getOneAcceptedOffers() {
+        when(companyOfferService.getAcceptedOffers("AHeijn")).thenReturn(Set.of(companyOffer));
+
+        String url = baseUrl + "/getAcceptedOffers?companyId=1";
+        try {
+            this.mockMvc.perform(get(url))
+                    .andExpect(status().isOk());
+            verify(companyOfferService).getAcceptedOffers("1");
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail("Exception in getting accepted offers");
+        }
+    }
+
+    @Test
+    void createValidContract() {
+        LocalDate startDate = LocalDate.of(2021, 01, 01);
+        LocalDate endDate = LocalDate.of(2021, 02, 01);
+
+        Contract contract = new Contract("tvelican", "AHeijn",
+                "Tudor Velican", "Albert Heijn",
+                LocalTime.of(12, 0), 12.5f,
+                startDate, endDate);
+
+        when(companyOfferService.createContract("1", startDate, endDate)).thenReturn(contract);
+
+        String url = baseUrl + "/createContract?offerId=1&startDate=2021-01-01&endDate=2021-02-01";
+
+        try {
+            this.mockMvc.perform(post(url))
+                    .andExpect(status().isCreated());
+            verify(companyOfferService).createContract("1", startDate, endDate);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail("Exception in creating a contract");
+        }
+    }
+    /*
+
+     */
 }

@@ -297,8 +297,10 @@ public class CompanyOfferService {
                         LocalTime.of(offer.getWeeklyHours().intValue(), 0),
                         offer.getPricePerHour().floatValue(), startDate, endDate);
                 HttpEntity<Contract> request = new HttpEntity<>(contract);
-                Contract response = restTemplate.postForObject(url, request, Contract.class);
-                return response;
+                //Contract response = restTemplate.postForObject(url, request, Contract.class);
+                ResponseEntity<Contract> response = restTemplate
+                        .postForEntity(url, request, Contract.class);
+                return response.getBody();
             } else {
                 throw new OfferNotFoundException();
             }

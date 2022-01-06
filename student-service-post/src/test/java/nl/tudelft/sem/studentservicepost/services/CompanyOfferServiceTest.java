@@ -30,6 +30,7 @@ import org.mockito.AdditionalAnswers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
@@ -475,7 +476,8 @@ class CompanyOfferServiceTest {
         }).isInstanceOf(OfferNotFoundException.class);
     }
 
-    /*    @Test
+    /*
+    @Test
     void createValidContract() {
         CompanyOffer companyOffer = new CompanyOffer();
         companyOffer.setCompanyId(companyName);
@@ -499,7 +501,7 @@ class CompanyOfferServiceTest {
                 offer.getPricePerHour().floatValue(), startDate, endDate);
 
         String url = "http://localhost:7070/contract/create";
-        when(restTemplate.postForEntity(anyString(), eq(HttpEntity.class), eq(Contract.class) ))
+        when(restTemplate.postForEntity(anyString(), any(), eq(Contract.class)))
                 .thenReturn(responseEntity);
         when(responseEntity.getBody()).thenReturn(contract);
         when(companyOfferRepository.existsById(1L)).thenReturn(true);
@@ -507,7 +509,8 @@ class CompanyOfferServiceTest {
 
         Contract response = companyOfferService.createContract("1", startDate, endDate);
         assertThat(response).isEqualTo(contract);
-    }*/
+    }
+     */
 
 
 }
