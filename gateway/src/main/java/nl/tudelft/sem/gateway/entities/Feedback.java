@@ -1,4 +1,4 @@
-package nl.tudelft.sem.authentication.entities;
+package nl.tudelft.sem.gateway.entities;
 
 import java.util.Objects;
 
@@ -204,4 +204,3 @@ public class Feedback {
                 + '}';
     }
 }
-
