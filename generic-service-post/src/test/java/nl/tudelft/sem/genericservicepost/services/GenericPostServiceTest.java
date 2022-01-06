@@ -1,7 +1,10 @@
 package nl.tudelft.sem.genericservicepost.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.HashSet;
+import java.util.Set;
 import nl.tudelft.sem.genericservicepost.entities.Expertise;
 import nl.tudelft.sem.genericservicepost.entities.GenericPost;
 import nl.tudelft.sem.genericservicepost.entities.StudentOffer;
@@ -11,12 +14,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.HashSet;
-import java.util.Set;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 public class GenericPostServiceTest {
@@ -71,14 +68,11 @@ public class GenericPostServiceTest {
     }
 
     @Test
-    void retrieveStudentsInPostTest(){
+    void retrieveStudentsInPostTest() {
 
         Set<StudentOffer> studentOffers = new HashSet<>();
-        Set<StudentOffer> students1 = new HashSet<>();
         StudentOffer ivan = new StudentOffer(1L, "IvanV", genericPost);
-        StudentOffer marie = new StudentOffer(2L, "Marie", genericPost1);
         StudentOffer todor = new StudentOffer(3L, "Todor", genericPost);
-        StudentOffer tudor = new StudentOffer(4L, "Tudor", genericPost1);
 
 
         // Test for students in post 1.
@@ -96,6 +90,9 @@ public class GenericPostServiceTest {
         assertThat(result).isEqualTo(studentOffers);
 
         // Test for students in post 2.
+        Set<StudentOffer> students1 = new HashSet<>();
+        StudentOffer marie = new StudentOffer(2L, "Marie", genericPost1);
+        StudentOffer tudor = new StudentOffer(4L, "Tudor", genericPost1);
         students1.add(marie);
         students1.add(tudor);
 
@@ -116,7 +113,7 @@ public class GenericPostServiceTest {
         input.add(ivan);
         genericPost2.setStudentOfferSet(input);
         assertThatThrownBy(() -> genericPostService.retrieveStudentsInPost(genericPost2))
-                .isInstanceOf(GenericPostNotFoundException.class);
+            .isInstanceOf(GenericPostNotFoundException.class);
     }
 
 }

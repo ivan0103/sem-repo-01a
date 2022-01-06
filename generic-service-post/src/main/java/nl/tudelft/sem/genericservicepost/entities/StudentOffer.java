@@ -31,6 +31,13 @@ public class StudentOffer {
     @JoinColumn(name = "generic_post_id", referencedColumnName = "generic_post_id")
     private GenericPost genericPost;
 
+    /**
+     * Instantiates a new Student offer.
+     *
+     * @param id          the id
+     * @param studentId   the student id
+     * @param genericPost the generic post
+     */
     public StudentOffer(Long id, String studentId, GenericPost genericPost) {
         this.id = id;
         this.studentId = studentId;
