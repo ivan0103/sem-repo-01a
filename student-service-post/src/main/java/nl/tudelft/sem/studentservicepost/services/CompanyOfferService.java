@@ -275,7 +275,8 @@ public class CompanyOfferService {
     public Contract createContract(
             String offerId,
             @Valid @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @Valid @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+            @Valid @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            RestTemplate restTemplate
     ) {
         long id;
         try {
@@ -291,7 +292,6 @@ public class CompanyOfferService {
                 Post post = offer.getPost();
 
                 String url = "http://localhost:7070/contract/create";
-                RestTemplate restTemplate = new RestTemplate();
                 Contract contract = new Contract(post.getAuthor(),
                         offer.getCompanyId(), post.getAuthor(), offer.getCompanyId(),
                         LocalTime.of(offer.getWeeklyHours().intValue(), 0),

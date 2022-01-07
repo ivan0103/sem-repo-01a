@@ -31,6 +31,7 @@ import nl.tudelft.sem.studentservicepost.services.CompanyOfferService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.AdditionalAnswers;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -38,6 +39,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.client.RestTemplate;
 
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -53,6 +55,8 @@ class CompanyOfferControllerTest {
     private transient String serializedOffer;
     private transient String serializedChangedOffer;
 
+    @Mock
+    private transient RestTemplate restTemplate;
 
     @Autowired
     private transient MockMvc mockMvc;
@@ -232,14 +236,16 @@ class CompanyOfferControllerTest {
                 LocalTime.of(12, 0), 12.5f,
                 startDate, endDate);
 
-        when(companyOfferService.createContract("1", startDate, endDate)).thenReturn(contract);
+        when(companyOfferService.createContract("1", startDate, endDate, restTemplate))
+                .thenReturn(contract);
 
         String url = baseUrl + "/createContract?offerId=1&startDate=2021-01-01&endDate=2021-02-01";
 
         try {
             this.mockMvc.perform(post(url))
                     .andExpect(status().isCreated());
-            verify(companyOfferService).createContract("1", startDate, endDate);
+            verify(companyOfferService).createContract(eq("1"), eq(startDate),
+                    eq(endDate), any(RestTemplate.class));
         } catch (Exception e) {
             e.printStackTrace();
             fail("Exception in creating a contract");
