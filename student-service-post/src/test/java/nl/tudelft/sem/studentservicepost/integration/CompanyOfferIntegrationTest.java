@@ -79,7 +79,7 @@ public class CompanyOfferIntegrationTest {
     @BeforeEach
     void setup() {
         companyOffer.setId(1L);
-        companyOffer.setCompanyId("big money srl");
+        companyOffer.setCompanyId("bigmoneysrl");
         companyOffer.setWeeklyHours(10);
         companyOffer.setTotalHours(80);
         companyOffer.setExpertise(Set.of(expertise1));
@@ -87,7 +87,7 @@ public class CompanyOfferIntegrationTest {
         companyOffer.setRequirementsSet(Set.of(requirement1));
 
         companyOffer1.setId(2L);
-        companyOffer1.setCompanyId("small money spa");
+        companyOffer1.setCompanyId("smallmoneyspa");
         companyOffer1.setWeeklyHours(5);
         companyOffer1.setTotalHours(2000);
         companyOffer1.setExpertise(Set.of(expertise2));
@@ -320,7 +320,7 @@ public class CompanyOfferIntegrationTest {
         CompanyOffer offer = createOffer(companyOffer, post.getId());
         acceptOffer(1L);
 
-        Set<CompanyOffer> result = getAcceptedOffers("big money srl");
+        Set<CompanyOffer> result = getAcceptedOffers("bigmoneysrl");
         assertThat(result).containsExactly(offer);
     }
 
@@ -329,7 +329,7 @@ public class CompanyOfferIntegrationTest {
         // In this test we don't accept the offer, thus it should not show up
         CompanyOffer offer = createOffer(companyOffer, post.getId());
 
-        Set<CompanyOffer> result = getAcceptedOffers("big money srl");
+        Set<CompanyOffer> result = getAcceptedOffers("bigmoneysrl");
         assertThat(result).hasSize(0);
         assertThat(result).doesNotContain(offer);
     }
