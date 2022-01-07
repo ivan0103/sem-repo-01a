@@ -40,7 +40,8 @@ public class GatewayService implements ReactiveUserDetailsService {
                 throw new IllegalArgumentException("NetID does not exist!");
             }
 
-            return Mono.just(new org.springframework.security.core.userdetails.User(authUser.getNetID(),
+            return Mono.just(
+                    new org.springframework.security.core.userdetails.User(authUser.getNetID(),
                     new BCryptPasswordEncoder().encode(authUser.getPassword()),
                     List.of(new SimpleGrantedAuthority(authUser.getRole()))));
         } catch (Exception e) {
@@ -162,7 +163,8 @@ public class GatewayService implements ReactiveUserDetailsService {
     //     *
     //     * @param username - username(or NetID) of a user.
     //     * @return the details of that user.
-    //     * @throws UsernameNotFoundException when the username searched for doesn't have an account.
+    //     * @throws UsernameNotFoundException when the username
+    //     * searched for doesn't have an account.
     //     */
     //    @Override
     //    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -186,7 +188,8 @@ public class GatewayService implements ReactiveUserDetailsService {
     //     *
     //     * @param username - username(or NetID) of a user.
     //     * @return the instance of the user.
-    //     * @throws UsernameNotFoundException when the username searched for doesn't have an account.
+    //     * @throws UsernameNotFoundException when the username
+    //     * searched for doesn't have an account.
     //     */
     //    public AuthUser getAuthUserByUsername(String username) throws UsernameNotFoundException {
     //
