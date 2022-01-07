@@ -12,14 +12,14 @@ public class Student {
 
     private Float rating;
 
-    protected Student(String netId, String name, Float rating) {
+    public Student(String netId, String name, Float rating) {
         this.role = "student";
         this.netId = netId;
         this.name = name;
         this.rating = rating;
     }
 
-    protected Student(){
+    public Student(){
     }
 
     public String getRole() {
