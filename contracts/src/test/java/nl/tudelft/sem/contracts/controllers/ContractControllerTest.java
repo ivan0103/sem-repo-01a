@@ -1,8 +1,11 @@
 package nl.tudelft.sem.contracts.controllers;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import java.time.LocalDate;
@@ -63,7 +66,7 @@ class ContractControllerTest {
     }
 
     @Test
-    void saveTest() throws Exception {
+    void createTest() throws Exception {
         //given
         given(contractService.create(contract)).willReturn(contract);
         given(detailsCheckService.checkContractDates(contract.getStartDate(),
@@ -83,9 +86,52 @@ class ContractControllerTest {
     }
 
     @Test
+    void createTestInvalidDates() throws Exception {
+        //given
+        given(detailsCheckService.checkContractDates(contract.getStartDate(),
+                contract.getEndDate())).willReturn(false);
+
+        String expected = "Invalid start or end dates for contract.";
+
+        //when
+        Exception testCase = assertThrows(
+                Exception.class,
+                () -> underTest.create(contract)
+        );
+
+        //then
+        verify(contractService, never()).create(any());
+
+        assertThat(testCase.getMessage()).isEqualTo(expected);
+        ;
+    }
+
+    @Test
+    void createTestInvalidHoursPerWeek() throws Exception {
+        //given
+        given(detailsCheckService.checkContractDates(contract.getStartDate(),
+                contract.getEndDate())).willReturn(true);
+        given(detailsCheckService.checkContractWorkHours(contract.getHoursPerWeek()))
+                .willReturn(false);
+
+        String expected = "Hours per week is more than allowed 20h.";
+
+        //when
+        Exception testCase = assertThrows(
+                Exception.class,
+                () -> underTest.create(contract)
+        );
+
+        //then
+        verify(contractService, never()).create(any());
+
+        assertThat(testCase.getMessage()).isEqualTo(expected);
+        ;
+    }
+
+    @Test
     void getContractPdfTest() throws Exception {
         //given
-        given(contractService.exists(contract.getId())).willReturn(true);
         given(contractService.getContract(contract.getId())).willReturn(contract);
 
         //setup
@@ -100,15 +146,14 @@ class ContractControllerTest {
         verify(pdfGeneratorService).exportContract(responseArgumentCaptor.capture(),
                 contractArgumentCaptor.capture());
         verify(contractService).getContract(idArgumentCaptor.capture());
-        verify(contractService).exists(idArgumentCaptor2.capture());
+
 
         long capturedId = idArgumentCaptor.getValue();
-        long capturedId2 = idArgumentCaptor2.getValue();
+
         HttpServletResponse capturedResponse = responseArgumentCaptor.getValue();
         Contract capturedContract = contractArgumentCaptor.getValue();
 
         assertThat(capturedId).isEqualTo(contract.getId());
-        assertThat(capturedId2).isEqualTo(contract.getId());
         assertThat(capturedContract).isEqualTo(contract);
         assertThat(capturedResponse).isEqualTo(response);
     }
@@ -133,6 +178,25 @@ class ContractControllerTest {
         assertThat(capturedId).isEqualTo(contract.getId());
         assertThat(capturedId2).isEqualTo(contract.getId());
         assertThat(result).isEqualTo(contract);
+    }
+
+    @Test
+    void getContractInvalidIdTest() throws Exception {
+        //given
+        given(contractService.exists(contract.getId())).willReturn(false);
+
+        String expected = "Invalid contract id. Contract Id does not exist in database.";
+
+
+
+        //when
+        Exception testCase = assertThrows(
+                Exception.class,
+                () -> underTest.getContract(contract.getId())
+        );
+
+        //then
+        assertThat(testCase.getMessage()).isEqualTo(expected);
     }
 
     @Test
@@ -161,6 +225,78 @@ class ContractControllerTest {
         assertThat(captureId).isEqualTo(contract.getId());
         assertThat(capturedContract).isEqualTo(contract);
         assertThat(testCase).isEqualTo(contract);
+    }
+
+    @Test
+    void modifyContractInvalidIdTest() throws Exception {
+        //setup
+        contract.setEndDate(LocalDate.of(2021, 2, 6));
+
+        String expected = "Invalid contract id. Contract Id does not exist in database.";
+
+        //given
+        given(contractService.exists(contract.getId())).willReturn(false);
+
+        //when
+        Exception testCase = assertThrows(
+                Exception.class,
+                () -> underTest.modifyContract(contract)
+        );
+
+        //then
+        verify(contractService, never()).create(any());
+
+        assertThat(testCase.getMessage()).isEqualTo(expected);
+    }
+
+    @Test
+    void modifyContractInvalidDates() throws Exception {
+        //setup
+        contract.setEndDate(LocalDate.of(2021, 2, 6));
+
+        String expected = "Invalid start or end dates for contract.";
+
+        //given
+        given(contractService.exists(contract.getId())).willReturn(true);
+        given(detailsCheckService.checkContractDates(contract.getStartDate(),
+                contract.getEndDate())).willReturn(false);
+
+        //when
+        Exception testCase = assertThrows(
+                Exception.class,
+                () -> underTest.modifyContract(contract)
+        );
+
+        //then
+        verify(contractService, never()).create(any());
+
+        assertThat(testCase.getMessage()).isEqualTo(expected);
+    }
+
+    @Test
+    void modifyContractInvalidWorkHours() throws Exception {
+        //setup
+        contract.setEndDate(LocalDate.of(2021, 2, 6));
+
+        String expected = "Hours per week is more than allowed 20h.";
+
+        //given
+        given(contractService.exists(contract.getId())).willReturn(true);
+        given(detailsCheckService.checkContractDates(contract.getStartDate(),
+                contract.getEndDate())).willReturn(true);
+        given(detailsCheckService.checkContractWorkHours(contract.getHoursPerWeek()))
+                .willReturn(false);
+
+        //when
+        Exception testCase = assertThrows(
+                Exception.class,
+                () -> underTest.modifyContract(contract)
+        );
+
+        //then
+        verify(contractService, never()).create(any());
+
+        assertThat(testCase.getMessage()).isEqualTo(expected);
     }
 
 }

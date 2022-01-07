@@ -53,11 +53,11 @@ public class ContractController {
 
         if (!detailsCheckService.checkContractDates(contract.getStartDate(),
             contract.getEndDate())) {
-            throw new Exception("Invalid start or end dates for contract");
+            throw new Exception("Invalid start or end dates for contract.");
         }
 
         if (!detailsCheckService.checkContractWorkHours(contract.getHoursPerWeek())) {
-            throw new Exception("hours per week is more than allowed 20h");
+            throw new Exception("Hours per week is more than allowed 20h.");
         }
         return new ResponseEntity<>(contractService.create(contract), HttpStatus.CREATED);
     }
@@ -90,9 +90,7 @@ public class ContractController {
     @PostMapping("/getPdf")
     public void getContractPdf(HttpServletResponse response,
                                @RequestParam long contractId) throws Exception {
-        if (!contractService.exists(contractId)) {
-            throw new Exception("Invalid contract id. Contract Id does not exist in database.");
-        }
+
         Contract contract = contractService.getContract(contractId);
 
         //set response to be a PDF.
@@ -125,11 +123,11 @@ public class ContractController {
 
         if (!detailsCheckService.checkContractDates(contract.getStartDate(),
             contract.getEndDate())) {
-            throw new Exception("Invalid start or end dates for contract");
+            throw new Exception("Invalid start or end dates for contract.");
         }
 
         if (!detailsCheckService.checkContractWorkHours(contract.getHoursPerWeek())) {
-            throw new Exception("hours per week is more than allowed 20h");
+            throw new Exception("Hours per week is more than allowed 20h.");
         }
         return contractService.create(contract);
     }
