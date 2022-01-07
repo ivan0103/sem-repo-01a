@@ -26,7 +26,9 @@ public class AuthUserService {
      * @return a new authUser
      */
 
-    public AuthUser addAuthUser(String netID, String password, String role) throws IllegalArgumentException {
+    public AuthUser addAuthUser(String netID, String password, String role)
+                                throws IllegalArgumentException {
+
         if (netID == null) {
             throw new IllegalArgumentException("NetID cannot be null!");
         }

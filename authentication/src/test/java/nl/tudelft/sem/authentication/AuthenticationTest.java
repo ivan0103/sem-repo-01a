@@ -6,7 +6,6 @@ import org.springframework.test.context.TestExecutionListeners;
 
 
 @SpringBootTest(classes = {Authentication.class})
-@TestExecutionListeners
 public class AuthenticationTest {
 
     @Test
