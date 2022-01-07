@@ -68,9 +68,14 @@ public class GenericPost {
     @OneToMany(mappedBy = "genericPost", fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<StudentOffer> studentOfferSet = new HashSet<>();
+
+    @OneToOne
+    @Column(name = "studentSet")
+    private transient Set<Student> studentSet = new HashSet<>();
+
     @OneToOne
     @Column(name = "candidate")
-    private transient StudentOffer selectedStudentOffer = new StudentOffer();
+    private transient Student selectedStudent = new Student();
 
     public GenericPost() {
     }
@@ -123,50 +128,46 @@ public class GenericPost {
         this.studentOfferSet = studentOfferSet;
     }
 
-    public StudentOffer getSelectedStudentOffer() {
-        return selectedStudentOffer;
+    public Set<Student> getStudentSet() {
+        return studentSet;
     }
 
-    public void setSelectedStudentOffer(StudentOffer studentOffer) {
-        this.selectedStudentOffer = studentOffer;
+    public void setStudentSet(Set<Student> studentSet) {
+        this.studentSet = studentSet;
     }
 
-    @Override
-    public String toString() {
-        return "GenericPost{"
-            + "id=" + id
-            + ", author='" + author + '\''
-            + ", hoursPerWeek=" + hoursPerWeek
-            + ", duration=" + duration
-            + ", expertiseSet=" + expertiseSet
-            + '}';
+    public Student getSelectedStudent() {
+        return selectedStudent;
+    }
+
+    public void setSelectedStudent(Student student) {
+        this.selectedStudent = student;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         GenericPost that = (GenericPost) o;
-        return hoursPerWeek == that.hoursPerWeek
-            && duration == that.duration
-            && id.equals(that.id)
-            && author.equals(that.author)
-            && expertiseSet.equals(that.expertiseSet)
-            && studentOfferSet.equals(that.studentOfferSet);
+        return hoursPerWeek == that.hoursPerWeek && duration == that.duration && Objects.equals(id, that.id) && Objects.equals(author, that.author) && Objects.equals(expertiseSet, that.expertiseSet) && Objects.equals(studentOfferSet, that.studentOfferSet) && Objects.equals(studentSet, that.studentSet) && Objects.equals(selectedStudent, that.selectedStudent);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id,
-            author,
-            hoursPerWeek,
-            duration,
-            expertiseSet,
-            studentOfferSet,
-            selectedStudentOffer);
+        return Objects.hash(id, author, hoursPerWeek, duration, expertiseSet, studentOfferSet, studentSet, selectedStudent);
+    }
+
+    @Override
+    public String toString() {
+        return "GenericPost{" +
+                "id=" + id +
+                ", author='" + author + '\'' +
+                ", hoursPerWeek=" + hoursPerWeek +
+                ", duration=" + duration +
+                ", expertiseSet=" + expertiseSet +
+                ", studentOfferSet=" + studentOfferSet +
+                ", studentSet=" + studentSet +
+                ", selectedStudent=" + selectedStudent +
+                '}';
     }
 }

@@ -4,6 +4,7 @@ import java.util.Set;
 import nl.tudelft.sem.genericservicepost.entities.Expertise;
 import nl.tudelft.sem.genericservicepost.entities.GenericPost;
 import nl.tudelft.sem.genericservicepost.entities.StudentOffer;
+import nl.tudelft.sem.genericservicepost.entities.Student;
 import nl.tudelft.sem.genericservicepost.exceptions.GenericPostNotFoundException;
 import nl.tudelft.sem.genericservicepost.exceptions.InvalidEditException;
 import nl.tudelft.sem.genericservicepost.exceptions.StudentOfferNotFoundException;
@@ -75,9 +76,9 @@ public class GenericPostService {
      * @return a Set of all Students
      * @throws GenericPostNotFoundException if id of the generic post was not found / doesn't exist.
      */
-    public Set<StudentOffer> retrieveStudentsInPost(GenericPost genericPost) {
+    public Set<Student> retrieveStudentsInPost(GenericPost genericPost) {
         if (genericPostRepository.existsById(genericPost.getId())) {
-            return genericPost.getStudentOfferSet();
+            return genericPost.getStudentSet();
         } else {
             throw new GenericPostNotFoundException();
         }
@@ -96,10 +97,10 @@ public class GenericPostService {
      * @throws GenericPostNotFoundException  if the post does not exist or not found.
      */
 
-    public StudentOffer setSelectedStudent(StudentOffer student, GenericPost post) {
+    public Student setSelectedStudent(Student student, GenericPost post) {
         if (genericPostRepository.existsById(post.getId())) {
-            if (post.getStudentOfferSet().contains(student)) {
-                post.setSelectedStudentOffer(student);
+            if (post.getStudentSet().contains(student)) {
+                post.setSelectedStudent(student);
                 return student;
             } else {
                 throw new StudentOfferNotFoundException();
