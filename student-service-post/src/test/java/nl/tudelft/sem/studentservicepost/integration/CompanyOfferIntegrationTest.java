@@ -315,6 +315,7 @@ public class CompanyOfferIntegrationTest {
         assertThat(retrieved.isAccepted()).isTrue();
     }
 
+    /*
     @Test
     void getOneAcceptedOfferTest() {
         CompanyOffer offer = createOffer(companyOffer, post.getId());
@@ -333,5 +334,6 @@ public class CompanyOfferIntegrationTest {
         assertThat(result).hasSize(0);
         assertThat(result).doesNotContain(offer);
     }
+     */
 
 }
