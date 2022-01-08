@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -187,6 +188,17 @@ public class ContractTest {
     @Test
     public void equalTrue() {
         assertThat(contract).isEqualTo(contract);
+    }
+
+    @Test
+    public void equalWrongObject() {
+        assertThat(contract.equals(student)).isFalse();
+    }
+
+    @Test
+    public void hashCodeTest() {
+        int expected = Objects.hash(contract.getId());
+        assertThat(contract.hashCode()).isEqualTo(expected);
     }
 
     @Test
