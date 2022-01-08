@@ -1,70 +1,179 @@
 package nl.tudelft.sem.gateway.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
-import java.util.ArrayList;
+import java.util.List;
 import nl.tudelft.sem.gateway.entities.AuthUser;
-import nl.tudelft.sem.gateway.entities.CommunicationEntity;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.client.RestTemplate;
+import reactor.core.publisher.Mono;
 
-
+@ExtendWith(MockitoExtension.class)
 class GatewayServiceTest {
-
-    private transient AuthUser user;
     private transient GatewayService underTest;
-    private final transient String baboon = "Baboon";
-    private final transient String baboon2 = "Baboon2";
-    private final transient String student = "Student";
+
 
     @Mock
     private transient RestTemplate restTemplate;
 
     @BeforeEach
     void setUp() {
-        user = new AuthUser(baboon, baboon2, student);
-
         underTest = new GatewayService(restTemplate);
     }
 
     @Test
-    @Disabled
-    void findByUsername() {
-        given(restTemplate.getForObject("http://users/{Baboon}", AuthUser.class)).willReturn(user);
+    void findByUsernameInvalidUserName() {
+        given(restTemplate.getForObject(
+                "http://AUTHENTICATION/authentication//ADMIN?netID=Bonobo",
+                AuthUser.class)).willReturn(null);
+
+        //when
+        Mono<UserDetails> testCase = underTest.findByUsername("Bonobo");
+
+        //then
+        verifyNoMoreInteractions(restTemplate);
+
+        assertThat(testCase).isNull();
     }
 
     @Test
-    @Disabled
-    void createAccountNoRole() {
-        CommunicationEntity communicationEntity = new CommunicationEntity(
-                "Chimp",
-                "Bill",
-                "Chimp1",
-                null
-                );
+    void findByUsernameSuccessful() {
+        //setup
+        AuthUser authUser = new AuthUser("Bonobo", "Bonobo2", "student");
 
-        IllegalArgumentException testCase = assertThrows(
-                IllegalArgumentException.class,
-                () -> underTest.createAccount(communicationEntity)
+        Mono<UserDetails> expected = Mono.just(
+                new org.springframework.security.core.userdetails.User(
+                        authUser.getNetID(),
+                        new BCryptPasswordEncoder().encode(authUser.getPassword()),
+                        List.of(new SimpleGrantedAuthority(authUser.getRole()))
+                )
         );
 
+        given(restTemplate.getForObject(
+                "http://AUTHENTICATION/authentication//ADMIN?netID=Bonobo",
+                AuthUser.class)).willReturn(authUser);
+
+        //when
+        Mono<UserDetails> testCase = underTest.findByUsername("Bonobo");
+
         //then
-        verifyNoInteractions(restTemplate);
+        verifyNoMoreInteractions(restTemplate);
 
-        assertThat(testCase.getMessage()).isEqualTo("Role mustn't be null!");
-
+        assertThat(testCase.toString()).isEqualTo(expected.toString());
     }
 
+
+    /*@Test
+    void createAccountIDTakenInUsers() {
+        //setup
+        CommunicationEntity communicationEntity = new CommunicationEntity(
+                "Bonobo",
+                "Ben",
+                "Bonobo2",
+                "student"
+        );
+
+        AuthUser authUser = new AuthUser("Bonobo", "Bonobo2", "student");
+
+
+        //given
+        given(restTemplate.getForObject("http://USERS/users/Bonobo", User.class)).willReturn(user);
+
+        //when
+        AuthUser testCase = underTest.createAccount(communicationEntity);
+
+        //then
+        verifyNoMoreInteractions(restTemplate);
+    }
+
+    @Test
+    void createAccountIDTakenInAuthUsers() {
+        //setup
+        CommunicationEntity communicationEntity = new CommunicationEntity(
+                "Bonobo",
+                "Ben",
+                "Bonobo2",
+                "student"
+        );
+
+        AuthUser authUser = new AuthUser("Bonobo", "Bonobo2", "student");
+
+
+        //given
+        given(restTemplate.getForObject("http://USERS/users/Bonobo", User.class)).willReturn(null);
+        given(restTemplate.getForObject(
+                "http://AUTHENTICATION/authentication//ADMIN?netID=Bonobo",
+                AuthUser.class)).willReturn(authUser);
+
+        //when
+        AuthUser testCase = underTest.createAccount(communicationEntity);
+
+        //then
+        verifyNoMoreInteractions(restTemplate);
+    }
+
+    @Test
+    void createAccountSuccessful() {
+        //setup
+        CommunicationEntity communicationEntity = new CommunicationEntity(
+                "Bonobo",
+                "Ben",
+                "Bonobo2",
+                "student"
+        );
+
+        AuthUser authUser = new AuthUser("Bonobo", "Bonobo2", "student");
+        ArgumentCaptor<String> stringArgumentCaptor1 = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<HttpMethod> httpMethodArgumentCaptor1  =
+                ArgumentCaptor.forClass(HttpMethod.class);
+
+        //given
+        given(restTemplate.getForObject("http://USERS/users/Bonobo", User.class)).willReturn(null);
+        given(restTemplate.getForObject(
+                "http://AUTHENTICATION/authentication//ADMIN?netID=Bonobo",
+                AuthUser.class)).willReturn(null);
+
+        //when
+        AuthUser testCase = underTest.createAccount(communicationEntity);
+
+        //then
+        verify(restTemplate, times(2)).execute(
+                stringArgumentCaptor1.capture(),
+                httpMethodArgumentCaptor1.capture(),
+                nullable(RequestCallback.class), nullable(ResponseExtractor.class));
+
+        List<String> capturedUrl1 = stringArgumentCaptor1.getAllValues();
+        List<HttpMethod> capturedHttpMethod1 = httpMethodArgumentCaptor1.getAllValues();
+
+
+        assertThat(capturedUrl1.get(0)).isEqualTo(
+                "http://AUTHENTICATION/authentication/addAuthUser/"
+                        + communicationEntity.getNetID() + "/"
+                        + communicationEntity.getPassword() + "/"
+                        + communicationEntity.getRole()
+        );
+
+        assertThat(capturedUrl1.get(1)).isEqualTo(
+                "http:/http://USERS/users//addUser/"
+                        + communicationEntity.getNetID() + "/"
+                        + communicationEntity.getPassword() + "/"
+                        + communicationEntity.getRole()
+        );
+
+        assertThat(capturedHttpMethod1.get(0)).isEqualTo(HttpMethod.POST);
+        assertThat(capturedHttpMethod1.get(1)).isEqualTo(HttpMethod.POST);
+        assertThat(testCase).isEqualTo(authUser);
+    }
+*/
 
 
 

@@ -40,7 +40,8 @@ public class GatewayService implements ReactiveUserDetailsService {
                 throw new IllegalArgumentException("NetID does not exist!");
             }
 
-            return Mono.just(new org.springframework.security.core.userdetails.User(authUser.getNetID(),
+            return Mono.just(new org.springframework.security.core.userdetails.User(
+                    authUser.getNetID(),
                     new BCryptPasswordEncoder().encode(authUser.getPassword()),
                     List.of(new SimpleGrantedAuthority(authUser.getRole()))));
         } catch (Exception e) {
@@ -59,22 +60,49 @@ public class GatewayService implements ReactiveUserDetailsService {
 
     public AuthUser createAccount(CommunicationEntity communicationEntity) {
         if (communicationEntity.getRole() == null) {
-            throw new IllegalArgumentException("Role mustn't be null!");
+            throw new IllegalArgumentException("Role must not be null!");
         }
 
         try {
             User user = restTemplate.getForObject(
                     usersApi + communicationEntity.getNetID(), User.class
             );
+            AuthUser authUser = restTemplate.getForObject(
+                    urlAuth + "/ADMIN?netID=" + communicationEntity.getNetID(), AuthUser.class
+            );
 
-            if (user != null) {
+            if (user != null || authUser != null) {
                 throw new IllegalArgumentException("Net ID already exists!");
             }
+
+            authUser = new AuthUser(communicationEntity.getNetID(),
+                    communicationEntity.getPassword(),
+                    communicationEntity.getRole());
+
+            restTemplate.execute(
+                    urlAuth + "addAuthUser/"
+                            + communicationEntity.getNetID() + "/"
+                            + communicationEntity.getPassword() + "/"
+                            + communicationEntity.getRole(),
+                    HttpMethod.POST, null, null
+            );
+
+            restTemplate.execute(
+                    usersApi + "addUser/"
+                            + communicationEntity.getNetID() + "/"
+                            + communicationEntity.getName() + "/"
+                            + communicationEntity.getRole(),
+                    HttpMethod.POST, null, null
+            );
+
+            return authUser;
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+        return null;
 
-        try {
+        /*try {
             AuthUser authUser = restTemplate.getForObject(
                     urlAuth + "/ADMIN?netID=" + communicationEntity.getNetID(), AuthUser.class
             );
@@ -107,7 +135,7 @@ public class GatewayService implements ReactiveUserDetailsService {
                 HttpMethod.POST, null, null
         );
 
-        return authUser;
+        return authUser;*/
     }
 
     //
@@ -162,7 +190,8 @@ public class GatewayService implements ReactiveUserDetailsService {
     //     *
     //     * @param username - username(or NetID) of a user.
     //     * @return the details of that user.
-    //     * @throws UsernameNotFoundException when the username searched for doesn't have an account.
+    //     * @throws UsernameNotFoundException when the username searched for doesn't have
+    //     an account.
     //     */
     //    @Override
     //    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -186,7 +215,8 @@ public class GatewayService implements ReactiveUserDetailsService {
     //     *
     //     * @param username - username(or NetID) of a user.
     //     * @return the instance of the user.
-    //     * @throws UsernameNotFoundException when the username searched for doesn't have an account.
+    //     * @throws UsernameNotFoundException when the username searched for doesn't
+    //     have an account.
     //     */
     //    public AuthUser getAuthUserByUsername(String username) throws UsernameNotFoundException {
     //

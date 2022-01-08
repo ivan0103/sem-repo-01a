@@ -9,11 +9,13 @@ import nl.tudelft.sem.gateway.services.GatewayService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-
+@ExtendWith(MockitoExtension.class)
 class GatewayControllerTest {
 
     private transient GatewayController underTest;
@@ -42,7 +44,6 @@ class GatewayControllerTest {
     }
 
     @Test
-    @Disabled
     void createAccount() {
         //setup
         CommunicationEntity communicationEntity = new CommunicationEntity(

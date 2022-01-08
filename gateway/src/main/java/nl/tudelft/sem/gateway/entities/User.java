@@ -47,8 +47,8 @@ public class User {
      * @param feedbacks list of feedbacks received by the user from other users
      */
 
-    protected User(String netID, String name, Float rating,
-                   List<Feedback> feedbacks, String role) {
+    public User(String netID, String name, Float rating,
+                List<Feedback> feedbacks, String role) {
 
         this.netID = netID;
         this.name = name;
