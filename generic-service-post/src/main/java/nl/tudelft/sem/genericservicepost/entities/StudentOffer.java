@@ -1,7 +1,6 @@
 package nl.tudelft.sem.genericservicepost.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -36,6 +35,23 @@ public class StudentOffer {
     @JoinColumn(name = "generic_post_id", referencedColumnName = "generic_post_id")
     private GenericPost genericPost;
 
+    public StudentOffer() {
+
+    }
+
+    /**
+     * Instantiates a new Student offer.
+     *
+     * @param id          the id
+     * @param studentId   the student id
+     * @param genericPost the generic post
+     */
+    public StudentOffer(Long id, String studentId, GenericPost genericPost) {
+        this.id = id;
+        this.studentId = studentId;
+        this.genericPost = genericPost;
+    }
+
     public Long getId() {
         return id;
     }
@@ -67,24 +83,5 @@ public class StudentOffer {
             + ", studentId='" + studentId + '\''
             + ", genericPost=" + genericPost
             + '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        StudentOffer that = (StudentOffer) o;
-        return Objects.equals(getId(), that.getId())
-            && Objects.equals(getStudentId(), that.getStudentId())
-            && Objects.equals(getGenericPost(), that.getGenericPost());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getStudentId(), getGenericPost());
     }
 }
