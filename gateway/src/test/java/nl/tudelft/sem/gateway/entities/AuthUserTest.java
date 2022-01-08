@@ -20,8 +20,9 @@ class AuthUserTest {
     }
 
     @Test
-    void constructorNullTest() {
-        assertThat(user).isNotNull();
+    void constructorEmpty() {
+        AuthUser user2 = new AuthUser();
+        assertThat(user2).isNotNull();
     }
 
     @Test

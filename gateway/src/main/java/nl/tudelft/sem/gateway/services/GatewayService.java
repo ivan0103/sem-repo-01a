@@ -64,7 +64,7 @@ public class GatewayService implements ReactiveUserDetailsService {
                                   throws IllegalArgumentException {
 
         if (communicationEntity.getRole() == null) {
-            throw new IllegalArgumentException("Role mustn't be null!");
+            throw new IllegalArgumentException("Role must not be null!");
         }
 
         User user = restTemplate.getForObject(
