@@ -1,7 +1,9 @@
 package nl.tudelft.sem.genericservicepost.controllers;
 
+import java.util.Set;
 import javax.validation.Valid;
 import nl.tudelft.sem.genericservicepost.entities.GenericPost;
+import nl.tudelft.sem.genericservicepost.entities.UserImpl;
 import nl.tudelft.sem.genericservicepost.services.GenericPostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,5 +24,20 @@ public class GenericPostController {
     public ResponseEntity<GenericPost> createGenericPost(@Valid @RequestBody GenericPost post) {
         GenericPost savedPost = genericPostService.createGenericPost(post);
         return new ResponseEntity<>(savedPost, HttpStatus.CREATED);
+    }
+
+    // Will be moved to the Student Offer Controller than Marie made, after her merge.
+    @PostMapping("/getStudentsByPost")
+    public ResponseEntity<Set<UserImpl>> getStudentsByPost(
+        @Valid @RequestBody GenericPost post) {
+        Set<UserImpl> result = genericPostService.retrieveStudentsInPost(post);
+        return new ResponseEntity<>(result, HttpStatus.FOUND);
+    }
+
+    @PostMapping("/setSelectedStudent")
+    public ResponseEntity<UserImpl> setSelectedStudent(
+            @Valid @RequestBody UserImpl student, GenericPost post) {
+        UserImpl result = genericPostService.setSelectedStudent(student, post);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 }
