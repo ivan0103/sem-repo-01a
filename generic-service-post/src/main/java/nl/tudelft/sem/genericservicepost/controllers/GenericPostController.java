@@ -64,8 +64,9 @@ public class GenericPostController {
      */
     @PatchMapping(value = "/edit", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<MappingJacksonValue> editPost(@Valid @RequestBody GenericPost post,
-                                                        @RequestParam("postId") String postId) {
+    public ResponseEntity<MappingJacksonValue> editPost(
+            @Valid @RequestBody GenericPost post,
+            @RequestParam("genericPostId") String postId) {
         GenericPost editedPost = genericPostService.editGenericPost(post, postId);
 
         SimpleBeanPropertyFilter simpleBeanPropertyFilter =

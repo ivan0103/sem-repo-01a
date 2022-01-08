@@ -79,28 +79,6 @@ public class GenericPostService {
     }
 
     /**
-     * Get generic post from its post id.
-     *
-     * @param postId the generic Post's id as String
-     * @return the generic Post
-     * @throws GenericPostNotFoundException if id of the generic post was not found / doesn't exist.
-     */
-    public GenericPost getById(String postId) {
-        long id;
-
-        try {
-            id = Long.parseLong(postId);
-            if (genericPostRepository.existsById(id)) {
-                return genericPostRepository.getGenericPostById(id);
-            } else {
-                throw new GenericPostNotFoundException();
-            }
-        } catch (NumberFormatException e) {
-            throw new GenericPostNotFoundException();
-        }
-    }
-
-    /**
      * Issue #6
      * Companies Access to Student Info
      * Companies can view all the Students and their Data,
