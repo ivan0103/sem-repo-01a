@@ -59,7 +59,7 @@ public class GenericPostServiceTest {
 
         tmp.setDuration(3);
 
-        GenericPost edited = genericPostService.editGenericPost(tmp);
+        GenericPost edited = genericPostService.editGenericPost(tmp, tmp.getId().toString());
 
         GenericPost retrieved = postRepository.getGenericPostById(tmp.getId());
 
@@ -71,7 +71,7 @@ public class GenericPostServiceTest {
     void editGenericPostExceptionTest() {
         GenericPost tmp = new GenericPost();
         tmp.setId(10L);
-        assertThatThrownBy(() -> genericPostService.editGenericPost(tmp))
+        assertThatThrownBy(() -> genericPostService.editGenericPost(tmp, tmp.getId().toString()))
             .isInstanceOf(GenericPostNotFoundException.class);
     }
 

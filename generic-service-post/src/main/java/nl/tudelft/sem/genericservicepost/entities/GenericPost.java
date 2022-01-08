@@ -32,7 +32,7 @@ public class GenericPost {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY, value = "id")
+    // @JsonProperty(access = JsonProperty.Access.WRITE_ONLY, value = "id")
     @Column(name = "generic_post_id")
     private Long id;
 
