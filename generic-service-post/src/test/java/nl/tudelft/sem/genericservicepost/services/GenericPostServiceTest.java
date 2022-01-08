@@ -71,7 +71,7 @@ public class GenericPostServiceTest {
     void editGenericPostExceptionTest() {
         GenericPost tmp = new GenericPost();
         tmp.setId(10L);
-        assertThatThrownBy(() -> genericPostService.editGenericPost(tmp))
+        assertThatThrownBy(() -> genericPostService.editGenericPost(tmp, tmp.getId().toString()))
             .isInstanceOf(GenericPostNotFoundException.class);
     }
 

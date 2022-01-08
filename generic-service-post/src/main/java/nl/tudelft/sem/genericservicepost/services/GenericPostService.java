@@ -1,5 +1,6 @@
 package nl.tudelft.sem.genericservicepost.services;
 
+import java.util.Collection;
 import java.util.Set;
 import nl.tudelft.sem.genericservicepost.entities.Expertise;
 import nl.tudelft.sem.genericservicepost.entities.GenericPost;
@@ -11,8 +12,6 @@ import nl.tudelft.sem.genericservicepost.repositories.ExpertiseRepository;
 import nl.tudelft.sem.genericservicepost.repositories.GenericPostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Collection;
 
 @Service
 public class GenericPostService {
@@ -79,6 +78,13 @@ public class GenericPostService {
         }
     }
 
+    /**
+     * Get generic post from its post id.
+     *
+     * @param postId the generic Post's id as String
+     * @return the generic Post
+     * @throws GenericPostNotFoundException if id of the generic post was not found / doesn't exist.
+     */
     public GenericPost getById(String postId) {
         long id;
 

@@ -12,6 +12,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import java.util.Collection;
+import java.util.Set;
+import javax.ws.rs.core.MediaType;
 import nl.tudelft.sem.genericservicepost.entities.Expertise;
 import nl.tudelft.sem.genericservicepost.entities.GenericPost;
 import nl.tudelft.sem.genericservicepost.repositories.ExpertiseRepository;
@@ -23,10 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
-
-import javax.ws.rs.core.MediaType;
-import java.util.Collection;
-import java.util.Set;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -91,7 +90,8 @@ public class GenericPostIntegrationTest {
     private Collection<GenericPost> getAll() {
         String url = baseUrl + "/getall";
         try {
-            String body = this.mockMvc.perform(get(url)).andDo(print()).andExpect(status().isFound())
+            String body = this.mockMvc.perform(get(url))
+                    .andDo(print()).andExpect(status().isFound())
                     .andReturn().getResponse().getContentAsString();
             return new ObjectMapper().readValue(body, new TypeReference<>() {
             });
