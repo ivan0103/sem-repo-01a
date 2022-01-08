@@ -24,10 +24,12 @@ public class AuthUserService {
      * @param password the password of the new authUser
      * @param role the role of the authUser
      * @return a new authUser
+     * @throws IllegalArgumentException if one of the arguments is invalid
      */
 
     public AuthUser addAuthUser(String netID, String password, String role)
-            throws IllegalArgumentException {
+                                throws IllegalArgumentException {
+
         if (netID == null) {
             throw new IllegalArgumentException("NetID cannot be null!");
         }

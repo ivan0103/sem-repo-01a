@@ -16,7 +16,6 @@ import reactor.core.publisher.Mono;
 
 
 @Service
-//public class GatewayService implements UserDetailsService {
 public class GatewayService implements ReactiveUserDetailsService {
 
 
@@ -41,8 +40,10 @@ public class GatewayService implements ReactiveUserDetailsService {
             }
 
             return Mono.just(
-                    new org.springframework.security.core.userdetails.User(authUser.getNetID(),
-                    new BCryptPasswordEncoder().encode(authUser.getPassword()),
+                    new org.springframework.security.core.userdetails.User(
+                            authUser.getNetID(),
+                    new BCryptPasswordEncoder().encode(
+                            authUser.getPassword()),
                     List.of(new SimpleGrantedAuthority(authUser.getRole()))));
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -56,37 +57,31 @@ public class GatewayService implements ReactiveUserDetailsService {
      * @param communicationEntity entity that contains data necessary
      *                                 for both users and authUsers
      * @return a new authenticated user or an exception
+     * @throws IllegalArgumentException if one of the arguments is invalid
      */
 
-    public AuthUser createAccount(CommunicationEntity communicationEntity) {
+    public AuthUser createAccount(CommunicationEntity communicationEntity)
+                                  throws IllegalArgumentException {
+
         if (communicationEntity.getRole() == null) {
             throw new IllegalArgumentException("Role mustn't be null!");
         }
 
-        try {
-            User user = restTemplate.getForObject(
-                    usersApi + communicationEntity.getNetID(), User.class
-            );
+        User user = restTemplate.getForObject(
+                usersApi + communicationEntity.getNetID(), User.class
+        );
 
-            if (user != null) {
-                throw new IllegalArgumentException("Net ID already exists!");
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        if (user != null) {
+            throw new IllegalArgumentException("Net ID already exists!");
         }
 
-        try {
-            AuthUser authUser = restTemplate.getForObject(
-                    urlAuth + "/ADMIN?netID=" + communicationEntity.getNetID(), AuthUser.class
-            );
+        AuthUser authenticatedUser = restTemplate.getForObject(
+                urlAuth + "/ADMIN?netID=" + communicationEntity.getNetID(), AuthUser.class
+        );
 
-            if (authUser != null) {
-                throw new IllegalArgumentException("NetID does not exist!");
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        if (authenticatedUser != null) {
+            throw new IllegalArgumentException("NetID does not exist!");
         }
-
 
         AuthUser authUser = new AuthUser(communicationEntity.getNetID(),
                 communicationEntity.getPassword(),
@@ -110,95 +105,4 @@ public class GatewayService implements ReactiveUserDetailsService {
 
         return authUser;
     }
-
-    //
-    //    @Autowired
-    //    public GatewayService(RestTemplate restTemplate) {
-    //        this.restTemplate = restTemplate;
-    //    }
-
-
-    //    @Override
-    //    public UserDetails loadUserByUsername(String netID) {
-    //        try {
-    //            AuthUser authUser = restTemplate.getForObject(
-    //                    urlAuth + "/ADMIN?netID=" + netID, AuthUser.class
-    //            );
-    //
-    //            if (authUser == null) {
-    //                throw new IllegalArgumentException("NetID does not exist!");
-    //            }
-    //
-    //            return new org.springframework.security.core.userdetails.User(authUser.getNetID(),
-    //                    new BCryptPasswordEncoder().encode(authUser.getPassword()),
-    //                    List.of(new SimpleGrantedAuthority(authUser.getRole())));
-    //
-    //        } catch (Exception e) {
-    //            System.out.println(e.getMessage());
-    //        }
-    //
-    //        return null;
-    //    }
-
-    /*
-     * Checks whether the user is truly authenticated.
-     *
-     * @param netID the net id
-     * @param password the password
-     * @return true - if the user is indeed authenticated
-     *         false -  otherwise
-     */
-    /*public Boolean isAuthenticated(String netID, String password) {
-        AuthUser authUser = restTemplate.getForObject(
-               urlAuth + netID + "/" + password,
-               AuthUser.class
-        );
-
-        return authUser != null;
-    }*/
-
-    //    /**
-    //     * This method loads user's details from the user microservice to be used by
-    //     * spring security for authentication.
-    //     *
-    //     * @param username - username(or NetID) of a user.
-    //     * @return the details of that user.
-    //     * @throws UsernameNotFoundException when the username
-    //     * searched for doesn't have an account.
-    //     */
-    //    @Override
-    //    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    //
-    //        AuthUser user = getAuthUserByUsername(username);
-    //
-    //        ArrayList<SimpleGrantedAuthority> authorities = new ArrayList<>();
-    //        authorities.add(new SimpleGrantedAuthority(user.getRole()));
-    //
-    //        return new org.springframework.security.core.userdetails.User(
-    //                user.getNetID(),
-    //                user.getPassword(),
-    //                authorities
-    //        );
-    //    }
-    //
-    //
-    //    /**
-    //     * Gets the user instance corresponding to a username from users repository
-    //     * in user microservice.
-    //     *
-    //     * @param username - username(or NetID) of a user.
-    //     * @return the instance of the user.
-    //     * @throws UsernameNotFoundException when the username
-    //     * searched for doesn't have an account.
-    //     */
-    //    public AuthUser getAuthUserByUsername(String username) throws UsernameNotFoundException {
-    //
-    //        try {
-    //            AuthUser user = restTemplate.getForObject("http://users/" + "{" + username + "}", AuthUser.class);
-    //            return user;
-    //        } catch (Exception e) {
-    //            e.printStackTrace();
-    //            throw new UsernameNotFoundException("User not found in the database");
-    //        }
-    //    }
 }

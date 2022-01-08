@@ -35,14 +35,17 @@ public class AuthUserController {
      * @param password the password of the new authUser
      * @param role the role of the authUser
      * @return a new authUser
+     * @throws IllegalArgumentException if one of the arguments is invalid
      */
 
     @PostMapping(path = "addAuthUser/{netID}/{password}/{role}")
-    public AuthUser addAuthUser(@PathVariable(value = "netID") String netID,
+    public ResponseEntity<AuthUser> addAuthUser(@PathVariable(value = "netID") String netID,
                         @PathVariable(value = "password") String password,
-                        @PathVariable(value = "role") String role) throws IllegalArgumentException {
+                        @PathVariable(value = "role") String role)
+                        throws IllegalArgumentException {
 
-        return authUserService.addAuthUser(netID, password, role);
+        AuthUser authUser = authUserService.addAuthUser(netID, password, role);
+        return new ResponseEntity<>(authUser, HttpStatus.CREATED);
     }
 
     /**
