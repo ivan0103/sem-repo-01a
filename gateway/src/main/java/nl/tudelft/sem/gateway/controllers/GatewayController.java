@@ -37,11 +37,13 @@ public class GatewayController {
      *
      * @param communicationEntity entity used to transfer data
      * @return a new authUser entity
+     * @throws IllegalArgumentException if one of the arguments is invalid
      */
 
     @PostMapping(path = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AuthUser> createAccount(@Valid @RequestBody
-                                                  CommunicationEntity communicationEntity) {
+                                                  CommunicationEntity communicationEntity)
+                                                  throws IllegalArgumentException {
 
         AuthUser authUser = gatewayService.createAccount(communicationEntity);
         return new ResponseEntity<>(authUser, HttpStatus.CREATED);
