@@ -7,10 +7,14 @@ import nl.tudelft.sem.genericservicepost.entities.UserImpl;
 import nl.tudelft.sem.genericservicepost.exceptions.GenericPostNotFoundException;
 import nl.tudelft.sem.genericservicepost.exceptions.InvalidEditException;
 import nl.tudelft.sem.genericservicepost.exceptions.StudentNotFoundException;
+import nl.tudelft.sem.genericservicepost.exceptions.UserNotFoundException;
 import nl.tudelft.sem.genericservicepost.repositories.ExpertiseRepository;
 import nl.tudelft.sem.genericservicepost.repositories.GenericPostRepository;
+import nl.tudelft.sem.genericservicepost.repositories.UserRepository;
+import org.apache.http.HttpEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class GenericPostService {
@@ -21,13 +25,17 @@ public class GenericPostService {
     @Autowired
     transient ExpertiseRepository expertiseRepository;
 
+    @Autowired
+    transient UserRepository userRepository;
+
     /**
      * Create generic post and save in database.
      *
      * @param genericPost the post
      * @return the saved post
      */
-    public GenericPost createGenericPost(GenericPost genericPost) {
+    public GenericPost createGenericPost(
+            GenericPost genericPost) {
         genericPost.setId(null);
 
         for (Expertise expertise : genericPost.getExpertiseSet()) {
@@ -63,6 +71,36 @@ public class GenericPostService {
         } else {
             throw new GenericPostNotFoundException();
         }
+    }
+
+    /**
+     * Gets by id.
+     *
+     * @param postId the post id
+     * @return the by id
+     */
+    public GenericPost getById(String postId) {
+        long id;
+        try {
+            id = Long.parseLong(postId);
+            if (genericPostRepository.existsById(id)) {
+                return genericPostRepository.getGenericPostById(id);
+            } else {
+                throw new GenericPostNotFoundException();
+            }
+        } catch (NumberFormatException e) {
+            throw new GenericPostNotFoundException();
+        }
+    }
+
+    /**
+     * Gets by id.
+     *
+     * @param netId the user id
+     * @return the user by id
+     */
+    public UserImpl getStudentById(String netId) {
+        return userRepository.getUserById(netId);
     }
 
     /**
@@ -108,4 +146,34 @@ public class GenericPostService {
             throw new GenericPostNotFoundException();
         }
     }
+    
+    /**
+     * Student signs up for a generic post.
+     *
+     * @param netId the student.
+     * @param post    the post to which the student is signing up for.
+     * @return the student.
+     * @throws GenericPostNotFoundException  if the post does not exist or not found.
+     * @throws UserNotFoundException if the student does not exist.
+     */
+    public UserImpl signUp(String netId, GenericPost post) {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "http://localhost:8081users{" + netId + "}";
+        UserImpl student = restTemplate.getForObject(url,UserImpl.class);
+
+        if (genericPostRepository.existsById(post.getId())) {
+            if (!post.getStudentSet().contains(student)) {
+                if (userRepository.existsUserById(netId)) {
+                    post.getStudentSet().add(student);
+                    return student;
+                } else {
+                    throw new UserNotFoundException();
+                }
+            }
+            return student;
+        } else {
+            throw new GenericPostNotFoundException();
+        }
+    }
+
 }
