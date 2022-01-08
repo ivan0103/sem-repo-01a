@@ -57,37 +57,31 @@ public class GatewayService implements ReactiveUserDetailsService {
      * @param communicationEntity entity that contains data necessary
      *                                 for both users and authUsers
      * @return a new authenticated user or an exception
+     * @throws IllegalArgumentException if one of the arguments is invalid
      */
 
-    public AuthUser createAccount(CommunicationEntity communicationEntity) {
+    public AuthUser createAccount(CommunicationEntity communicationEntity)
+                                  throws IllegalArgumentException {
+
         if (communicationEntity.getRole() == null) {
             throw new IllegalArgumentException("Role mustn't be null!");
         }
 
-        try {
-            User user = restTemplate.getForObject(
-                    usersApi + communicationEntity.getNetID(), User.class
-            );
+        User user = restTemplate.getForObject(
+                usersApi + communicationEntity.getNetID(), User.class
+        );
 
-            if (user != null) {
-                throw new IllegalArgumentException("Net ID already exists!");
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        if (user != null) {
+            throw new IllegalArgumentException("Net ID already exists!");
         }
 
-        try {
-            AuthUser authUser = restTemplate.getForObject(
-                    urlAuth + "/ADMIN?netID=" + communicationEntity.getNetID(), AuthUser.class
-            );
+        AuthUser authenticatedUser = restTemplate.getForObject(
+                urlAuth + "/ADMIN?netID=" + communicationEntity.getNetID(), AuthUser.class
+        );
 
-            if (authUser != null) {
-                throw new IllegalArgumentException("NetID does not exist!");
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        if (authenticatedUser != null) {
+            throw new IllegalArgumentException("NetID does not exist!");
         }
-
 
         AuthUser authUser = new AuthUser(communicationEntity.getNetID(),
                 communicationEntity.getPassword(),
