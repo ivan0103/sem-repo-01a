@@ -71,11 +71,11 @@ public class GenericPost {
 
     @OneToOne
     @Column(name = "studentSet")
-    private transient Set<Student> studentSet = new HashSet<>();
+    private transient Set<UserImpl> studentSet = new HashSet<>();
 
     @OneToOne
     @Column(name = "candidate")
-    private transient Student selectedStudent = new Student();
+    private transient UserImpl selectedStudent = new UserImpl();
 
     public GenericPost() {
     }
@@ -128,46 +128,63 @@ public class GenericPost {
         this.studentOfferSet = studentOfferSet;
     }
 
-    public Set<Student> getStudentSet() {
+    public Set<UserImpl> getStudentSet() {
         return studentSet;
     }
 
-    public void setStudentSet(Set<Student> studentSet) {
+    public void setStudentSet(Set<UserImpl> studentSet) {
         this.studentSet = studentSet;
     }
 
-    public Student getSelectedStudent() {
+    public UserImpl getSelectedStudent() {
         return selectedStudent;
     }
 
-    public void setSelectedStudent(Student student) {
+    public void setSelectedStudent(UserImpl student) {
         this.selectedStudent = student;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         GenericPost that = (GenericPost) o;
-        return hoursPerWeek == that.hoursPerWeek && duration == that.duration && Objects.equals(id, that.id) && Objects.equals(author, that.author) && Objects.equals(expertiseSet, that.expertiseSet) && Objects.equals(studentOfferSet, that.studentOfferSet) && Objects.equals(studentSet, that.studentSet) && Objects.equals(selectedStudent, that.selectedStudent);
+        return hoursPerWeek == that.hoursPerWeek
+                && duration == that.duration
+                && Objects.equals(id, that.id)
+                && Objects.equals(author, that.author)
+                && Objects.equals(expertiseSet, that.expertiseSet)
+                && Objects.equals(studentOfferSet, that.studentOfferSet)
+                && Objects.equals(studentSet, that.studentSet)
+                && Objects.equals(selectedStudent, that.selectedStudent);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, author, hoursPerWeek, duration, expertiseSet, studentOfferSet, studentSet, selectedStudent);
+        return Objects.hash(id,
+                author,
+                hoursPerWeek,
+                duration,
+                expertiseSet,
+                studentOfferSet,
+                studentSet,
+                selectedStudent);
     }
 
     @Override
     public String toString() {
-        return "GenericPost{" +
-                "id=" + id +
-                ", author='" + author + '\'' +
-                ", hoursPerWeek=" + hoursPerWeek +
-                ", duration=" + duration +
-                ", expertiseSet=" + expertiseSet +
-                ", studentOfferSet=" + studentOfferSet +
-                ", studentSet=" + studentSet +
-                ", selectedStudent=" + selectedStudent +
-                '}';
+        return "GenericPost{"
+                + "id=" + id
+                + ", author='" + author + '\''
+                + ", hoursPerWeek=" + hoursPerWeek
+                + ", duration=" + duration
+                + ", expertiseSet=" + expertiseSet
+                + ", studentOfferSet=" + studentOfferSet
+                + ", studentSet=" + studentSet
+                + ", selectedStudent=" + selectedStudent + '}';
     }
 }

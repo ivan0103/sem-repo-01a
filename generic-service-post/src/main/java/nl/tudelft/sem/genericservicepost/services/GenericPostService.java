@@ -1,20 +1,16 @@
 package nl.tudelft.sem.genericservicepost.services;
 
-import java.time.LocalTime;
 import java.util.Set;
 import nl.tudelft.sem.genericservicepost.entities.Expertise;
 import nl.tudelft.sem.genericservicepost.entities.GenericPost;
-import nl.tudelft.sem.genericservicepost.entities.Student;
+import nl.tudelft.sem.genericservicepost.entities.UserImpl;
 import nl.tudelft.sem.genericservicepost.exceptions.GenericPostNotFoundException;
 import nl.tudelft.sem.genericservicepost.exceptions.InvalidEditException;
 import nl.tudelft.sem.genericservicepost.exceptions.StudentNotFoundException;
 import nl.tudelft.sem.genericservicepost.repositories.ExpertiseRepository;
 import nl.tudelft.sem.genericservicepost.repositories.GenericPostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 @Service
 public class GenericPostService {
@@ -79,7 +75,7 @@ public class GenericPostService {
      * @return a Set of all Students
      * @throws GenericPostNotFoundException if id of the generic post was not found / doesn't exist.
      */
-    public Set<Student> retrieveStudentsInPost(GenericPost genericPost) {
+    public Set<UserImpl> retrieveStudentsInPost(GenericPost genericPost) {
         if (genericPostRepository.existsById(genericPost.getId())) {
             return genericPost.getStudentSet();
         } else {
@@ -100,20 +96,9 @@ public class GenericPostService {
      * @throws GenericPostNotFoundException  if the post does not exist or not found.
      */
 
-    public Student setSelectedStudent(Student student, GenericPost post) {
+    public UserImpl setSelectedStudent(UserImpl student, GenericPost post) {
         if (genericPostRepository.existsById(post.getId())) {
             if (post.getStudentSet().contains(student)) {
-                /*
-                String netId = "{" + student.getNetId() + "}";
-                String url = "http://localhost:8081users" + netId;
-
-                RestTemplate restTemplate = new RestTemplate();
-                Student stud = new Student(student.getNetId(), student.getName(), student.getRating());
-                HttpEntity<Student> request = new HttpEntity<>(stud);
-                ResponseEntity<Student> response = restTemplate
-                        .postForEntity(url, request, Student.class);
-                 */
-
                 post.setSelectedStudent(student);
                 return student;
             } else {

@@ -1,5 +1,8 @@
 package nl.tudelft.sem.gateway.config;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import nl.tudelft.sem.gateway.entities.AuthUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -16,10 +19,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.web.client.RestTemplate;
 import reactor.core.publisher.Mono;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 
 @Configuration

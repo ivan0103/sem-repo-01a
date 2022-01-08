@@ -68,7 +68,8 @@
 //                    UsernamePasswordAuthenticationToken authenticationToken =
 //                            new UsernamePasswordAuthenticationToken(username, null, authorities);
 //
-//                    //Set the token in the security context folder to tell Spring security about it.
+//                    //Set the token in the security context folder
+//                    to tell Spring security about it.
 //                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 //
 //                    //Move on in filter chain
