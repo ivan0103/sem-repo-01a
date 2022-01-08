@@ -3,13 +3,13 @@ package nl.tudelft.sem.authentication.controllers;
 import javassist.NotFoundException;
 import javax.validation.Valid;
 import nl.tudelft.sem.authentication.entities.AuthUser;
-import nl.tudelft.sem.authentication.entities.CommunicationEntity;
 import nl.tudelft.sem.authentication.services.AuthUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,18 +29,20 @@ public class AuthUserController {
     }
 
     /**
-     * Create a new authUser entity.
+     * Create a new authUser.
      *
-     * @param communicationEntity entity used to transfer data
-     * @return a new authUser entity
+     * @param netID the id of the new authUser
+     * @param password the password of the new authUser
+     * @param role the role of the authUser
+     * @return a new authUser
      */
 
-    @PostMapping(path = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AuthUser> createAccount(@Valid @RequestBody
-                                                  CommunicationEntity communicationEntity) {
+    @PostMapping(path = "addAuthUser/{netID}/{password}/{role}")
+    public AuthUser addAuthUser(@PathVariable(value = "netID") String netID,
+                        @PathVariable(value = "password") String password,
+                        @PathVariable(value = "role") String role) throws IllegalArgumentException {
 
-        AuthUser authUser = authUserService.createAccount(communicationEntity);
-        return new ResponseEntity<>(authUser, HttpStatus.CREATED);
+        return authUserService.addAuthUser(netID, password, role);
     }
 
     /**

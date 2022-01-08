@@ -2,94 +2,51 @@ package nl.tudelft.sem.authentication.services;
 
 import javassist.NotFoundException;
 import nl.tudelft.sem.authentication.entities.AuthUser;
-import nl.tudelft.sem.authentication.entities.CommunicationEntity;
-import nl.tudelft.sem.authentication.entities.User;
 import nl.tudelft.sem.authentication.repositories.AuthUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 
 @Service
 public class AuthUserService {
 
     private final transient AuthUserRepository authUserRepository;
-    private final transient RestTemplate restTemplate;
-    private final transient String usersApi = "http://USERS/users/";
 
     @Autowired
-    public AuthUserService(AuthUserRepository authUserRepository, RestTemplate restTemplate) {
+    public AuthUserService(AuthUserRepository authUserRepository) {
         this.authUserRepository = authUserRepository;
-        this.restTemplate = restTemplate;
     }
 
     /**
-     * Create a new account.
+     * Create a new authUser.
      *
-     * @param communicationEntity entity that contains data necessary
-*                                 for both users and authUsers
-     * @return a new authenticated user or an exception
+     * @param netID the id of the new authUser
+     * @param password the password of the new authUser
+     * @param role the role of the authUser
+     * @return a new authUser
      */
 
-    public AuthUser createAccount(CommunicationEntity communicationEntity) {
-        if (authUserRepository.findById(communicationEntity.getNetID()).isPresent()) {
-            throw new IllegalArgumentException("Net ID already exists!");
+    public AuthUser addAuthUser(String netID, String password, String role)
+            throws IllegalArgumentException {
+        if (netID == null) {
+            throw new IllegalArgumentException("NetID cannot be null!");
+        }
+        if (password == null) {
+            throw new IllegalArgumentException("Password cannot be null!");
+        }
+        if (!role.equalsIgnoreCase("student")
+            && !role.equalsIgnoreCase("company")) {
+
+            throw new IllegalArgumentException("Invalid role");
+        }
+        if (authUserRepository.findById(netID).isPresent()) {
+            throw new IllegalArgumentException("User with this netID already exists!");
         }
 
-        if (communicationEntity.getRole() == null) {
-            throw new IllegalArgumentException("Role mustn't be null!");
-        }
-
-        try {
-            User user = restTemplate.getForObject(
-                    usersApi + communicationEntity.getNetID(), User.class
-            );
-
-            if (user != null) {
-                throw new IllegalArgumentException("Net ID already exists!");
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-
-        AuthUser authUser = new AuthUser(communicationEntity.getNetID(),
-                                         communicationEntity.getPassword(),
-                                         communicationEntity.getRole());
-
-        restTemplate.execute(
-                usersApi + "addUser/"
-                        + communicationEntity.getNetID() + "/"
-                        + communicationEntity.getName() + "/"
-                        + communicationEntity.getRole(),
-                HttpMethod.POST, null, null
-        );
+        AuthUser authUser = new AuthUser(netID, password, role);
         authUserRepository.save(authUser);
-
         return authUser;
     }
-
-    //    /**
-    //     * Retrieves an authenticated user.
-    //     *
-    //     * @param netID the net id of the user
-    //     * @param password the password of the user
-    //     * @return an authenticated user or null
-    //     */
-    //
-    //    public AuthUser getAuthUser(String netID, String password) {
-    //        if (authUserRepository.findById(netID).isEmpty()) {
-    //            return null;
-    //        }
-    //
-    //        AuthUser authUser = authUserRepository.findById(netID).get();
-    //
-    //        if (!authUser.getPassword().equals(password)) {
-    //            return null;
-    //        }
-    //
-    //        return authUser;
-    //    }
 
     /**
      * Method to check whether the authenticated user exists.

@@ -13,10 +13,4 @@ public class Authentication {
         SpringApplication.run(Authentication.class, args);
     }
 
-    @Bean
-    @LoadBalanced
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
-
 }
