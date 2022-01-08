@@ -15,12 +15,18 @@ class UserTest {
     private transient User user;
     private transient ArrayList<Feedback> feedbacks;
     private transient Feedback feedback;
+    private transient String netId;
+    private transient String name;
+    private transient String role;
 
     @BeforeEach
     void setUp() {
         feedback = new Feedback(1L, "Inappropriate", 2);
         feedbacks = new ArrayList<>();
-        user = new User("Bonobo", "Ben", 2f, feedbacks, "student");
+        netId = "Bonobo";
+        name = "Ben";
+        role = "student";
+        user = new User(netId, name, 2f, feedbacks, role);
     }
 
     @Test
@@ -31,13 +37,13 @@ class UserTest {
 
     @Test
     void constructorNoFeedbacks() {
-        User user2 = new User("Bonobo", "Ben", 2f, "student");
+        User user2 = new User(netId, name, 2f, role);
         assertThat(user2).isNotNull();
     }
 
     @Test
     void getNetID() {
-        assertThat(user.getNetID()).isEqualTo("Bonobo");
+        assertThat(user.getNetID()).isEqualTo(netId);
     }
 
     @Test
@@ -46,12 +52,12 @@ class UserTest {
 
         assertThat(user.getNetID()).isEqualTo("Bonobo2");
 
-        user.setNetID("Bonobo");
+        user.setNetID(netId);
     }
 
     @Test
     void getName() {
-        assertThat(user.getName()).isEqualTo("Ben");
+        assertThat(user.getName()).isEqualTo(name);
     }
 
     @Test
@@ -60,7 +66,7 @@ class UserTest {
 
         assertThat(user.getName()).isEqualTo("Brocollus");
 
-        user.setName("Ben");
+        user.setName(name);
     }
 
     @Test
@@ -109,14 +115,14 @@ class UserTest {
 
     @Test
     void getRole() {
-        assertThat(user.getRole()).isEqualTo("student");
+        assertThat(user.getRole()).isEqualTo(role);
     }
 
     @Test
     void setRole() {
         user.setRole("company");
         assertThat(user.getRole()).isEqualTo("company");
-        user.setRole("student");
+        user.setRole(role);
     }
 
     @Test
@@ -131,13 +137,13 @@ class UserTest {
 
     @Test
     void testEqualsTrue() {
-        User user2 = new User("Bonobo", "Ben", 2f, feedbacks, "student");
+        User user2 = new User(netId, name, 2f, feedbacks, role);
         assertThat(user.equals(user2)).isTrue();
     }
 
     @Test
     void testEqualsFalse() {
-        User user2 = new User("Bonobo", "Ben", 2f, feedbacks, "company");
+        User user2 = new User(netId, name, 2f, feedbacks, "company");
         assertThat(user.equals(user2)).isFalse();
     }
 

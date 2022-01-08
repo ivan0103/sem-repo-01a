@@ -10,13 +10,19 @@ import org.junit.jupiter.api.Test;
 class CommunicationEntityTest {
 
     private transient CommunicationEntity communicationEntity;
+    private transient String netId;
+    private transient String name;
+    private transient String password;
 
     @BeforeEach
     void setUp() {
+        netId = "Chimp";
+        name = "Bill";
+        password = "Chimp1";
         communicationEntity = new CommunicationEntity(
-                "Chimp",
-                "Bill",
-                "Chimp1",
+                netId,
+                name,
+                password,
                 "company");
 
     }
@@ -39,9 +45,9 @@ class CommunicationEntityTest {
     @Test
     void getRole() {
         CommunicationEntity communicationEntity2 = new CommunicationEntity(
-                "Chimp",
-                "Bill",
-                "Chimp1",
+                netId,
+                name,
+                password,
                 "STUDENT");
         assertThat(communicationEntity2.getRole()).isEqualTo("student");
     }
@@ -53,16 +59,15 @@ class CommunicationEntityTest {
 
     @Test
     void testEqualsWrongEntity() {
-        String name = "Chimp";
         assertThat(communicationEntity.equals(name)).isFalse();
     }
 
     @Test
     void testEqualsTrue() {
         CommunicationEntity other = new CommunicationEntity(
-                "Chimp",
-                "Bill",
-                "Chimp1",
+                netId,
+                name,
+                password,
                 "company");
         assertThat(communicationEntity.equals(other)).isTrue();
     }
@@ -70,9 +75,9 @@ class CommunicationEntityTest {
     @Test
     void testEqualsFalse() {
         CommunicationEntity other = new CommunicationEntity(
-                "Chimp",
+                netId,
                 "Benjamin",
-                "Chimp1",
+                password,
                 "company");
         assertThat(communicationEntity.equals(other)).isFalse();
     }

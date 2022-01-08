@@ -12,11 +12,13 @@ class FeedbackTest {
 
     private transient Feedback feedback;
     private transient User user;
+    private transient String text;
 
     @BeforeEach
     void setUp() {
         user = new User("Bonobo", "Ben", 2f, new ArrayList<>(), "student");
-        feedback = new Feedback(1L, "Inappropriate", 2, user);
+        text = "Inappropriate";
+        feedback = new Feedback(1L, text, 2, user);
     }
 
     @Test
@@ -27,19 +29,19 @@ class FeedbackTest {
 
     @Test
     void constructorNoId() {
-        Feedback feedback2 = new Feedback("Inappropriate", 2, user);
+        Feedback feedback2 = new Feedback(text, 2, user);
         assertThat(feedback2).isNotNull();
     }
 
     @Test
     void constructorNoUser() {
-        Feedback feedback2 = new Feedback(1L, "Inappropriate", 2);
+        Feedback feedback2 = new Feedback(1L, text, 2);
         assertThat(feedback2).isNotNull();
     }
 
     @Test
     void constructorNoIdOrUser() {
-        Feedback feedback2 = new Feedback("Inappropriate", 2);
+        Feedback feedback2 = new Feedback(text, 2);
         assertThat(feedback2).isNotNull();
     }
 
@@ -56,7 +58,7 @@ class FeedbackTest {
 
     @Test
     void getText() {
-        assertThat(feedback.getText()).isEqualTo("Inappropriate");
+        assertThat(feedback.getText()).isEqualTo(text);
     }
 
     @Test
@@ -68,7 +70,7 @@ class FeedbackTest {
     void setText() {
         feedback.setText("Cute");
         assertThat(feedback.getText()).isEqualTo("Cute");
-        feedback.setText("Inappropriate");
+        feedback.setText(text);
     }
 
     @Test
@@ -109,7 +111,7 @@ class FeedbackTest {
 
     @Test
     void testEqualsTrue() {
-        Feedback feedback2 = new Feedback(1L, "Inappropriate", 2, user);
+        Feedback feedback2 = new Feedback(1L, text, 2, user);
         assertThat(feedback.equals(feedback2)).isTrue();
     }
 

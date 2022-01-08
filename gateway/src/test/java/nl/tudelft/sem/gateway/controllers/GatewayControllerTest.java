@@ -40,7 +40,7 @@ class GatewayControllerTest {
         String testCase = underTest.greetAuthenticatedUsers();
 
         //then
-        assertThat(testCase).isEqualTo(testCase);
+        assertThat(testCase).isEqualTo(expected);
     }
 
     @Test
