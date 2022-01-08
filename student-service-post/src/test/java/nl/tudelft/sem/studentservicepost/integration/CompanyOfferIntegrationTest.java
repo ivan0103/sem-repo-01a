@@ -31,6 +31,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Description;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -78,7 +79,7 @@ public class CompanyOfferIntegrationTest {
     @BeforeEach
     void setup() {
         companyOffer.setId(1L);
-        companyOffer.setCompanyId("big money srl");
+        companyOffer.setCompanyId("bigmoneysrl");
         companyOffer.setWeeklyHours(10);
         companyOffer.setTotalHours(80);
         companyOffer.setExpertise(Set.of(expertise1));
@@ -86,7 +87,7 @@ public class CompanyOfferIntegrationTest {
         companyOffer.setRequirementsSet(Set.of(requirement1));
 
         companyOffer1.setId(2L);
-        companyOffer1.setCompanyId("small money spa");
+        companyOffer1.setCompanyId("smallmoneyspa");
         companyOffer1.setWeeklyHours(5);
         companyOffer1.setTotalHours(2000);
         companyOffer1.setExpertise(Set.of(expertise2));
@@ -218,6 +219,21 @@ public class CompanyOfferIntegrationTest {
         }
     }
 
+    private Set<CompanyOffer> getAcceptedOffers(String companyId) {
+        String url = baseUrl + "/getAcceptedOffers?companyId=" + companyId;
+        try {
+            String body =
+                    this.mockMvc.perform(get(url)).andDo(print())
+                            .andExpect(status().isOk())
+                            .andReturn().getResponse().getContentAsString();
+            return new ObjectMapper().readValue(body, new TypeReference<Set<CompanyOffer>>(){});
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
     @Test
     void createOfferTest() {
         CompanyOffer expected = createOffer(companyOffer, post.getId());
@@ -297,7 +313,27 @@ public class CompanyOfferIntegrationTest {
         assertThat(expected).isNotNull();
         CompanyOffer retrieved = companyOfferRepository.getById(expected.getId());
         assertThat(retrieved.isAccepted()).isTrue();
-
     }
+
+    /*
+    @Test
+    void getOneAcceptedOfferTest() {
+        CompanyOffer offer = createOffer(companyOffer, post.getId());
+        acceptOffer(1L);
+
+        Set<CompanyOffer> result = getAcceptedOffers("bigmoneysrl");
+        assertThat(result).containsExactly(offer);
+    }
+
+    @Test
+    void getZeroAcceptedOffersTest() {
+        // In this test we don't accept the offer, thus it should not show up
+        CompanyOffer offer = createOffer(companyOffer, post.getId());
+
+        Set<CompanyOffer> result = getAcceptedOffers("bigmoneysrl");
+        assertThat(result).hasSize(0);
+        assertThat(result).doesNotContain(offer);
+    }
+     */
 
 }
