@@ -1,12 +1,10 @@
 package nl.tudelft.sem.eureka.services;
 
-import nl.tudelft.sem.eureka.entities.DummyEntity;
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import nl.tudelft.sem.eureka.entities.DummyEntity;
+import org.junit.jupiter.api.Test;
 
 class DummyServiceTest {
 

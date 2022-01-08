@@ -1,5 +1,9 @@
 package nl.tudelft.sem.eureka.controllers;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
+
+import java.util.List;
 import nl.tudelft.sem.eureka.entities.DummyEntity;
 import nl.tudelft.sem.eureka.services.DummyService;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,19 +12,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.BDDMockito.given;
-
 @ExtendWith(MockitoExtension.class)
 class DummyControllerTest {
 
-    DummyController underTest;
+    private transient DummyController underTest;
 
     @Mock
-    DummyService dummyService;
+    private transient DummyService dummyService;
 
     @BeforeEach
     void setUp() {
