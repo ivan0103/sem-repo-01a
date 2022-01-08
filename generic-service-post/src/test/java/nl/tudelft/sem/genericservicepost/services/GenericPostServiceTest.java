@@ -55,7 +55,7 @@ public class GenericPostServiceTest {
 
         tmp.setDuration(3);
 
-        GenericPost edited = genericPostService.editGenericPost(tmp);
+        GenericPost edited = genericPostService.editGenericPost(tmp, tmp.getId().toString());
 
         GenericPost retrieved = postRepository.getGenericPostById(tmp.getId());
 
