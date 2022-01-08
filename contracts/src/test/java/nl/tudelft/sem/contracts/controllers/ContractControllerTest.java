@@ -103,7 +103,6 @@ class ContractControllerTest {
         verify(contractService, never()).create(any());
 
         assertThat(testCase.getMessage()).isEqualTo(expected);
-        ;
     }
 
     @Test
@@ -126,7 +125,6 @@ class ContractControllerTest {
         verify(contractService, never()).create(any());
 
         assertThat(testCase.getMessage()).isEqualTo(expected);
-        ;
     }
 
     @Test
