@@ -1,13 +1,11 @@
 package nl.tudelft.sem.genericservicepost.services;
 
+import java.time.LocalTime;
 import java.util.Set;
 import nl.tudelft.sem.genericservicepost.entities.Expertise;
 import nl.tudelft.sem.genericservicepost.entities.GenericPost;
 import nl.tudelft.sem.genericservicepost.entities.UserImpl;
-import nl.tudelft.sem.genericservicepost.exceptions.GenericPostNotFoundException;
-import nl.tudelft.sem.genericservicepost.exceptions.InvalidEditException;
-import nl.tudelft.sem.genericservicepost.exceptions.StudentNotFoundException;
-import nl.tudelft.sem.genericservicepost.exceptions.UserNotFoundException;
+import nl.tudelft.sem.genericservicepost.exceptions.*;
 import nl.tudelft.sem.genericservicepost.repositories.ExpertiseRepository;
 import nl.tudelft.sem.genericservicepost.repositories.GenericPostRepository;
 import nl.tudelft.sem.genericservicepost.repositories.UserRepository;
@@ -36,21 +34,31 @@ public class GenericPostService {
      */
     public GenericPost createGenericPost(
             GenericPost genericPost) {
-        genericPost.setId(null);
+        // Constraints
+        String netId = genericPost.getAuthor();
+        String url = "http://localhost:8081users{" + netId + "}";
+        RestTemplate restTemplate = new RestTemplate();
+        UserImpl company = restTemplate.getForObject(url,UserImpl.class);
 
-        for (Expertise expertise : genericPost.getExpertiseSet()) {
-            if (expertiseRepository.existsById(expertise.getExpertiseString())) {
-                Expertise tmp = expertiseRepository.getExpertiseByExpertiseString(
-                    expertise.getExpertiseString());
-                tmp.getGenericPostSet().add(genericPost);
-                expertiseRepository.save(tmp);
-            } else {
-                expertiseRepository.save(expertise);
+        if (company!= null && company.getRating() >= 3F ){
+            genericPost.setId(null);
+
+            for (Expertise expertise : genericPost.getExpertiseSet()) {
+                if (expertiseRepository.existsById(expertise.getExpertiseString())) {
+                    Expertise tmp = expertiseRepository.getExpertiseByExpertiseString(
+                            expertise.getExpertiseString());
+                    tmp.getGenericPostSet().add(genericPost);
+                    expertiseRepository.save(tmp);
+                } else {
+                    expertiseRepository.save(expertise);
+                }
             }
-        }
 
-        genericPost = genericPostRepository.save(genericPost);
-        return genericPost;
+            genericPost = genericPostRepository.save(genericPost);
+            return genericPost;
+        } else {
+            throw new CompanyLowScoreException();
+        }
     }
 
     /**
