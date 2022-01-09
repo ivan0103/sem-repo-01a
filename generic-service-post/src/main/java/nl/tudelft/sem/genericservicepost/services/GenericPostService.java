@@ -1,11 +1,16 @@
 package nl.tudelft.sem.genericservicepost.services;
 
+import java.awt.print.PrinterException;
 import java.time.LocalTime;
 import java.util.Set;
 import nl.tudelft.sem.genericservicepost.entities.Expertise;
 import nl.tudelft.sem.genericservicepost.entities.GenericPost;
 import nl.tudelft.sem.genericservicepost.entities.UserImpl;
-import nl.tudelft.sem.genericservicepost.exceptions.*;
+import nl.tudelft.sem.genericservicepost.exceptions.CompanyLowScoreException;
+import nl.tudelft.sem.genericservicepost.exceptions.GenericPostNotFoundException;
+import nl.tudelft.sem.genericservicepost.exceptions.InvalidEditException;
+import nl.tudelft.sem.genericservicepost.exceptions.StudentNotFoundException;
+import nl.tudelft.sem.genericservicepost.exceptions.UserNotFoundException;
 import nl.tudelft.sem.genericservicepost.repositories.ExpertiseRepository;
 import nl.tudelft.sem.genericservicepost.repositories.GenericPostRepository;
 import nl.tudelft.sem.genericservicepost.repositories.UserRepository;
@@ -38,9 +43,9 @@ public class GenericPostService {
         String netId = genericPost.getAuthor();
         String url = "http://localhost:8081users{" + netId + "}";
         RestTemplate restTemplate = new RestTemplate();
-        UserImpl company = restTemplate.getForObject(url,UserImpl.class);
+        UserImpl company = restTemplate.getForObject(url, UserImpl.class);
 
-        if (company!= null && company.getRating() >= 3F ){
+        if (company != null && company.getRating() >= 3F) {
             genericPost.setId(null);
 
             for (Expertise expertise : genericPost.getExpertiseSet()) {
@@ -167,20 +172,19 @@ public class GenericPostService {
     public UserImpl signUp(String netId, GenericPost post) {
         RestTemplate restTemplate = new RestTemplate();
         String url = "http://localhost:8081users{" + netId + "}";
-        UserImpl student = restTemplate.getForObject(url,UserImpl.class);
-
-        if (genericPostRepository.existsById(post.getId())) {
-            if (!post.getStudentSet().contains(student)) {
-                if (userRepository.existsUserById(netId)) {
+        UserImpl student = restTemplate.getForObject(url, UserImpl.class);
+        if (student != null && userRepository.existsUserById(netId)) {
+            if (genericPostRepository.existsById(post.getId())) {
+                if (!post.getStudentSet().contains(student)) {
                     post.getStudentSet().add(student);
                     return student;
-                } else {
-                    throw new UserNotFoundException();
                 }
+                return student;
+            } else {
+                throw new GenericPostNotFoundException();
             }
-            return student;
         } else {
-            throw new GenericPostNotFoundException();
+            throw new UserNotFoundException();
         }
     }
 
