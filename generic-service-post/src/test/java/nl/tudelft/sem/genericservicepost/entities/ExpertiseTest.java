@@ -1,21 +1,11 @@
 package nl.tudelft.sem.genericservicepost.entities;
 
-import org.junit.jupiter.api.Test;
-
-import java.util.Set;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Set;
+import org.junit.jupiter.api.Test;
+
 class ExpertiseTest {
-
-
-    @Test
-    void equalsStrangeLetters() {
-
-        Expertise c1 = new Expertise("comp1");
-        Expertise c2 = new Expertise("Com P      1");
-        assertThat(c1).isEqualTo(c2);
-    }
 
     @Test
     void constructor() {
@@ -32,7 +22,11 @@ class ExpertiseTest {
     @Test
     void postSetTest() {
         Expertise c = new Expertise();
-        Set<GenericPost> postSet = Set.of(new GenericPost(), new GenericPost());
+        GenericPost g1 = new GenericPost();
+        GenericPost g2 = new GenericPost();
+        g1.setId(1L);
+        g2.setId(2L);
+        Set<GenericPost> postSet = Set.of(g1, g2);
         c.setGenericPostSet(postSet);
         assertThat(c.getGenericPostSet()).isEqualTo(postSet);
     }
