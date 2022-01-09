@@ -2,9 +2,9 @@ package nl.tudelft.sem.studentservicepost.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -25,7 +25,7 @@ public class Expertise {
     private String expertiseString;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "expertiseSet", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "expertiseSet", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Set<Post> postSet = new HashSet<>();
 

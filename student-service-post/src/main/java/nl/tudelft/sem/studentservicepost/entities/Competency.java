@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -26,7 +27,7 @@ public class Competency {
     private String competencyString;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "competencySet", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "competencySet", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Set<Post> postSet = new HashSet<>();
 
@@ -77,9 +78,7 @@ public class Competency {
             return false;
         }
         Competency that = (Competency) o;
-        String thatC = makeSearchable(that.competencyString);
-        String thisC = makeSearchable(this.competencyString);
-        return thisC.equalsIgnoreCase(thatC);
+        return this.searchableString.equalsIgnoreCase(that.searchableString);
     }
 
     @Override

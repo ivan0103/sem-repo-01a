@@ -1,14 +1,30 @@
 package nl.tudelft.sem.genericservicepost.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "generic_posts")
@@ -16,9 +32,12 @@ public class GenericPost {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // @JsonProperty(access = JsonProperty.Access.WRITE_ONLY, value = "id")
     @Column(name = "generic_post_id")
     private Long id;
 
+    @NotNull(message = "NetID cannot be null!")
+    @Size(min = 4, max = 24, message = "NetID must be between 4-24 characters!")
     @Column(name = "author_id")
     private String author;
 
@@ -38,14 +57,28 @@ public class GenericPost {
     @Valid
     @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
-            name = "generic_post_expertise",
-            joinColumns = {@JoinColumn(name = "generic_post_id")},
-            inverseJoinColumns = {@JoinColumn(name = "expertise")}
+        name = "generic_post_expertise",
+        joinColumns = {@JoinColumn(name = "generic_post_id")},
+        inverseJoinColumns = {@JoinColumn(name = "expertise")}
     )
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Set<Expertise> expertiseSet = new HashSet<>();
 
-    @OneToMany
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @OneToMany(mappedBy = "genericPost", fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<StudentOffer> studentOfferSet = new HashSet<>();
+
+    @OneToOne
+    @Column(name = "studentSet")
+    private transient Set<UserImpl> studentSet = new HashSet<>();
+
+    @OneToOne
+    @Column(name = "candidate")
+    private transient UserImpl selectedStudent = new UserImpl();
+
+    public GenericPost() {
+    }
 
     public Long getId() {
         return id;
@@ -95,17 +128,20 @@ public class GenericPost {
         this.studentOfferSet = studentOfferSet;
     }
 
-    @Override
-    public String toString() {
-        return "GenericPost{"
-                + "id=" + id
-                + ", author='"
-                + author + '\''
-                + ", hoursPerWeek="
-                + hoursPerWeek + ", duration="
-                + duration + ", expertiseSet="
-                + expertiseSet + ", studentOfferSet="
-                + studentOfferSet + '}';
+    public Set<UserImpl> getStudentSet() {
+        return studentSet;
+    }
+
+    public void setStudentSet(Set<UserImpl> studentSet) {
+        this.studentSet = studentSet;
+    }
+
+    public UserImpl getSelectedStudent() {
+        return selectedStudent;
+    }
+
+    public void setSelectedStudent(UserImpl student) {
+        this.selectedStudent = student;
     }
 
     @Override
@@ -117,21 +153,38 @@ public class GenericPost {
             return false;
         }
         GenericPost that = (GenericPost) o;
-        return getHoursPerWeek() == that.getHoursPerWeek()
-                && getDuration() == that.getDuration()
-                && Objects.equals(getId(), that.getId())
-                && Objects.equals(getAuthor(), that.getAuthor())
-                && Objects.equals(getExpertiseSet(), that.getExpertiseSet())
-                && Objects.equals(getStudentOfferSet(), that.getStudentOfferSet());
+        return hoursPerWeek == that.hoursPerWeek
+                && duration == that.duration
+                && Objects.equals(id, that.id)
+                && Objects.equals(author, that.author)
+                && Objects.equals(expertiseSet, that.expertiseSet)
+                && Objects.equals(studentOfferSet, that.studentOfferSet)
+                && Objects.equals(studentSet, that.studentSet)
+                && Objects.equals(selectedStudent, that.selectedStudent);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(),
-                getAuthor(),
-                getHoursPerWeek(),
-                getDuration(),
-                getExpertiseSet(),
-                getStudentOfferSet());
+        return Objects.hash(id,
+                author,
+                hoursPerWeek,
+                duration,
+                expertiseSet,
+                studentOfferSet,
+                studentSet,
+                selectedStudent);
+    }
+
+    @Override
+    public String toString() {
+        return "GenericPost{"
+                + "id=" + id
+                + ", author='" + author + '\''
+                + ", hoursPerWeek=" + hoursPerWeek
+                + ", duration=" + duration
+                + ", expertiseSet=" + expertiseSet
+                + ", studentOfferSet=" + studentOfferSet
+                + ", studentSet=" + studentSet
+                + ", selectedStudent=" + selectedStudent + '}';
     }
 }
