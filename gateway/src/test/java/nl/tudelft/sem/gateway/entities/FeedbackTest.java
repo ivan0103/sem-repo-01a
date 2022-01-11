@@ -53,7 +53,7 @@ class FeedbackTest {
     @Test
     void setId() {
         feedback.setId(2L);
-        assertThat(feedback.getId()).isEqualTo(1L);
+        assertThat(feedback.getId()).isEqualTo(2L);
     }
 
     @Test

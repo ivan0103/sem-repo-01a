@@ -48,7 +48,7 @@ class FeedbackTest {
     @Test
     void setId() {
         feedback.setId(69L);
-        assertThat(feedback.getId()).isNotEqualTo(69);
+        assertThat(feedback.getId()).isEqualTo(69);
     }
 
     @Test

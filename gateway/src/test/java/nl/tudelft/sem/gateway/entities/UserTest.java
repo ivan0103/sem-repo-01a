@@ -100,20 +100,6 @@ class UserTest {
     }
 
     @Test
-    void addFeedback() {
-        user.addFeedback(feedback);
-
-        assertThat(user.getFeedbacks().size()).isEqualTo(1);
-    }
-
-    @Test
-    void removeFeedback() {
-        user.removeFeedback(feedback);
-
-        assertThat(user.getFeedbacks().size()).isEqualTo(0);
-    }
-
-    @Test
     void getRole() {
         assertThat(user.getRole()).isEqualTo(role);
     }

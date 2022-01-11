@@ -58,18 +58,6 @@ abstract class UserTest {
     }
 
     @Test
-    public void testAddAndRemoveFeedback() {
-        Feedback feedback = new Feedback(1L, "agg", 2, null);
-        user.addFeedback(feedback);
-
-        List<Feedback> newList = List.of(feedbacks.get(0), feedback);
-        assertEquals(newList, user.getFeedbacks());
-
-        user.removeFeedback(feedback);
-        assertEquals(feedbacks, user.getFeedbacks());
-    }
-
-    @Test
     public void testEquals() {
         User user2 = createUser(netID, name, rating, feedbacks);
         assertEquals(user2, user);
