@@ -15,13 +15,13 @@ public class FieldsManagerService {
 
 
     @Autowired
-    private ExpertiseRepository expertiseRepository;
+    private transient ExpertiseRepository expertiseRepository;
 
     @Autowired
-    private RequirementRepository requirementRepository;
+    private transient RequirementRepository requirementRepository;
 
     @Autowired
-    private PostRepository postRepository;
+    private transient PostRepository postRepository;
 
 
     void updateExpertise(CompanyOffer companyOffer) {
