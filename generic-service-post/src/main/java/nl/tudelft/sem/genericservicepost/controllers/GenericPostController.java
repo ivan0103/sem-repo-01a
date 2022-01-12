@@ -1,11 +1,9 @@
 package nl.tudelft.sem.genericservicepost.controllers;
 
-import com.fasterxml.jackson.databind.ser.FilterProvider;
-import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
-import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import java.util.Collection;
 import javax.validation.Valid;
 import nl.tudelft.sem.genericservicepost.entities.GenericPost;
+import nl.tudelft.sem.genericservicepost.services.GenericPostHelper;
 import nl.tudelft.sem.genericservicepost.services.GenericPostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,6 +29,9 @@ public class GenericPostController {
     @Autowired
     private transient GenericPostService genericPostService;
 
+    @Autowired
+    private transient GenericPostHelper genericPostHelper;
+
     /**
      * Create post mapping jackson value.
      *
@@ -41,7 +42,9 @@ public class GenericPostController {
     public ResponseEntity<MappingJacksonValue> createGenericPost(
             @Valid @RequestBody GenericPost post) {
         GenericPost savedPost = genericPostService.createGenericPost(post);
-        return new ResponseEntity<>(mappingJacksonPost(savedPost), HttpStatus.CREATED);
+        return new ResponseEntity<>(genericPostHelper
+                .mappingJacksonPost(savedPost, filterName, userType),
+                HttpStatus.CREATED);
     }
 
     /**
@@ -58,7 +61,7 @@ public class GenericPostController {
             @RequestParam("genericPostId") String postId) {
         GenericPost editedPost = genericPostService.editGenericPost(post, postId);
         return ResponseEntity.accepted().contentType(MediaType.APPLICATION_JSON)
-                .body(mappingJacksonPost(editedPost));
+                .body(genericPostHelper.mappingJacksonPost(editedPost, filterName, userType));
     }
 
     /**
@@ -69,23 +72,10 @@ public class GenericPostController {
     @GetMapping(value = "/getall")
     public ResponseEntity<MappingJacksonValue> getAll() {
         Collection<GenericPost> found = genericPostService.getAll();
-
-        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(found);
-        mappingJacksonValue.setFilters(filter());
-
-        return new ResponseEntity<>(mappingJacksonValue, HttpStatus.FOUND);
+        return new ResponseEntity<>(genericPostHelper
+                .mappingJacksonCollection(found, filterName, userType),
+                HttpStatus.FOUND);
     }
 
-    private FilterProvider filter() {
-        SimpleBeanPropertyFilter simpleBeanPropertyFilter =
-                SimpleBeanPropertyFilter.serializeAllExcept(userType);
-        return new SimpleFilterProvider()
-                .addFilter(filterName, simpleBeanPropertyFilter);
-    }
 
-    private MappingJacksonValue mappingJacksonPost(GenericPost post) {
-        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(post);
-        mappingJacksonValue.setFilters(filter());
-        return mappingJacksonValue;
-    }
 }
