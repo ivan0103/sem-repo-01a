@@ -16,9 +16,9 @@ public class Contract {
 
     private float payPerWeek;
 
-    private final ContractParties contractParties;
+    private final transient ContractParties contractParties;
 
-    private final ContractTimes contractTimes;
+    private final transient ContractTimes contractTimes;
 
     /**
      * Instantiates a new Contract.
