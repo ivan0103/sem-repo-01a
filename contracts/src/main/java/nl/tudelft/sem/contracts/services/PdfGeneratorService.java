@@ -38,7 +38,13 @@ public class PdfGeneratorService {
 
     }
 
-    public void createPDF(Document document, Contract contract){
+    /**
+     * This method is for creating the actual pdf.
+     *
+     * @param document the response document to which to add pdf
+     * @param contract the contract instance for which we are making a pdf
+     */
+    public void createPDF(Document document, Contract contract) {
         //Set normal fonts to use for document.
         Font normalFont = FontFactory.getFont(FontFactory.TIMES);
         normalFont.setSize(12);
@@ -56,6 +62,15 @@ public class PdfGeneratorService {
         addToDocument(document, title, intro, detailsHeader, contractDetails);
     }
 
+    /**
+     * This method adds different the paragraphs to the response document.
+     *
+     * @param document the response document
+     * @param title the title paragraph
+     * @param intro the introductory paragraph
+     * @param detailsHeader the paragraph which is the header for details section
+     * @param contractDetails the contract details
+     */
     public void addToDocument(Document document, Paragraph title, Paragraph intro,
                               Paragraph detailsHeader, Paragraph contractDetails) {
         //add the paragraphs to the document and close the document.
