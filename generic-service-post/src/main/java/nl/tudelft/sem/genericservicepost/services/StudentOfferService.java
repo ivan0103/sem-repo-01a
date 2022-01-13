@@ -4,7 +4,6 @@ import java.util.Set;
 import nl.tudelft.sem.genericservicepost.entities.GenericPost;
 import nl.tudelft.sem.genericservicepost.entities.StudentOffer;
 import nl.tudelft.sem.genericservicepost.exceptions.GenericPostNotFoundException;
-import nl.tudelft.sem.genericservicepost.repositories.ExpertiseRepository;
 import nl.tudelft.sem.genericservicepost.repositories.GenericPostRepository;
 import nl.tudelft.sem.genericservicepost.repositories.StudentOfferRepository;
 import org.springframework.beans.factory.annotation.Autowired;

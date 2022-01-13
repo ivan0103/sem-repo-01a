@@ -99,8 +99,8 @@ public class GenericPostService {
     /**
      * Issue #16
      * Company can choose a student from StudentOffer
-     * After viewing all their parameters in the above method
-     * Method receives the selected student and assignes it to the posts paramter.
+     * After viewing all their parameters in the above method.
+     * Method receives the selected student and assigns it to the post parameter.
      *
      * @param student the selected student.
      * @param post    the post from which the student was selected and to which it will be assigned
