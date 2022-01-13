@@ -29,29 +29,41 @@ public class PdfGeneratorService {
             //Attach document in PDF format to response.
             PdfWriter.getInstance(document, response.getOutputStream());
 
-            //Set normal fonts to use for document.
-            Font normalFont = FontFactory.getFont(FontFactory.TIMES);
-            normalFont.setSize(12);
-
-            //Declare different paragraphs of text and format them.
-            Paragraph title = formatTitle(contract);
-
-            Paragraph intro = formatIntro(contract, normalFont);
-
-            Paragraph detailsHeader = formatDetailsHeader();
-
-            Paragraph contractDetails = formatDetails(contract, normalFont);
-
-            //add the paragraphs to the document and close the document.
-            document.open();
-            document.add(title);
-            document.add(intro);
-            document.add(detailsHeader);
-            document.add(contractDetails);
+            //create the pdf and add it to response document
+            createPDF(document, contract);
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+    }
+
+    public void createPDF(Document document, Contract contract){
+        //Set normal fonts to use for document.
+        Font normalFont = FontFactory.getFont(FontFactory.TIMES);
+        normalFont.setSize(12);
+
+        //Declare different paragraphs of text and format them.
+        Paragraph title = formatTitle(contract);
+
+        Paragraph intro = formatIntro(contract, normalFont);
+
+        Paragraph detailsHeader = formatDetailsHeader();
+
+        Paragraph contractDetails = formatDetails(contract, normalFont);
+
+        //add the paragraphs to the document and close the document.
+        addToDocument(document, title, intro, detailsHeader, contractDetails);
+    }
+
+    public void addToDocument(Document document, Paragraph title, Paragraph intro,
+                              Paragraph detailsHeader, Paragraph contractDetails) {
+        //add the paragraphs to the document and close the document.
+        document.open();
+        document.add(title);
+        document.add(intro);
+        document.add(detailsHeader);
+        document.add(contractDetails);
     }
 
     /**
