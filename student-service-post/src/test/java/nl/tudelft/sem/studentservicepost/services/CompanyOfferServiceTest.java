@@ -2,6 +2,9 @@ package nl.tudelft.sem.studentservicepost.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
@@ -32,6 +35,7 @@ import org.mockito.AdditionalAnswers;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
@@ -48,6 +52,10 @@ class CompanyOfferServiceTest {
     transient Post post;
     @InjectMocks
     transient CompanyOfferService companyOfferService;
+
+    @Mock
+    transient FieldsManagerService fieldsManagerService;
+
     @Mock
     transient CompanyOfferRepository companyOfferRepository;
     @Mock
@@ -65,15 +73,16 @@ class CompanyOfferServiceTest {
     @Mock
     transient ResponseEntity<Contract> responseEntity;
 
+
     @BeforeEach
     void setup() {
 
-        when(postRepository.existsById(ArgumentMatchers.any())).thenReturn(false);
+        when(postRepository.existsById(any())).thenReturn(false);
         when(postRepository.existsById(1L)).thenReturn(true);
-        when(postService.createPost(ArgumentMatchers.any()))
-                .thenAnswer(AdditionalAnswers.returnsFirstArg());
-        when(companyOfferRepository.save(ArgumentMatchers.any()))
-                .thenAnswer(AdditionalAnswers.returnsFirstArg());
+        when(postService.createPost(any()))
+            .thenAnswer(AdditionalAnswers.returnsFirstArg());
+        when(companyOfferRepository.save(any()))
+            .thenAnswer(AdditionalAnswers.returnsFirstArg());
 
 
         post = new Post();
@@ -89,24 +98,28 @@ class CompanyOfferServiceTest {
 
         when(postService.getById("1")).thenReturn(post);
 
-        when(requirementRepository.existsById(ArgumentMatchers.any())).thenReturn(false);
+        when(requirementRepository.existsById(any())).thenReturn(false);
         when(requirementRepository.existsById(reqString)).thenReturn(false, true);
         when(requirementRepository.getRequirementByRequirementString(reqString)).thenReturn(
             new Requirement(reqString));
 
-        when(expertiseRepository.existsById(ArgumentMatchers.any())).thenReturn(false);
+        when(expertiseRepository.existsById(any())).thenReturn(false);
         when(expertiseRepository.existsById(expString)).thenReturn(false, true);
         when(expertiseRepository.getExpertiseByExpertiseString(expString)).thenReturn(
             new Expertise(expString));
 
-        when(companyOfferRepository.getAllByPost(ArgumentMatchers.any()))
-                .thenReturn(new HashSet<>());
+        when(companyOfferRepository.getAllByPost(any()))
+            .thenReturn(new HashSet<>());
 
-        when(companyOfferRepository.existsById(ArgumentMatchers.any())).thenReturn(false);
+        when(companyOfferRepository.existsById(any())).thenReturn(false);
         when(companyOfferRepository.existsById(1L)).thenReturn(true);
 
-        when(changedOfferRepository.existsById(ArgumentMatchers.any())).thenReturn(false);
+        when(changedOfferRepository.existsById(any())).thenReturn(false);
         when(changedOfferRepository.existsById(2L)).thenReturn(true);
+
+        when(fieldsManagerService.updatePost(any(), anyString())).thenReturn(false);
+
+        when(fieldsManagerService.updatePost(any(), eq("1"))).thenReturn(true);
 
 
     }
@@ -240,7 +253,7 @@ class CompanyOfferServiceTest {
         when(postService.getById("lmao")).thenThrow(PostNotFoundException.class);
 
         assertThatThrownBy(() -> companyOfferService.getByPostId("lmao")).isInstanceOf(
-                PostNotFoundException.class);
+            PostNotFoundException.class);
 
     }
 
@@ -474,7 +487,7 @@ class CompanyOfferServiceTest {
         Set<CompanyOffer> returnSet = new HashSet<>();
         returnSet.add(inserted);
         when(companyOfferRepository.getAllByCompanyIdAndAcceptedIsTrue(companyName))
-                .thenReturn(returnSet);
+            .thenReturn(returnSet);
         when(companyOfferRepository.existsByCompanyId(companyName)).thenReturn(true);
 
         assertThat(companyOfferService.getAcceptedOffers(companyName)).isEqualTo(returnSet);
@@ -484,9 +497,8 @@ class CompanyOfferServiceTest {
     void getAcceptedOffersNotFound() {
         when(companyOfferRepository.existsByCompanyId(companyName)).thenReturn(false);
 
-        assertThatThrownBy(() -> {
-            companyOfferService.getAcceptedOffers(companyName);
-        }).isInstanceOf(OfferNotFoundException.class);
+        assertThatThrownBy(() -> companyOfferService.getAcceptedOffers(companyName)).isInstanceOf(
+            OfferNotFoundException.class);
     }
 
     @Test
@@ -499,32 +511,33 @@ class CompanyOfferServiceTest {
         companyOffer.setWeeklyHours(12);
         companyOffer.setAccepted(true);
         companyOffer.setPricePerHour(new BigDecimal(price));
+        companyOffer.setPost(post);
 
         String postId = post.getId().toString();
 
         CompanyOffer offer = companyOfferService.createOffer(companyOffer, postId);
 
-        LocalDate startDate = LocalDate.of(2022, 01, 01);
-        LocalDate endDate = LocalDate.of(2022, 02, 01);
+        LocalDate startDate = LocalDate.of(2022, 1, 1);
+        LocalDate endDate = LocalDate.of(2022, 2, 1);
 
         Contract contract = new Contract(post.getAuthor(),
-                offer.getCompanyId(), post.getAuthor(), offer.getCompanyId(),
-                LocalTime.of(offer.getWeeklyHours().intValue(), 0),
-                offer.getPricePerHour().floatValue(), startDate, endDate);
+            offer.getCompanyId(), post.getAuthor(), offer.getCompanyId(),
+            LocalTime.of(offer.getWeeklyHours(), 0),
+            offer.getPricePerHour().floatValue(), startDate, endDate);
 
         String url = "http://localhost:7070/contract/create";
 
         when(restTemplate.postForEntity(
-                ArgumentMatchers.eq(url),
-                ArgumentMatchers.any(),
-                ArgumentMatchers.eq(Contract.class)))
-                .thenReturn(responseEntity);
+            eq(url),
+            any(),
+            eq(Contract.class)))
+            .thenReturn(responseEntity);
         when(responseEntity.getBody()).thenReturn(contract);
         when(companyOfferRepository.existsById(1L)).thenReturn(true);
         when(companyOfferRepository.getById(1L)).thenReturn(offer);
 
         Contract response = companyOfferService.createContract(
-                "1", startDate, endDate, restTemplate);
+            "1", startDate, endDate, restTemplate);
         assertThat(response).isEqualTo(contract);
     }
 
@@ -544,8 +557,8 @@ class CompanyOfferServiceTest {
 
         CompanyOffer offer = companyOfferService.createOffer(companyOffer, postId);
 
-        LocalDate startDate = LocalDate.of(2022, 01, 01);
-        LocalDate endDate = LocalDate.of(2022, 02, 01);
+        LocalDate startDate = LocalDate.of(2022, 1, 1);
+        LocalDate endDate = LocalDate.of(2022, 2, 1);
 
         when(companyOfferRepository.existsById(1L)).thenReturn(true);
         when(companyOfferRepository.getById(1L)).thenReturn(offer);
@@ -556,8 +569,8 @@ class CompanyOfferServiceTest {
 
     @Test
     void createContractOfferDoesntExist() {
-        LocalDate startDate = LocalDate.of(2022, 01, 01);
-        LocalDate endDate = LocalDate.of(2022, 02, 01);
+        LocalDate startDate = LocalDate.of(2022, 1, 1);
+        LocalDate endDate = LocalDate.of(2022, 2, 1);
 
         when(companyOfferRepository.existsById(69L)).thenReturn(false);
         assertThatThrownBy(() -> {
@@ -567,8 +580,8 @@ class CompanyOfferServiceTest {
 
     @Test
     void createContractInvalidOfferId() {
-        LocalDate startDate = LocalDate.of(2022, 01, 01);
-        LocalDate endDate = LocalDate.of(2022, 02, 01);
+        LocalDate startDate = LocalDate.of(2022, 1, 1);
+        LocalDate endDate = LocalDate.of(2022, 2, 1);
 
         assertThatThrownBy(() -> {
             companyOfferService.createContract("bruh", startDate, endDate, restTemplate);

@@ -11,6 +11,7 @@ import java.util.Set;
 import nl.tudelft.sem.genericservicepost.entities.Expertise;
 import nl.tudelft.sem.genericservicepost.entities.GenericPost;
 import nl.tudelft.sem.genericservicepost.entities.StudentOffer;
+import nl.tudelft.sem.genericservicepost.entities.UserImpl;
 import nl.tudelft.sem.genericservicepost.exceptions.GenericPostNotFoundException;
 import nl.tudelft.sem.genericservicepost.repositories.ExpertiseRepository;
 import nl.tudelft.sem.genericservicepost.repositories.GenericPostRepository;
@@ -89,5 +90,74 @@ public class StudentOfferServiceTest {
                 .thenReturn(new HashSet<>(List.of(applied)));
         assertThatThrownBy(() -> studentOfferService.getByGenericPostId(postId + 1)).isInstanceOf(
                 GenericPostNotFoundException.class);
+    }
+
+    @Test
+    void retrieveStudentsInPostTest() {
+        Set<UserImpl> students = new HashSet<>();
+        UserImpl ivan = new UserImpl();
+        UserImpl todor = new UserImpl();
+
+        students.add(ivan);
+        students.add(todor);
+
+        Set<UserImpl> result = new HashSet<>();
+        result.add(ivan);
+        result.add(todor);
+
+        GenericPost tmp = genericPostService.createGenericPost(genericPost);
+        tmp.setStudentSet(students);
+        students = studentOfferService.retrieveStudentsInPost(tmp);
+
+        assertThat(result).isEqualTo(students);
+    }
+
+    @Test
+    void retrieveStudentsInPostExceptionTest() {
+        UserImpl todor = new UserImpl();
+        GenericPost genericPost2 = new GenericPost();
+        genericPost2.setId(10L);
+        Set<UserImpl> input = new HashSet<>();
+        input.add(todor);
+        genericPost2.setStudentSet(input);
+        assertThatThrownBy(() -> studentOfferService.retrieveStudentsInPost(genericPost2))
+                .isInstanceOf(GenericPostNotFoundException.class);
+    }
+
+    @Test
+    void retrieveEmptyStudentsInPostTest() {
+        Set<UserImpl> students = new HashSet<>();
+        Set<UserImpl> result = new HashSet<>();
+        GenericPost tmp = genericPostService.createGenericPost(genericPost);
+        tmp.setStudentSet(students);
+        students = studentOfferService.retrieveStudentsInPost(tmp);
+        assertThat(result).isEqualTo(students);
+    }
+
+    @Test
+    void setSelectedStudentTest() {
+        Set<UserImpl> students = new HashSet<>();
+        UserImpl tudor = new UserImpl();
+        UserImpl todor = new UserImpl();
+
+        students.add(tudor);
+        students.add(todor);
+
+        GenericPost tmp = genericPostService.createGenericPost(genericPost);
+        tmp.setStudentSet(students);
+        UserImpl output = studentOfferService.setSelectedStudent(tudor, tmp);
+
+        assertThat(output).isEqualTo(tudor);
+        assertThat(tmp.getSelectedStudent()).isEqualTo(tudor);
+    }
+
+    @Test
+    void setSelectedStudentNoPostTest() {
+        GenericPost genericPost2 = new GenericPost();
+        genericPost2.setId(10L);
+        assertThatThrownBy(
+                () -> studentOfferService.setSelectedStudent(new UserImpl(),
+                        genericPost2))
+                .isInstanceOf(GenericPostNotFoundException.class);
     }
 }

@@ -154,28 +154,6 @@ public abstract class User {
     }
 
     /**
-     * Adds a new feedback to the list of feedbacks.
-     *
-     * @param feedback the new feedback to be added
-     */
-
-    public void addFeedback(Feedback feedback) {
-        List<Feedback> newList = new ArrayList<>(this.feedbacks);
-        newList.add(feedback);
-        this.feedbacks = newList;
-    }
-
-    /**
-     * Removes a new feedback from the list of feedbacks.
-     *
-     * @param feedback the feedback to be removed
-     */
-
-    public void removeFeedback(Feedback feedback) {
-        this.feedbacks.remove(feedback);
-    }
-
-    /**
      * Equals method - checks whether the users are the same or not.
      * NOTE! Since this is an abstract class an equal method does not make much sense
      * to have it, but pmd complained about it, unfortunately.
