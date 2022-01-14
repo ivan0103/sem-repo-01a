@@ -92,7 +92,7 @@ public class Feedback {
      */
 
     public void setId(Long id) {
-        //Doesn't do anything. Used only to suppress warnings
+        this.id = id;
     }
 
     /**
