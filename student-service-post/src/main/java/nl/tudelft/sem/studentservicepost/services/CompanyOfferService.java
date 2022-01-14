@@ -45,17 +45,8 @@ public class CompanyOfferService {
     @Autowired
     transient PostRepository postRepository;
 
-    /**
-     * The Expertise repository.
-     */
     @Autowired
-    transient ExpertiseRepository expertiseRepository;
-
-    /**
-     * The Requirement repository.
-     */
-    @Autowired
-    transient RequirementRepository requirementRepository;
+    private transient FieldsManagerService fieldsManagerService;
 
     /**
      * The Changed offer repository.
@@ -77,34 +68,9 @@ public class CompanyOfferService {
 
         companyOffer.setId(null);
         try {
-            long postIdL = Long.parseLong(postId);
-            if (postRepository.existsById(postIdL)) {
-                Post post = postRepository.getPostById(postIdL);
-                post.getCompanyOfferSet().add(companyOffer);
-                companyOffer.setPost(post);
-
-                for (Expertise expertise : companyOffer.getExpertise()) {
-                    if (expertiseRepository.existsById(expertise.getExpertiseString())) {
-                        Expertise tmp = expertiseRepository.getExpertiseByExpertiseString(
-                            expertise.getExpertiseString());
-                        tmp.getOfferSet().add(companyOffer);
-                        expertiseRepository.save(tmp);
-                    } else {
-                        expertiseRepository.save(expertise);
-                    }
-                }
-
-                for (Requirement requirement : companyOffer.getRequirementsSet()) {
-                    if (requirementRepository.existsById(requirement.getRequirementString())) {
-                        Requirement tmp = requirementRepository.getRequirementByRequirementString(
-                            requirement.getRequirementString());
-                        tmp.getCompanyOfferSet().add(companyOffer);
-                        requirementRepository.save(tmp);
-                    } else {
-                        requirementRepository.save(requirement);
-                    }
-                }
-                postRepository.save(post);
+            if (fieldsManagerService.updatePost(companyOffer, postId)) {
+                fieldsManagerService.updateExpertise(companyOffer);
+                fieldsManagerService.updateRequirement(companyOffer);
                 return companyOfferRepository.save(companyOffer);
             } else {
                 throw new PostNotFoundException();
@@ -294,7 +260,7 @@ public class CompanyOfferService {
                 String url = "http://localhost:7070/contract/create";
                 Contract contract = new Contract(post.getAuthor(),
                         offer.getCompanyId(), post.getAuthor(), offer.getCompanyId(),
-                        LocalTime.of(offer.getWeeklyHours().intValue(), 0),
+                        LocalTime.of(offer.getWeeklyHours(), 0),
                         offer.getPricePerHour().floatValue(), startDate, endDate);
                 HttpEntity<Contract> request = new HttpEntity<>(contract);
                 //Contract response = restTemplate.postForObject(url, request, Contract.class);

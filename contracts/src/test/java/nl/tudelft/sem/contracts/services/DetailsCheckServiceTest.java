@@ -25,19 +25,11 @@ class DetailsCheckServiceTest {
     }
 
     @Test
-    void checkContractDatesTooLarge() {
+    void checkContractDatesFalse() {
         LocalDate start = LocalDate.of(2020, 1, 1);
         LocalDate end = LocalDate.of(2020, 8, 1);
 
         assertThat(underTest.checkContractDates(start, end)).isFalse();
-    }
-
-    @Test
-    void checkContractDatesWrongOrder() {
-        LocalDate start = LocalDate.of(2020, 1, 1);
-        LocalDate end = LocalDate.of(2020, 5, 1);
-
-        assertThat(underTest.checkContractDates(end, start)).isFalse();
     }
 
     @Test
