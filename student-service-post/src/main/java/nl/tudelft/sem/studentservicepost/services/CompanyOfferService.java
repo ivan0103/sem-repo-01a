@@ -1,7 +1,6 @@
 package nl.tudelft.sem.studentservicepost.services;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Set;
 import javax.validation.Valid;
 import nl.tudelft.sem.studentservicepost.entities.ChangedOffer;
@@ -21,7 +20,6 @@ import nl.tudelft.sem.studentservicepost.repositories.RequirementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -253,20 +251,9 @@ public class CompanyOfferService {
                 if (!offer.isAccepted()) {
                     throw new OfferNotAcceptedException();
                 }
-
-
-                Post post = offer.getPost();
-
+                Contract contract = Contract.buildFromOffer(offer, startDate, endDate);
                 String url = "http://localhost:7070/contract/create";
-                Contract contract = new Contract(post.getAuthor(),
-                        offer.getCompanyId(), post.getAuthor(), offer.getCompanyId(),
-                        LocalTime.of(offer.getWeeklyHours(), 0),
-                        offer.getPricePerHour().floatValue(), startDate, endDate);
-                HttpEntity<Contract> request = new HttpEntity<>(contract);
-                //Contract response = restTemplate.postForObject(url, request, Contract.class);
-                ResponseEntity<Contract> response = restTemplate
-                        .postForEntity(url, request, Contract.class);
-                return response.getBody();
+                return (Contract) makeRequest(url, contract, restTemplate).getBody();
             } else {
                 throw new OfferNotFoundException();
             }
@@ -274,4 +261,19 @@ public class CompanyOfferService {
             throw new OfferNotFoundException();
         }
     }
+
+    private ResponseEntity<Object> makeRequest(
+            String url,
+            Object object,
+            RestTemplate restTemplate
+    ) {
+        HttpEntity<Object> request = new HttpEntity<>(object);
+        try {
+            Class cls = Class.forName(object.getClass().getName());
+            return restTemplate.postForEntity(url, request, cls);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Class not found. Bad request");
+        }
+    }
+
 }
