@@ -30,6 +30,7 @@ public class EditGenericPostController {
 
     @Autowired
     private transient GenericPostHelper genericPostHelper;
+
     /**
      * Edit post mapping jackson value.
      *
