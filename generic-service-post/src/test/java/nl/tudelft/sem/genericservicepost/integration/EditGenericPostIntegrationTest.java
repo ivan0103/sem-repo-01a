@@ -78,7 +78,8 @@ public class EditGenericPostIntegrationTest {
                     new ObjectMapper().writer(filterClientSide).writeValueAsString(post);
 
             String body = mockMvc.perform(
-                            post(url).content(serializedPost).contentType(MediaType.APPLICATION_JSON))
+                            post(url).content(serializedPost)
+                                    .contentType(MediaType.APPLICATION_JSON))
                     .andDo(print()).andExpect(status().isCreated()).andReturn().getResponse()
                     .getContentAsString();
             return new ObjectMapper().readValue(body, GenericPost.class);
