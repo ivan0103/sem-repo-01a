@@ -14,31 +14,18 @@ public class Contract {
 
     private long id;
 
-    private String freelancerId;
-
-    private String companyId;
-
-    private String freelancerName;
-
-    private String companyName;
-
-    private LocalTime hoursPerWeek;
-
     private float payPerWeek;
 
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private LocalDate startDate;
+    private final transient ContractParties contractParties;
 
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private LocalDate endDate;
-
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private LocalDate agreementDate;
+    private final transient ContractTimes contractTimes;
 
     /**
      * Instantiates a new Contract.
      */
     public Contract() {
+        this.contractParties = new ContractParties();
+        this.contractTimes = new ContractTimes();
     }
 
     /**
@@ -57,15 +44,9 @@ public class Contract {
                     String companyName, LocalTime hoursPerWeek, float payPerWeek,
                     LocalDate startDate, LocalDate endDate) {
 
-        this.freelancerId = freelancerId;
-        this.companyId = companyId;
-        this.freelancerName = freelancerName;
-        this.companyName = companyName;
-        this.hoursPerWeek = hoursPerWeek;
-        this.payPerWeek = payPerWeek;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.agreementDate = LocalDate.now();
+        this.contractParties =
+            new ContractParties(freelancerId, companyId, freelancerName, companyName);
+        this.contractTimes = new ContractTimes(hoursPerWeek, startDate, endDate, LocalDate.now());
     }
 
     /**
@@ -93,7 +74,7 @@ public class Contract {
      * @return the freelancer id
      */
     public String getFreelancerId() {
-        return freelancerId;
+        return this.contractParties.getFreelancerId();
     }
 
     /**
@@ -102,7 +83,7 @@ public class Contract {
      * @param freelancerId the freelancer id
      */
     public void setFreelancerId(String freelancerId) {
-        this.freelancerId = freelancerId;
+        this.contractParties.setFreelancerId(freelancerId);
     }
 
     /**
@@ -111,7 +92,7 @@ public class Contract {
      * @return the company id
      */
     public String getCompanyId() {
-        return companyId;
+        return this.contractParties.getCompanyId();
     }
 
     /**
@@ -120,7 +101,7 @@ public class Contract {
      * @param companyId the company id
      */
     public void setCompanyId(String companyId) {
-        this.companyId = companyId;
+        this.contractParties.setCompanyId(companyId);
     }
 
     /**
@@ -129,7 +110,7 @@ public class Contract {
      * @return the freelancer name
      */
     public String getFreelancerName() {
-        return freelancerName;
+        return this.contractParties.getFreelancerName();
     }
 
     /**
@@ -138,7 +119,7 @@ public class Contract {
      * @param freelancerName the freelancer name
      */
     public void setFreelancerName(String freelancerName) {
-        this.freelancerName = freelancerName;
+        this.contractParties.setFreelancerName(freelancerName);
     }
 
     /**
@@ -147,7 +128,7 @@ public class Contract {
      * @return the company name
      */
     public String getCompanyName() {
-        return companyName;
+        return this.contractParties.getCompanyName();
     }
 
     /**
@@ -156,7 +137,7 @@ public class Contract {
      * @param companyName the company name
      */
     public void setCompanyName(String companyName) {
-        this.companyName = companyName;
+        this.contractParties.setCompanyName(companyName);
     }
 
     /**
@@ -165,7 +146,7 @@ public class Contract {
      * @return the hours per week
      */
     public LocalTime getHoursPerWeek() {
-        return hoursPerWeek;
+        return this.contractTimes.getHoursPerWeek();
     }
 
     /**
@@ -174,7 +155,7 @@ public class Contract {
      * @param hoursPerWeek the hours per week
      */
     public void setHoursPerWeek(LocalTime hoursPerWeek) {
-        this.hoursPerWeek = hoursPerWeek;
+        this.contractTimes.setHoursPerWeek(hoursPerWeek);
     }
 
     /**
@@ -201,7 +182,7 @@ public class Contract {
      * @return the start date
      */
     public LocalDate getStartDate() {
-        return startDate;
+        return this.contractTimes.getStartDate();
     }
 
     /**
@@ -210,7 +191,7 @@ public class Contract {
      * @param startDate the start date
      */
     public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
+        this.contractTimes.setStartDate(startDate);
     }
 
     /**
@@ -219,7 +200,7 @@ public class Contract {
      * @return the end date
      */
     public LocalDate getEndDate() {
-        return endDate;
+        return this.contractTimes.getEndDate();
     }
 
     /**
@@ -228,7 +209,7 @@ public class Contract {
      * @param endDate the end date
      */
     public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
+        this.contractTimes.setEndDate(endDate);
     }
 
     /**
@@ -237,7 +218,7 @@ public class Contract {
      * @return the agreement date
      */
     public LocalDate getAgreementDate() {
-        return agreementDate;
+        return this.contractTimes.getAgreementDate();
     }
 
     /**
@@ -246,7 +227,7 @@ public class Contract {
      * @param agreementDate the agreement date
      */
     public void setAgreementDate(LocalDate agreementDate) {
-        this.agreementDate = agreementDate;
+        this.contractTimes.setAgreementDate(agreementDate);
     }
 
     /**
@@ -257,17 +238,15 @@ public class Contract {
      * @param endDate   the end date of the contract
      * @return the contract
      */
-    public static Contract buildFromOffer(
-            CompanyOffer offer,
-            @Valid @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @Valid @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
-    ) {
+    public static Contract buildFromOffer(CompanyOffer offer,
+                                          @Valid @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                                              LocalDate startDate,
+                                          @Valid @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                                              LocalDate endDate) {
         Post post = offer.getPost();
-        Contract contract = new Contract(post.getAuthor(),
-                offer.getCompanyId(), post.getAuthor(), offer.getCompanyId(),
-                LocalTime.of(offer.getWeeklyHours().intValue(), 0),
-                offer.getPricePerHour().floatValue(), startDate, endDate);
-        return contract;
+        return new Contract(post.getAuthor(), offer.getCompanyId(), post.getAuthor(),
+            offer.getCompanyId(), LocalTime.of(offer.getWeeklyHours(), 0),
+            offer.getPricePerHour().floatValue(), startDate, endDate);
     }
 
     /**
@@ -289,5 +268,11 @@ public class Contract {
     @Override
     public int hashCode() {
         return Objects.hash(getId());
+    }
+
+    @Override
+    public String toString() {
+        return "Contract{" + "id=" + id + ", payPerWeek=" + payPerWeek + ", contractParties="
+               + contractParties + ", contractTimes=" + contractTimes + '}';
     }
 }

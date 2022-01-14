@@ -6,17 +6,12 @@ import javax.validation.Valid;
 import nl.tudelft.sem.studentservicepost.entities.ChangedOffer;
 import nl.tudelft.sem.studentservicepost.entities.CompanyOffer;
 import nl.tudelft.sem.studentservicepost.entities.Contract;
-import nl.tudelft.sem.studentservicepost.entities.Expertise;
 import nl.tudelft.sem.studentservicepost.entities.Post;
-import nl.tudelft.sem.studentservicepost.entities.Requirement;
 import nl.tudelft.sem.studentservicepost.exceptions.OfferNotAcceptedException;
 import nl.tudelft.sem.studentservicepost.exceptions.OfferNotFoundException;
 import nl.tudelft.sem.studentservicepost.exceptions.PostNotFoundException;
 import nl.tudelft.sem.studentservicepost.repositories.ChangedOfferRepository;
 import nl.tudelft.sem.studentservicepost.repositories.CompanyOfferRepository;
-import nl.tudelft.sem.studentservicepost.repositories.ExpertiseRepository;
-import nl.tudelft.sem.studentservicepost.repositories.PostRepository;
-import nl.tudelft.sem.studentservicepost.repositories.RequirementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpEntity;
@@ -41,7 +36,7 @@ public class CompanyOfferService {
      * The Post repository.
      */
     @Autowired
-    transient PostRepository postRepository;
+    transient PostService postService;
 
     @Autowired
     private transient FieldsManagerService fieldsManagerService;
@@ -65,17 +60,14 @@ public class CompanyOfferService {
         // Find post using PostId, add to companyOffer obj then save, do something if not found
 
         companyOffer.setId(null);
-        try {
-            if (fieldsManagerService.updatePost(companyOffer, postId)) {
-                fieldsManagerService.updateExpertise(companyOffer);
-                fieldsManagerService.updateRequirement(companyOffer);
-                return companyOfferRepository.save(companyOffer);
-            } else {
-                throw new PostNotFoundException();
-            }
-        } catch (NumberFormatException e) {
+        if (fieldsManagerService.updatePost(companyOffer, postId)) {
+            fieldsManagerService.updateExpertise(companyOffer);
+            fieldsManagerService.updateRequirement(companyOffer);
+            return companyOfferRepository.save(companyOffer);
+        } else {
             throw new PostNotFoundException();
         }
+
     }
 
     /**
@@ -85,23 +77,10 @@ public class CompanyOfferService {
      * @return set of all offers
      */
     public Set<CompanyOffer> getByPostId(String postId) {
-        long postIdL;
-        try {
-            postIdL = Long.parseLong(postId);
-
-            Set<CompanyOffer> result;
-            if (postRepository.existsById(postIdL)) {
-                Post toCheck = postRepository.getPostById(postIdL);
-                result = companyOfferRepository.getAllByPost(toCheck);
-            } else {
-                throw new PostNotFoundException();
-            }
-            return result;
-        } catch (NumberFormatException e) {
-            throw new PostNotFoundException();
-        }
-
-
+        Set<CompanyOffer> result;
+        Post toCheck = postService.getById(postId);
+        result = companyOfferRepository.getAllByPost(toCheck);
+        return result;
     }
 
     /**
@@ -220,7 +199,7 @@ public class CompanyOfferService {
     public Set<CompanyOffer> getAcceptedOffers(String companyId) {
         if (companyOfferRepository.existsByCompanyId(companyId)) {
             Set<CompanyOffer> companyOffer = companyOfferRepository
-                    .getAllByCompanyIdAndAcceptedIsTrue(companyId);
+                .getAllByCompanyIdAndAcceptedIsTrue(companyId);
             return companyOffer;
         } else {
             throw new OfferNotFoundException();
@@ -237,10 +216,10 @@ public class CompanyOfferService {
      * @return the contract
      */
     public Contract createContract(
-            String offerId,
-            @Valid @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @Valid @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-            RestTemplate restTemplate
+        String offerId,
+        @Valid @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+        @Valid @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+        RestTemplate restTemplate
     ) {
         long id;
         try {
@@ -263,9 +242,9 @@ public class CompanyOfferService {
     }
 
     private ResponseEntity<Object> makeRequest(
-            String url,
-            Object object,
-            RestTemplate restTemplate
+        String url,
+        Object object,
+        RestTemplate restTemplate
     ) {
         HttpEntity<Object> request = new HttpEntity<>(object);
         try {
