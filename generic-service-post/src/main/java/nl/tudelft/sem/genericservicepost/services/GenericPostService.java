@@ -22,6 +22,19 @@ public class GenericPostService {
     @Autowired
     transient ExpertiseRepository expertiseRepository;
 
+
+    public boolean exists(Long id){
+        return genericPostRepository.existsById(id);
+    }
+
+    public GenericPost save(GenericPost post){
+        return genericPostRepository.save(post);
+    }
+
+    public GenericPost getPostById(Long id){
+        return genericPostRepository.getGenericPostById(id);
+    }
+
     /**
      * Create generic post and save in database.
      *
@@ -42,7 +55,7 @@ public class GenericPostService {
             }
         }
 
-        genericPost = genericPostRepository.save(genericPost);
+        genericPost = save(genericPost);
         return genericPost;
     }
 
@@ -59,13 +72,13 @@ public class GenericPostService {
         try {
             id = Long.parseLong(postId);
 
-            if (genericPostRepository.existsById(id)) {
-                GenericPost toEdit = genericPostRepository.getGenericPostById(id);
+            if (exists(id)) {
+                GenericPost toEdit = getPostById(id);
 
                 // this only checks that NetID is same
                 if (toEdit.getAuthor().equals(post.getAuthor())) {
                     post.setId(toEdit.getId());
-                    return genericPostRepository.save(post);
+                    return save(post);
                 } else {
                     throw new InvalidEditException();
                 }
@@ -89,7 +102,7 @@ public class GenericPostService {
      * @throws GenericPostNotFoundException if id of the generic post was not found / doesn't exist.
      */
     public Set<UserImpl> retrieveStudentsInPost(GenericPost genericPost) {
-        if (genericPostRepository.existsById(genericPost.getId())) {
+        if (exists(genericPost.getId())) {
             return genericPost.getStudentSet();
         } else {
             throw new GenericPostNotFoundException();
@@ -110,7 +123,7 @@ public class GenericPostService {
      */
 
     public UserImpl setSelectedStudent(UserImpl student, GenericPost post) {
-        if (genericPostRepository.existsById(post.getId())) {
+        if (exists(post.getId())) {
             if (post.getStudentSet().contains(student)) {
                 post.setSelectedStudent(student);
                 return student;
