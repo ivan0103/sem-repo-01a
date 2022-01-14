@@ -105,7 +105,7 @@ public class UserService {
         User user = userRepository.findById(netID).get();
         Feedback feedback = new Feedback(text, rating, user);
         User toUser = userRepository.findById(toNetID).get();
-        toUser.addFeedback(feedback);
+        toUser.getFeedbacks().add(feedback);
         toUser.setRating((toUser.getRating() * (toUser.getFeedbacks().size() - 1)
                 + feedback.getRating()) / (toUser.getFeedbacks().size()));
         userRepository.save(toUser);
@@ -203,7 +203,7 @@ public class UserService {
             return null;
         }
 
-        receiver.removeFeedback(feedback);
+        receiver.getFeedbacks().remove(feedback);
 
         if (text != null) {
             feedback.setText(text);
@@ -214,7 +214,7 @@ public class UserService {
         }
 
         feedbackRepository.save(feedback);
-        receiver.addFeedback(feedback);
+        receiver.getFeedbacks().add(feedback);
         receiver.setRating((receiver.getRating() * (receiver.getFeedbacks().size() - 1)
                 + feedback.getRating()) / (receiver.getFeedbacks().size()));
         userRepository.save(receiver);
@@ -262,7 +262,7 @@ public class UserService {
                     / (((float) receiver.getFeedbacks().size() - 1)));
         }
 
-        receiver.removeFeedback(feedback);
+        receiver.getFeedbacks().remove(feedback);
         feedbackRepository.delete(feedback);
         userRepository.save(receiver);
 

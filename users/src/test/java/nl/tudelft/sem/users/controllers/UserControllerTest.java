@@ -67,7 +67,7 @@ public class UserControllerTest {
     @Test
     public void testAddFeedback() throws Exception {
         Feedback feedback = new Feedback(1L, "blah", 1, user1);
-        user2.addFeedback(feedback);
+        user2.getFeedbacks().add(feedback);
         when(userService.addFeedback(feedback.getUser().getNetID(), feedback.getText(),
                 feedback.getRating(), user2.getNetID())).thenReturn(feedback);
         this.mockMvc.perform(post(url + "/" + feedback.getUser().getNetID()
@@ -95,7 +95,7 @@ public class UserControllerTest {
     @Test
     public void testEditFeedback() throws Exception {
         Feedback feedback = new Feedback(1L, "blah", 1, user1);
-        user2.addFeedback(feedback);
+        user2.getFeedbacks().add(feedback);
         when(userService.addFeedback(feedback.getUser().getNetID(), feedback.getText(),
                 feedback.getRating(), user2.getNetID())).thenReturn(feedback);
         this.mockMvc.perform(post(url + "/" + feedback.getUser().getNetID()
@@ -103,9 +103,9 @@ public class UserControllerTest {
                         + "/" + user2.getName()))
                 .andDo(print()).andExpect(status().isOk());
 
-        user2.removeFeedback(feedback);
+        user2.getFeedbacks().remove(feedback);
         feedback.setRating(-1);
-        user2.addFeedback(feedback);
+        user2.getFeedbacks().add(feedback);
         when(userService.editFeedback(user1.getNetID(), feedback.getText(),
                 feedback.getRating(), feedback.getId(), user2.getNetID())).thenReturn(feedback);
         this.mockMvc.perform(put(url + "/" + user1.getNetID() + "/" + feedback.getText()
@@ -116,7 +116,7 @@ public class UserControllerTest {
     @Test
     public void testDeleteFeedback() throws Exception {
         Feedback feedback = new Feedback(1L, "blah", 1, user1);
-        user2.addFeedback(feedback);
+        user2.getFeedbacks().add(feedback);
         when(userService.addFeedback(feedback.getUser().getNetID(), feedback.getText(),
                 feedback.getRating(), user2.getNetID())).thenReturn(feedback);
         this.mockMvc.perform(post(url + "/" + feedback.getUser().getNetID()
@@ -124,7 +124,7 @@ public class UserControllerTest {
                         + "/" + user2.getName()))
                 .andDo(print()).andExpect(status().isOk());
 
-        user2.removeFeedback(feedback);
+        user2.getFeedbacks().remove(feedback);
         when(userService.deleteFeedback(user1.getNetID(), feedback.getId(), user2.getNetID()))
                 .thenReturn(feedback);
         this.mockMvc.perform(delete(url + "/" + user1.getNetID() + "/" + feedback.getId()
