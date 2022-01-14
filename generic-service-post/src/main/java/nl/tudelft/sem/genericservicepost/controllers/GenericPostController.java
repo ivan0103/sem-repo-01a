@@ -48,23 +48,6 @@ public class GenericPostController {
     }
 
     /**
-     * Edit post mapping jackson value.
-     *
-     * @param post   the post
-     * @param postId the post id
-     * @return the mapping jackson value
-     */
-    @PatchMapping(value = "/edit", consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<MappingJacksonValue> editPost(
-            @Valid @RequestBody GenericPost post,
-            @RequestParam("genericPostId") String postId) {
-        GenericPost editedPost = genericPostService.editGenericPost(post, postId);
-        return ResponseEntity.accepted().contentType(MediaType.APPLICATION_JSON)
-                .body(genericPostHelper.mappingJacksonPost(editedPost, filterName, userType));
-    }
-
-    /**
      * Gets all posts.
      *
      * @return all posts in repository

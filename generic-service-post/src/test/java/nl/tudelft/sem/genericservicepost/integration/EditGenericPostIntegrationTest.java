@@ -29,7 +29,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class GenericPostIntegrationTest {
+public class EditGenericPostIntegrationTest {
 
     private final transient String baseUrl = "/genericpost";
 
@@ -78,7 +78,8 @@ public class GenericPostIntegrationTest {
                     new ObjectMapper().writer(filterClientSide).writeValueAsString(post);
 
             String body = mockMvc.perform(
-                    post(url).content(serializedPost).contentType(MediaType.APPLICATION_JSON))
+                            post(url).content(serializedPost)
+                                    .contentType(MediaType.APPLICATION_JSON))
                     .andDo(print()).andExpect(status().isCreated()).andReturn().getResponse()
                     .getContentAsString();
             return new ObjectMapper().readValue(body, GenericPost.class);
@@ -87,34 +88,33 @@ public class GenericPostIntegrationTest {
         }
     }
 
-    private Collection<GenericPost> getAll() {
-        String url = baseUrl + "/getall";
+    private GenericPost editGenericPost(GenericPost post) {
+        String url = "/genericpost" + "/edit?genericPostId=" + post.getId();
         try {
-            String body = this.mockMvc.perform(get(url))
-                    .andDo(print()).andExpect(status().isFound())
+            String serializedPost =
+                    new ObjectMapper().writer(filterClientSide).writeValueAsString(post);
+            String body = this.mockMvc.perform(patch(url).content(serializedPost)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(print()).andExpect(status().isAccepted())
                     .andReturn().getResponse().getContentAsString();
-            return new ObjectMapper().readValue(body, new TypeReference<>() {
-            });
+            return new ObjectMapper().readValue(body, GenericPost.class);
+
         } catch (Exception e) {
             return null;
         }
     }
 
     @Test
-    void createPostTest() {
+    void editPostTest() {
         GenericPost expected = addGenericPost(genericPost);
         assertThat(expected).isNotNull();
         assertThat(expected.getId()).isNotNull();
-        assertThat(genericPostRepository.existsById(expected.getId())).isTrue();
-    }
+        int newHours = 6;
 
-    @Test
-    void getAllTest() {
-        GenericPost p1 = addGenericPost(genericPost);
-        GenericPost p2 = addGenericPost(genericPost2);
-        Collection<GenericPost> returned = getAll();
-
-        assertThat(returned).isNotNull();
-        assertThat(returned).containsExactly(p1, p2);
+        expected.setHoursPerWeek(newHours);
+        GenericPost edited = editGenericPost(expected);
+        assertThat(edited).isNotNull();
+        assertThat(edited.getHoursPerWeek()).isEqualTo(newHours);
+        assertThat(genericPostRepository.getGenericPostById(edited.getId())).isEqualTo(edited);
     }
 }

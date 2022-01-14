@@ -21,9 +21,6 @@ public class StudentOfferService {
     @Autowired
     transient GenericPostRepository genericPostRepository;
 
-    @Autowired
-    transient ExpertiseRepository expertiseRepository;
-
     /**
      * Create student offer student offer.
      *

@@ -19,6 +19,10 @@ public class GenericPostService {
     @Autowired
     transient ExpertiseRepository expertiseRepository;
 
+    public GenericPost save(GenericPost post) {
+        return genericPostRepository.save(post);
+    }
+
     /**
      * Create generic post and save in database.
      *
@@ -39,40 +43,8 @@ public class GenericPostService {
             }
         }
 
-        genericPost = genericPostRepository.save(genericPost);
+        genericPost = save(genericPost);
         return genericPost;
-    }
-
-    /**
-     * Edit generic post and save it.
-     *
-     * @param post the generic Post
-     * @param postId the generic Post's id as String
-     * @return the generic Post
-     * @throws GenericPostNotFoundException if id of the generic post was not found / doesn't exist.
-     */
-    public GenericPost editGenericPost(GenericPost post, String postId) {
-        long id;
-        try {
-            id = Long.parseLong(postId);
-
-            if (genericPostRepository.existsById(id)) {
-                GenericPost toEdit = genericPostRepository.getGenericPostById(id);
-
-                // this only checks that NetID is same
-                if (toEdit.getAuthor().equals(post.getAuthor())) {
-                    post.setId(toEdit.getId());
-                    return genericPostRepository.save(post);
-                } else {
-                    throw new InvalidEditException();
-                }
-            } else {
-                throw new GenericPostNotFoundException();
-            }
-
-        } catch (NumberFormatException e) {
-            throw new GenericPostNotFoundException();
-        }
     }
 
     public Collection<GenericPost> getAll() {
