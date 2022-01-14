@@ -44,7 +44,7 @@ public class PostService {
      * @return the saved post
      */
     public Post createPost(Post post) {
-        post.setId(null);
+        //post.setId(null);
 
         for (Expertise expertise : post.getExpertiseSet()) {
             if (expertiseRepository.existsById(expertise.getExpertiseString())) {
