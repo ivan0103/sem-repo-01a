@@ -87,7 +87,7 @@ class CompanyOfferServiceTest {
 
         post.setId(1L);
 
-        when(postRepository.getPostById(1L)).thenReturn(post);
+        when(postService.getById("1")).thenReturn(post);
 
         when(requirementRepository.existsById(ArgumentMatchers.any())).thenReturn(false);
         when(requirementRepository.existsById(reqString)).thenReturn(false, true);
@@ -146,6 +146,8 @@ class CompanyOfferServiceTest {
         companyOffer.setTotalHours(420);
         companyOffer.setWeeklyHours(12);
 
+        when(postService.getById("12")).thenThrow(PostNotFoundException.class);
+
         assertThatThrownBy(() -> companyOfferService.createOffer(companyOffer, "12"))
             .isInstanceOf(PostNotFoundException.class);
     }
@@ -161,6 +163,7 @@ class CompanyOfferServiceTest {
         companyOffer.setTotalHours(420);
         companyOffer.setWeeklyHours(12);
 
+        when(postService.getById("a valid id lol")).thenThrow(PostNotFoundException.class);
 
         assertThatThrownBy(() -> companyOfferService.createOffer(companyOffer, "a valid id lol"))
             .isInstanceOf(PostNotFoundException.class);
@@ -208,6 +211,8 @@ class CompanyOfferServiceTest {
         when(companyOfferRepository.getAllByPost(post)).thenReturn(
             new HashSet<>(List.of(inserted)));
 
+        when(postService.getById("12")).thenThrow(PostNotFoundException.class);
+
         assertThatThrownBy(() -> companyOfferService.getByPostId("12")).isInstanceOf(
             PostNotFoundException.class);
 
@@ -231,6 +236,8 @@ class CompanyOfferServiceTest {
 
         when(companyOfferRepository.getAllByPost(post)).thenReturn(
             new HashSet<>(List.of(inserted)));
+
+        when(postService.getById("lmao")).thenThrow(PostNotFoundException.class);
 
         assertThatThrownBy(() -> companyOfferService.getByPostId("lmao")).isInstanceOf(
                 PostNotFoundException.class);

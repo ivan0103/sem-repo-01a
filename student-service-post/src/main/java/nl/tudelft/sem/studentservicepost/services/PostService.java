@@ -44,7 +44,7 @@ public class PostService {
      * @return the saved post
      */
     public Post createPost(Post post) {
-        //post.setId(null);
+        post.setId(null);
 
         for (Expertise expertise : post.getExpertiseSet()) {
             if (expertiseRepository.existsById(expertise.getExpertiseString())) {
@@ -71,6 +71,10 @@ public class PostService {
         Post returned = postRepository.save(post);
         System.out.println(returned);
         return returned;
+    }
+
+    public Post savePost(Post post) {
+        return postRepository.save(post);
     }
 
     /**

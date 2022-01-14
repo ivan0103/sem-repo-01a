@@ -40,8 +40,7 @@ public class CompanyOfferService {
      * The Post repository.
      */
     @Autowired
-    //transient PostRepository postRepository;
-    PostService postService;
+    transient PostService postService;
 
     /**
      * The Expertise repository.
@@ -100,8 +99,7 @@ public class CompanyOfferService {
                 requirementRepository.save(requirement);
             }
         }
-        //postRepository.save(post);
-        postService.createPost(post);
+        postService.savePost(post);
         return companyOfferRepository.save(companyOffer);
 
     }
