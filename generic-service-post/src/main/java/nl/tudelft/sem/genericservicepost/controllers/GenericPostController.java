@@ -56,33 +56,6 @@ public class GenericPostController {
     }
 
     /**
-     * Edit post mapping jackson value.
-     *
-     * @param post   the post
-     * @param postId the post id
-     * @return the mapping jackson value
-     */
-    @PatchMapping(value = "/edit", consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<MappingJacksonValue> editPost(
-            @Valid @RequestBody GenericPost post,
-            @RequestParam("genericPostId") String postId) {
-        GenericPost editedPost = genericPostService.editGenericPost(post, postId);
-
-        SimpleBeanPropertyFilter simpleBeanPropertyFilter =
-                SimpleBeanPropertyFilter.serializeAllExcept(userType);
-        FilterProvider filterProvider = new SimpleFilterProvider()
-                .addFilter(filterName, simpleBeanPropertyFilter);
-
-        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(editedPost);
-        mappingJacksonValue.setFilters(filterProvider);
-
-
-        return ResponseEntity.accepted().contentType(MediaType.APPLICATION_JSON)
-                .body(mappingJacksonValue);
-    }
-
-    /**
      * Gets all posts.
      *
      * @return all posts in repository
@@ -100,20 +73,5 @@ public class GenericPostController {
         mappingJacksonValue.setFilters(filterProvider);
 
         return new ResponseEntity<>(mappingJacksonValue, HttpStatus.FOUND);
-    }
-
-    // Will be moved to the Student Offer Controller than Marie made, after her merge.
-    @PostMapping("/getStudentsByPost")
-    public ResponseEntity<Set<UserImpl>> getStudentsByPost(
-        @Valid @RequestBody GenericPost post) {
-        Set<UserImpl> result = genericPostService.retrieveStudentsInPost(post);
-        return new ResponseEntity<>(result, HttpStatus.FOUND);
-    }
-
-    @PostMapping("/setSelectedStudent")
-    public ResponseEntity<UserImpl> setSelectedStudent(
-            @Valid @RequestBody UserImpl student, GenericPost post) {
-        UserImpl result = genericPostService.setSelectedStudent(student, post);
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 }
