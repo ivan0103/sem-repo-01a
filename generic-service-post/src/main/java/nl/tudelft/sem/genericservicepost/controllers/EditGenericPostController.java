@@ -3,10 +3,10 @@ package nl.tudelft.sem.genericservicepost.controllers;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
-
 import javax.validation.Valid;
 import nl.tudelft.sem.genericservicepost.entities.GenericPost;
 import nl.tudelft.sem.genericservicepost.services.EditGenericPostService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
@@ -17,14 +17,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/editgenericpost")
+@RequestMapping("/genericpost")
 public class EditGenericPostController {
 
     private final transient String filterName = "postFilter";
 
     private final transient String userType = "user";
 
-    transient EditGenericPostService moreService;
+    @Autowired
+    private transient EditGenericPostService editService;
+
     /**
      * Edit post mapping jackson value.
      *
@@ -37,7 +39,7 @@ public class EditGenericPostController {
     public ResponseEntity<MappingJacksonValue> editPost(
             @Valid @RequestBody GenericPost post,
             @RequestParam("genericPostId") String postId) {
-        GenericPost editedPost = moreService.editGenericPost(post, postId);
+        GenericPost editedPost = editService.editGenericPost(post, postId);
 
         SimpleBeanPropertyFilter simpleBeanPropertyFilter =
                 SimpleBeanPropertyFilter.serializeAllExcept(userType);

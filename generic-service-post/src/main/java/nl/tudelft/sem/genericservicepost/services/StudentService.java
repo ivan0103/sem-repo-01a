@@ -16,7 +16,7 @@ public class StudentService {
     @Autowired
     transient GenericPostRepository genericPostRepository;
 
-    public boolean exists(Long id){
+    public boolean exists(Long id) {
         return genericPostRepository.existsById(id);
     }
 

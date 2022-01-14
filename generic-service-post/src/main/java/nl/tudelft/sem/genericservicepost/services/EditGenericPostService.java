@@ -1,11 +1,8 @@
 package nl.tudelft.sem.genericservicepost.services;
 
-import java.util.Collection;
-import nl.tudelft.sem.genericservicepost.entities.Expertise;
 import nl.tudelft.sem.genericservicepost.entities.GenericPost;
 import nl.tudelft.sem.genericservicepost.exceptions.GenericPostNotFoundException;
 import nl.tudelft.sem.genericservicepost.exceptions.InvalidEditException;
-import nl.tudelft.sem.genericservicepost.repositories.ExpertiseRepository;
 import nl.tudelft.sem.genericservicepost.repositories.GenericPostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,15 +13,15 @@ public class EditGenericPostService {
     @Autowired
     transient GenericPostRepository genericPostRepository;
 
-    public boolean exists(Long id){
+    public boolean exists(Long id) {
         return genericPostRepository.existsById(id);
     }
 
-    public GenericPost save(GenericPost post){
+    public GenericPost save(GenericPost post) {
         return genericPostRepository.save(post);
     }
 
-    public GenericPost getPostById(Long id){
+    public GenericPost getPostById(Long id) {
         return genericPostRepository.getGenericPostById(id);
     }
 

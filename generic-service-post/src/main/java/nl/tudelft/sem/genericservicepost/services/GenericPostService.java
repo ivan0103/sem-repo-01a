@@ -19,7 +19,7 @@ public class GenericPostService {
     @Autowired
     transient ExpertiseRepository expertiseRepository;
 
-    public GenericPost save(GenericPost post){
+    public GenericPost save(GenericPost post) {
         return genericPostRepository.save(post);
     }
 
