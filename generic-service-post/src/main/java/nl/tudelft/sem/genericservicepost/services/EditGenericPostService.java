@@ -38,13 +38,13 @@ public class EditGenericPostService {
         try {
             id = Long.parseLong(postId);
 
-            if (exists(id)) {
-                GenericPost toEdit = getPostById(id);
+            if (genericPostRepository.existsById(id)) {
+                GenericPost toEdit = genericPostRepository.getGenericPostById(id);
 
                 // this only checks that NetID is same
                 if (toEdit.getAuthor().equals(post.getAuthor())) {
                     post.setId(toEdit.getId());
-                    return save(post);
+                    return genericPostRepository.save(post);
                 } else {
                     throw new InvalidEditException();
                 }
@@ -56,5 +56,6 @@ public class EditGenericPostService {
             throw new GenericPostNotFoundException();
         }
     }
+
 
 }

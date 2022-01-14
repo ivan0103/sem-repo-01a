@@ -74,4 +74,6 @@ public class GenericPostController {
 
         return new ResponseEntity<>(mappingJacksonValue, HttpStatus.FOUND);
     }
+
+
 }

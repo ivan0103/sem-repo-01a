@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import javax.validation.Valid;
 import nl.tudelft.sem.genericservicepost.entities.GenericPost;
 import nl.tudelft.sem.genericservicepost.services.EditGenericPostService;
+import nl.tudelft.sem.genericservicepost.services.GenericPostHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,8 @@ public class EditGenericPostController {
     @Autowired
     private transient EditGenericPostService editService;
 
+    @Autowired
+    private transient GenericPostHelper genericPostHelper;
     /**
      * Edit post mapping jackson value.
      *
@@ -40,17 +43,8 @@ public class EditGenericPostController {
             @Valid @RequestBody GenericPost post,
             @RequestParam("genericPostId") String postId) {
         GenericPost editedPost = editService.editGenericPost(post, postId);
-
-        SimpleBeanPropertyFilter simpleBeanPropertyFilter =
-                SimpleBeanPropertyFilter.serializeAllExcept(userType);
-        FilterProvider filterProvider = new SimpleFilterProvider()
-                .addFilter(filterName, simpleBeanPropertyFilter);
-
-        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(editedPost);
-        mappingJacksonValue.setFilters(filterProvider);
-
-
         return ResponseEntity.accepted().contentType(MediaType.APPLICATION_JSON)
-                .body(mappingJacksonValue);
+                .body(genericPostHelper.mappingJacksonPost(editedPost, filterName, userType));
     }
+
 }
