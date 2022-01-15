@@ -3,35 +3,29 @@ package nl.tudelft.sem.studentservicepost.entities;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
+import javax.validation.Valid;
 import org.springframework.format.annotation.DateTimeFormat;
 
 
+/**
+ * The type Contract.
+ */
 public class Contract {
 
     private long id;
 
-    private String freelancerId;
-
-    private String companyId;
-
-    private String freelancerName;
-
-    private String companyName;
-
-    private LocalTime hoursPerWeek;
-
     private float payPerWeek;
 
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private LocalDate startDate;
+    private final transient ContractParties contractParties;
 
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private LocalDate endDate;
+    private final transient ContractTimes contractTimes;
 
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private LocalDate agreementDate;
-
+    /**
+     * Instantiates a new Contract.
+     */
     public Contract() {
+        this.contractParties = new ContractParties();
+        this.contractTimes = new ContractTimes();
     }
 
     /**
@@ -50,96 +44,209 @@ public class Contract {
                     String companyName, LocalTime hoursPerWeek, float payPerWeek,
                     LocalDate startDate, LocalDate endDate) {
 
-        this.freelancerId = freelancerId;
-        this.companyId = companyId;
-        this.freelancerName = freelancerName;
-        this.companyName = companyName;
-        this.hoursPerWeek = hoursPerWeek;
-        this.payPerWeek = payPerWeek;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.agreementDate = LocalDate.now();
+        this.contractParties =
+            new ContractParties(freelancerId, companyId, freelancerName, companyName);
+        this.contractTimes = new ContractTimes(hoursPerWeek, startDate, endDate, LocalDate.now());
     }
 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public long getId() {
         return id;
     }
 
 
+    /**
+     * Sets id.
+     *
+     * @param id the id
+     */
     protected void setId(long id) {
         this.id = id;
     }
 
+    /**
+     * Gets freelancer id.
+     *
+     * @return the freelancer id
+     */
     public String getFreelancerId() {
-        return freelancerId;
+        return this.contractParties.getFreelancerId();
     }
 
+    /**
+     * Sets freelancer id.
+     *
+     * @param freelancerId the freelancer id
+     */
     public void setFreelancerId(String freelancerId) {
-        this.freelancerId = freelancerId;
+        this.contractParties.setFreelancerId(freelancerId);
     }
 
+    /**
+     * Gets company id.
+     *
+     * @return the company id
+     */
     public String getCompanyId() {
-        return companyId;
+        return this.contractParties.getCompanyId();
     }
 
+    /**
+     * Sets company id.
+     *
+     * @param companyId the company id
+     */
     public void setCompanyId(String companyId) {
-        this.companyId = companyId;
+        this.contractParties.setCompanyId(companyId);
     }
 
+    /**
+     * Gets freelancer name.
+     *
+     * @return the freelancer name
+     */
     public String getFreelancerName() {
-        return freelancerName;
+        return this.contractParties.getFreelancerName();
     }
 
+    /**
+     * Sets freelancer name.
+     *
+     * @param freelancerName the freelancer name
+     */
     public void setFreelancerName(String freelancerName) {
-        this.freelancerName = freelancerName;
+        this.contractParties.setFreelancerName(freelancerName);
     }
 
+    /**
+     * Gets company name.
+     *
+     * @return the company name
+     */
     public String getCompanyName() {
-        return companyName;
+        return this.contractParties.getCompanyName();
     }
 
+    /**
+     * Sets company name.
+     *
+     * @param companyName the company name
+     */
     public void setCompanyName(String companyName) {
-        this.companyName = companyName;
+        this.contractParties.setCompanyName(companyName);
     }
 
+    /**
+     * Gets hours per week.
+     *
+     * @return the hours per week
+     */
     public LocalTime getHoursPerWeek() {
-        return hoursPerWeek;
+        return this.contractTimes.getHoursPerWeek();
     }
 
+    /**
+     * Sets hours per week.
+     *
+     * @param hoursPerWeek the hours per week
+     */
     public void setHoursPerWeek(LocalTime hoursPerWeek) {
-        this.hoursPerWeek = hoursPerWeek;
+        this.contractTimes.setHoursPerWeek(hoursPerWeek);
     }
 
+    /**
+     * Gets pay per week.
+     *
+     * @return the pay per week
+     */
     public float getPayPerWeek() {
         return payPerWeek;
     }
 
+    /**
+     * Sets pay per week.
+     *
+     * @param payPerWeek the pay per week
+     */
     public void setPayPerWeek(float payPerWeek) {
         this.payPerWeek = payPerWeek;
     }
 
+    /**
+     * Gets start date.
+     *
+     * @return the start date
+     */
     public LocalDate getStartDate() {
-        return startDate;
+        return this.contractTimes.getStartDate();
     }
 
+    /**
+     * Sets start date.
+     *
+     * @param startDate the start date
+     */
     public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
+        this.contractTimes.setStartDate(startDate);
     }
 
+    /**
+     * Gets end date.
+     *
+     * @return the end date
+     */
     public LocalDate getEndDate() {
-        return endDate;
+        return this.contractTimes.getEndDate();
     }
 
+    /**
+     * Sets end date.
+     *
+     * @param endDate the end date
+     */
     public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
+        this.contractTimes.setEndDate(endDate);
     }
 
+    /**
+     * Gets agreement date.
+     *
+     * @return the agreement date
+     */
     public LocalDate getAgreementDate() {
-        return agreementDate;
+        return this.contractTimes.getAgreementDate();
     }
 
+    /**
+     * Sets agreement date.
+     *
+     * @param agreementDate the agreement date
+     */
     public void setAgreementDate(LocalDate agreementDate) {
-        this.agreementDate = agreementDate;
+        this.contractTimes.setAgreementDate(agreementDate);
+    }
+
+    /**
+     * Static method to build contract from offer.
+     *
+     * @param offer     the offer
+     * @param startDate the start date of the contract
+     * @param endDate   the end date of the contract
+     * @return the contract
+     */
+    public static Contract buildFromOffer(CompanyOffer offer,
+                                          @Valid @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                                              LocalDate startDate,
+                                          @Valid @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                                              LocalDate endDate) {
+        Post post = offer.getPost();
+        return new Contract(post.getAuthor(), offer.getCompanyId(), post.getAuthor(),
+            offer.getCompanyId(), LocalTime.of(offer.getWeeklyHours(), 0),
+            offer.getPricePerHour().floatValue(), startDate, endDate);
     }
 
     /**
@@ -161,5 +268,11 @@ public class Contract {
     @Override
     public int hashCode() {
         return Objects.hash(getId());
+    }
+
+    @Override
+    public String toString() {
+        return "Contract{" + "id=" + id + ", payPerWeek=" + payPerWeek + ", contractParties="
+               + contractParties + ", contractTimes=" + contractTimes + '}';
     }
 }

@@ -77,7 +77,7 @@ public class UserServiceTest {
         Feedback feedback = new Feedback(1L, "blah", 1, user1);
         Mockito.when(feedbackRepository.save(feedback)).thenReturn(feedback);
         User user3 = new UserFactory().createUser("b", "b", 0.2f, role);
-        user3.addFeedback(feedback);
+        user3.getFeedbacks().add(feedback);
         Mockito.when(userRepository.findById(user1.getNetID()))
                 .thenReturn(java.util.Optional.of(user1));
         Mockito.when(userRepository.findById(user2.getNetID()))
@@ -114,7 +114,7 @@ public class UserServiceTest {
     public void testEditFeedback() throws NotFoundException {
         Feedback feedback = new Feedback(1L, "blah", 1, user1);
         User user3 = new UserFactory().createUser("b", "b", 0.2f, role);
-        user3.addFeedback(feedback);
+        user3.getFeedbacks().add(feedback);
         Mockito.when(userRepository.findById(user1.getNetID()))
                 .thenReturn(java.util.Optional.of(user1));
         Mockito.when(userRepository.findById(user2.getNetID()))
@@ -128,7 +128,7 @@ public class UserServiceTest {
 
         Feedback feedback2 = new Feedback(1L, "b", 1, user1);
         User user4 = new UserFactory().createUser(user3.getNetID(), "b", 0.2f, role);
-        user4.addFeedback(feedback2);
+        user4.getFeedbacks().add(feedback2);
         Mockito.when(userRepository.findById(user1.getNetID()))
                 .thenReturn(java.util.Optional.of(user1));
         Mockito.when(userRepository.findById(user3.getNetID()))
@@ -146,7 +146,7 @@ public class UserServiceTest {
     public void testDeleteFeedback() throws NotFoundException {
         Feedback feedback = new Feedback(1L, "blah", 1, user1);
         User user3 = new UserFactory().createUser("b", "b", 0.2f, role);
-        user3.addFeedback(feedback);
+        user3.getFeedbacks().add(feedback);
         Mockito.when(userRepository.findById(user1.getNetID()))
                 .thenReturn(java.util.Optional.of(user1));
         Mockito.when(userRepository.findById(user2.getNetID()))

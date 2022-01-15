@@ -73,6 +73,10 @@ public class PostService {
         return returned;
     }
 
+    public Post savePost(Post post) {
+        return postRepository.save(post);
+    }
+
     /**
      * Edit post.
      *

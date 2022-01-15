@@ -61,23 +61,19 @@ public class GatewayService implements ReactiveUserDetailsService {
      */
 
     public AuthUser createAccount(CommunicationEntity communicationEntity)
-                                  throws IllegalArgumentException {
+            throws IllegalArgumentException {
 
         if (communicationEntity.getRole() == null) {
             throw new IllegalArgumentException("Role must not be null!");
         }
 
-        User user = restTemplate.getForObject(
-                usersApi + communicationEntity.getNetID(), User.class
-        );
+        User user = getUser(communicationEntity.getNetID());
 
         if (user != null) {
             throw new IllegalArgumentException("Net ID already exists!");
         }
 
-        AuthUser authenticatedUser = restTemplate.getForObject(
-                urlAuth + "/ADMIN?netID=" + communicationEntity.getNetID(), AuthUser.class
-        );
+        AuthUser authenticatedUser = getAuthenticatedUser(communicationEntity.getNetID());
 
         if (authenticatedUser != null) {
             throw new IllegalArgumentException("NetID does not exist!");
@@ -87,6 +83,34 @@ public class GatewayService implements ReactiveUserDetailsService {
                 communicationEntity.getPassword(),
                 communicationEntity.getRole());
 
+        executePOSTS(communicationEntity);
+
+        return authUser;
+    }
+
+    private User getUser(String netID) {
+        try {
+            return restTemplate.getForObject(
+                    usersApi + netID, User.class
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private AuthUser getAuthenticatedUser(String netID) {
+        try {
+            return restTemplate.getForObject(
+                    urlAuth + "/ADMIN?netID=" + netID, AuthUser.class
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private void executePOSTS(CommunicationEntity communicationEntity) {
         restTemplate.execute(
                 urlAuth + "addAuthUser/"
                         + communicationEntity.getNetID() + "/"
@@ -102,7 +126,5 @@ public class GatewayService implements ReactiveUserDetailsService {
                         + communicationEntity.getRole(),
                 HttpMethod.POST, null, null
         );
-
-        return authUser;
     }
 }

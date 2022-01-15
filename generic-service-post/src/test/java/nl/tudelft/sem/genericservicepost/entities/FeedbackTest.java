@@ -1,4 +1,4 @@
-package nl.tudelft.sem.studentservicepost.entities;
+package nl.tudelft.sem.genericservicepost.entities;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -99,7 +99,7 @@ class FeedbackTest {
 
     @Test
     void testEqualsDifferentType() {
-        assertThat(feedback).isNotEqualTo(new Post());
+        assertThat(feedback).isNotEqualTo(new GenericPost());
     }
 
     @Test
@@ -141,8 +141,8 @@ class FeedbackTest {
     @Test
     void testToString() {
         String expected = "Feedback{id=42, text='text', rating=1, user="
-            + user.toString()
-            + "}";
+                + user.toString()
+                + "}";
         assertThat(feedback.toString()).isEqualTo(expected);
     }
 }
