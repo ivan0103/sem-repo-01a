@@ -1,16 +1,23 @@
 package nl.tudelft.sem.contracts.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
 
+import com.lowagie.text.Document;
 import com.lowagie.text.Font;
 import com.lowagie.text.FontFactory;
 import com.lowagie.text.Paragraph;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
+
 import nl.tudelft.sem.contracts.entities.Contract;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
 class PdfGeneratorServiceTest {
     private transient Contract contract;
@@ -38,6 +45,41 @@ class PdfGeneratorServiceTest {
     void exportContract() {
     }
 
+    @Disabled
+    @Test
+    void createPdf() {
+
+    }
+
+    @Test
+    void addToDocument() {
+        //setup
+        Font normalFont = FontFactory.getFont(FontFactory.TIMES);
+        normalFont.setSize(12);
+
+        Paragraph title = underTest.formatTitle(contract);
+        Paragraph intro = underTest.formatIntro(contract, normalFont);
+        Paragraph detailsHeader = underTest.formatDetailsHeader();
+        Paragraph contractDetails = underTest.formatDetails(contract, normalFont);
+
+        ArgumentCaptor<Paragraph> paragraphArgumentCaptor =
+                ArgumentCaptor.forClass(Paragraph.class);
+        //when
+        Document document = mock(Document.class);
+        underTest.addToDocument(document, title, intro, detailsHeader, contractDetails);
+
+        //then
+        verify(document).open();
+        verify(document, times(4)).add(paragraphArgumentCaptor.capture());
+
+        List<Paragraph> capturedParagraphs= paragraphArgumentCaptor.getAllValues();
+
+        assertThat(capturedParagraphs.get(0)).isEqualTo(title);
+        assertThat(capturedParagraphs.get(1)).isEqualTo(intro);
+        assertThat(capturedParagraphs.get(2)).isEqualTo(detailsHeader);
+        assertThat(capturedParagraphs.get(3)).isEqualTo(contractDetails);
+    }
+
     @Test
     void formatTitle() {
         //setup
@@ -45,11 +87,22 @@ class PdfGeneratorServiceTest {
         titleFont.setSize(25);
         Paragraph expected = new Paragraph("Contract Of Employment", titleFont);
 
+        expected.setAlignment(Paragraph.ALIGN_CENTER);
+        expected.setExtraParagraphSpace(2);
+
         //when
         Paragraph testCase = underTest.formatTitle(contract);
 
         //then
         assertThat(testCase.getContent()).isEqualTo(expected.getContent());
+
+        assertThat(testCase.getFont().getSize()).isEqualTo(expected.getFont().getSize());
+        assertThat(testCase.getFont().getBaseFont()).isEqualTo(
+                expected.getFont().getBaseFont());
+
+        assertThat(testCase.getAlignment()).isEqualTo(expected.getAlignment());
+        assertThat(testCase.getExtraParagraphSpace()).isEqualTo(
+                expected.getExtraParagraphSpace());
     }
 
     @Test
@@ -63,11 +116,22 @@ class PdfGeneratorServiceTest {
                 + " may be modified(to an extent) in the future upon the approval of both parties.";
         Paragraph expected = new Paragraph(text, normalFont);
 
+        expected.setAlignment(Paragraph.ALIGN_CENTER);
+        expected.setExtraParagraphSpace(5);
+
         //when
         Paragraph testCase = underTest.formatIntro(contract, normalFont);
 
         //then
         assertThat(testCase.getContent()).isEqualTo(expected.getContent());
+
+        assertThat(testCase.getFont().getSize()).isEqualTo(expected.getFont().getSize());
+        assertThat(testCase.getFont().getBaseFont()).isEqualTo(
+                expected.getFont().getBaseFont());
+
+        assertThat(testCase.getAlignment()).isEqualTo(expected.getAlignment());
+        assertThat(testCase.getExtraParagraphSpace()).isEqualTo(
+                expected.getExtraParagraphSpace());
     }
 
     @Test
@@ -77,11 +141,21 @@ class PdfGeneratorServiceTest {
         enhancedFont.setSize(13);
         Paragraph expected = new Paragraph("The details are as followed:", enhancedFont);
 
+        expected.setAlignment(Paragraph.ALIGN_LEFT);
+
         //when
         Paragraph testCase = underTest.formatDetailsHeader();
 
         //then
         assertThat(testCase.getContent()).isEqualTo(expected.getContent());
+
+        assertThat(testCase.getFont().getSize()).isEqualTo(expected.getFont().getSize());
+        assertThat(testCase.getFont().getBaseFont()).isEqualTo(
+                expected.getFont().getBaseFont());
+
+        assertThat(testCase.getAlignment()).isEqualTo(expected.getAlignment());
+        assertThat(testCase.getExtraParagraphSpace()).isEqualTo(
+                expected.getExtraParagraphSpace());
     }
 
     @Test
@@ -93,10 +167,21 @@ class PdfGeneratorServiceTest {
                 + "-Hours per week: 06:00\n-Hourly rate: €14.5";
         Paragraph expected = new Paragraph(text, normalFont);
 
+        expected.setAlignment(Paragraph.ALIGN_LEFT);
+        expected.setIndentationRight(5);
+
         //when
         Paragraph testCase = underTest.formatDetails(contract, normalFont);
 
         //then
         assertThat(testCase.getContent()).isEqualTo(expected.getContent());
+
+        assertThat(testCase.getFont().getSize()).isEqualTo(expected.getFont().getSize());
+        assertThat(testCase.getFont().getBaseFont()).isEqualTo(
+                expected.getFont().getBaseFont());
+
+        assertThat(testCase.getAlignment()).isEqualTo(expected.getAlignment());
+        assertThat(testCase.getIndentationRight()).isEqualTo(
+                expected.getIndentationRight());
     }
 }
