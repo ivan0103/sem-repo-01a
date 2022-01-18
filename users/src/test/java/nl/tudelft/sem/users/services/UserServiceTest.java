@@ -166,6 +166,8 @@ public class UserServiceTest {
         Mockito.doNothing().when(feedbackRepository).deleteAll(user1.getFeedbacks());
         Mockito.doNothing().when(userRepository).delete(user1);
         assertEquals(user1, userService.deleteUser(user1.getNetID()));
+        Mockito.verify(userRepository).delete(user1);
+        Mockito.verify(feedbackRepository).deleteAll(user1.getFeedbacks());
     }
 
     @Test
@@ -246,31 +248,24 @@ public class UserServiceTest {
         user3.setRating((feedback.getRating() + feedback2.getRating()) / 2.0f);
         Mockito.when(userRepository.findById(user3.getNetID()))
                 .thenReturn(Optional.of(user3));
+        Feedback feedback3 = new Feedback(2L, text, rating, user);
         Mockito.when(feedbackRepository.findById(feedback2.getId()))
-                .thenReturn(Optional.of(feedback2));
+                .thenReturn(Optional.of(feedback3));
         Mockito.when(feedbackRepository.save(feedback2))
                 .thenReturn(feedback2);
         Mockito.when(userRepository.save(user3))
                 .thenReturn(user3);
         String newText = "newText";
         int newRating = 7;
-        Feedback feedback3 = new Feedback(feedback2.getId(), feedback2.getText(),
-                feedback2.getRating(), user);
-        assertEquals(feedback2,
+        Feedback feedback4 = new Feedback(2L, newText, newRating, user);
+        assertEquals(feedback4,
                 userService.editFeedback(user.getNetID(), newText,
                         newRating, feedback2.getId(), user3.getNetID()));
-        List<Feedback> initialList = List.of(feedback, feedback3);
-        assertNotEquals(initialList, user3.getFeedbacks());
-        assertEquals(newText, feedback2.getText());
-        assertEquals(newRating, feedback2.getRating());
-        assertEquals(feedback2, user3.getFeedbacks().get(1));
-        assertEquals(feedback2.getRating(), user3.getFeedbacks().get(1).getRating());
-        assertEquals(feedback2.getText(), user3.getFeedbacks().get(1).getText());
         assertEquals(5.5f, user3.getRating());
-        assertNotEquals(text, user3.getFeedbacks().get(1).getText());
-        assertNotEquals(rating, user3.getFeedbacks().get(1).getRating());
-        assertNotEquals(text, feedback2.getText());
-        assertNotEquals(rating, feedback2.getRating());
+        assertEquals(newRating, feedback4.getRating());
+        assertEquals(newText, feedback4.getText());
+        assertEquals(newRating, user3.getFeedbacks().get(1).getRating());
+        assertEquals(newText, user3.getFeedbacks().get(1).getText());
     }
 
     @Test
@@ -358,6 +353,7 @@ public class UserServiceTest {
                         feedback2.getId(), user3.getNetID()));
         assertEquals(6.5f, user3.getRating());
         assertNotEquals(initialSize, user3.getFeedbacks().size());
+        Mockito.verify(feedbackRepository).delete(feedback2);
     }
 
     @Test
