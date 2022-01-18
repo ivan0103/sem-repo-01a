@@ -22,6 +22,7 @@ plugins {
 
     // PITest
     id 'info.solidsoft.pitest' version '1.5.2' apply false
+
 }
 
 
@@ -44,6 +45,7 @@ allprojects {
     group = 'nl.tudelft.sem'
     sourceCompatibility = 11
     targetCompatibility = 11
+
 }
 
 subprojects {
@@ -104,18 +106,6 @@ subprojects {
     apply plugin: 'pmd'
     pmd {
         incrementalAnalysis = true
-    }
-
-    apply plugin: 'info.solidsoft.pitest'
-    pitest {
-        //adds dependency to org.pitest:pitest-junit5-plugin and sets "testPlugin" to "junit5"
-        junit5PluginVersion = '0.12'
-
-        targetClasses = ['nl.tudelft.sem.*']  //by default "${project.group}.*"
-        pitestVersion = '1.5.1' //not needed when a default PIT version should be used
-        threads = 4
-        outputFormats = ['XML', 'HTML']
-        timestampedReports = false
     }
 
 }
