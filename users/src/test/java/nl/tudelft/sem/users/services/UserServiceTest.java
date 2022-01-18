@@ -55,7 +55,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testGetOneUser() throws NotFoundException {
+    public void testGetOneUser() {
         Mockito.when(userRepository.findById(user1.getNetID()))
                 .thenReturn(java.util.Optional.of(user1));
         assertEquals(user1, userService.getOneUser(user1.getNetID()));
@@ -73,7 +73,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testAddFeedback() throws NotFoundException {
+    public void testAddFeedback() {
         Feedback feedback = new Feedback(1L, "blah", 1, user1);
         Mockito.when(feedbackRepository.save(feedback)).thenReturn(feedback);
         User user3 = new UserFactory().createUser("b", "b", 0.2f, role);
@@ -91,7 +91,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testDeleteUser() throws NotFoundException {
+    public void testDeleteUser() {
         Mockito.when(userRepository.findById(user1.getNetID()))
                 .thenReturn(java.util.Optional.of(user1));
         Mockito.doNothing().when(feedbackRepository).deleteAll(user1.getFeedbacks());
@@ -100,7 +100,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void updateUser() throws NotFoundException {
+    public void updateUser() {
         User user3 = new UserFactory().createUser(user2.getNetID(),
                 "aaaaaa", user2.getRating(), ((Company) user2).getRole());
         user3.setName("aaaaaa");
@@ -111,7 +111,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testEditFeedback() throws NotFoundException {
+    public void testEditFeedback() {
         Feedback feedback = new Feedback(1L, "blah", 1, user1);
         User user3 = new UserFactory().createUser("b", "b", 0.2f, role);
         user3.getFeedbacks().add(feedback);
@@ -143,7 +143,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testDeleteFeedback() throws NotFoundException {
+    public void testDeleteFeedback() {
         Feedback feedback = new Feedback(1L, "blah", 1, user1);
         User user3 = new UserFactory().createUser("b", "b", 0.2f, role);
         user3.getFeedbacks().add(feedback);
