@@ -65,19 +65,21 @@ class PdfGeneratorServiceTest {
         ArgumentCaptor<Paragraph> paragraphArgumentCaptor =
                 ArgumentCaptor.forClass(Paragraph.class);
         //when
-        Document document = mock(Document.class);
-        underTest.addToDocument(document, title, intro, detailsHeader, contractDetails);
+        try(Document document = mock(Document.class)) {
 
-        //then
-        verify(document).open();
-        verify(document, times(4)).add(paragraphArgumentCaptor.capture());
+            underTest.addToDocument(document, title, intro, detailsHeader, contractDetails);
 
-        List<Paragraph> capturedParagraphs= paragraphArgumentCaptor.getAllValues();
+            //then
+            verify(document).open();
+            verify(document, times(4)).add(paragraphArgumentCaptor.capture());
 
-        assertThat(capturedParagraphs.get(0)).isEqualTo(title);
-        assertThat(capturedParagraphs.get(1)).isEqualTo(intro);
-        assertThat(capturedParagraphs.get(2)).isEqualTo(detailsHeader);
-        assertThat(capturedParagraphs.get(3)).isEqualTo(contractDetails);
+            List<Paragraph> capturedParagraphs = paragraphArgumentCaptor.getAllValues();
+
+            assertThat(capturedParagraphs.get(0)).isEqualTo(title);
+            assertThat(capturedParagraphs.get(1)).isEqualTo(intro);
+            assertThat(capturedParagraphs.get(2)).isEqualTo(detailsHeader);
+            assertThat(capturedParagraphs.get(3)).isEqualTo(contractDetails);
+        }
     }
 
     @Test
