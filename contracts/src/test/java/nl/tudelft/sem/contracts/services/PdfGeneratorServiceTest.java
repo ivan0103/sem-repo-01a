@@ -2,8 +2,8 @@ package nl.tudelft.sem.contracts.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import com.lowagie.text.Document;
 import com.lowagie.text.Font;
@@ -12,7 +12,6 @@ import com.lowagie.text.Paragraph;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-
 import nl.tudelft.sem.contracts.entities.Contract;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -65,7 +64,7 @@ class PdfGeneratorServiceTest {
         ArgumentCaptor<Paragraph> paragraphArgumentCaptor =
                 ArgumentCaptor.forClass(Paragraph.class);
         //when
-        try(Document document = mock(Document.class)) {
+        try (Document document = mock(Document.class)) {
 
             underTest.addToDocument(document, title, intro, detailsHeader, contractDetails);
 
