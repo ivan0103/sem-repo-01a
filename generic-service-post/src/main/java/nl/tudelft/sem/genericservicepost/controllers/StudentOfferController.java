@@ -46,19 +46,4 @@ public class StudentOfferController {
         Set<StudentOffer> result = studentOfferService.getByGenericPostId(genericPostId);
         return new ResponseEntity<>(result, HttpStatus.FOUND);
     }
-
-    // Will be moved to the Student Offer Controller than Marie made, after her merge.
-    @PostMapping("/getStudentsByPost")
-    public ResponseEntity<Set<UserImpl>> getStudentsByPost(
-            @Valid @RequestBody GenericPost post) {
-        Set<UserImpl> result = studentOfferService.retrieveStudentsInPost(post);
-        return new ResponseEntity<>(result, HttpStatus.FOUND);
-    }
-
-    @PostMapping("/setSelectedStudent")
-    public ResponseEntity<UserImpl> setSelectedStudent(
-            @Valid @RequestBody UserImpl student, GenericPost post) {
-        UserImpl result = studentOfferService.setSelectedStudent(student, post);
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
-    }
 }
