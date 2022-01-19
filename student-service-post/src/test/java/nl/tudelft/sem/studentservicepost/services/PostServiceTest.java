@@ -176,6 +176,12 @@ class PostServiceTest {
         assertThat(tmp2).isEqualTo(post1);
     }
 
+    @Test
+    void savePost() {
+        Post tmp = postService.savePost(post);
+        Mockito.verify(postRepository).save(post);
+        assertThat(tmp).isEqualTo(post);
+    }
 
     @Test
     void editPost() {
@@ -236,6 +242,9 @@ class PostServiceTest {
     void testSearchByKeywordFoundComp() {
         Post tmp = postService.createPost(post);
         Collection<Post> result = postService.searchByKeyword("cOmp  1");
+        for (Post p : result) {
+            assertThat(p.getCompanyOfferSet()).isNull();
+        }
         assertThat(result).containsOnlyOnce(tmp).hasSize(1);
     }
 
@@ -243,6 +252,9 @@ class PostServiceTest {
     void testSearchByKeywordFoundExp() {
         Post tmp = postService.createPost(post);
         Collection<Post> result = postService.searchByKeyword("EXp  1");
+        for (Post p : result) {
+            assertThat(p.getCompanyOfferSet()).isNull();
+        }
         assertThat(result).containsOnlyOnce(tmp).hasSize(2);
     }
 
