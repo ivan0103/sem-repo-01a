@@ -13,18 +13,6 @@ public class EditGenericPostService {
     @Autowired
     transient GenericPostRepository genericPostRepository;
 
-    public boolean exists(Long id) {
-        return genericPostRepository.existsById(id);
-    }
-
-    public GenericPost save(GenericPost post) {
-        return genericPostRepository.save(post);
-    }
-
-    public GenericPost getPostById(Long id) {
-        return genericPostRepository.getGenericPostById(id);
-    }
-
     /**
      * Edit generic post and save it.
      *
@@ -37,7 +25,6 @@ public class EditGenericPostService {
         long id;
         try {
             id = Long.parseLong(postId);
-
             if (genericPostRepository.existsById(id)) {
                 GenericPost toEdit = genericPostRepository.getGenericPostById(id);
 
@@ -46,7 +33,7 @@ public class EditGenericPostService {
                     post.setId(toEdit.getId());
                     return genericPostRepository.save(post);
                 } else {
-                    throw new InvalidEditException();
+                    throw new GenericPostNotFoundException();
                 }
             } else {
                 throw new GenericPostNotFoundException();

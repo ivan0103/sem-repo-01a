@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import nl.tudelft.sem.genericservicepost.entities.Expertise;
 import nl.tudelft.sem.genericservicepost.entities.GenericPost;
 import nl.tudelft.sem.genericservicepost.exceptions.GenericPostNotFoundException;
+import nl.tudelft.sem.genericservicepost.exceptions.InvalidEditException;
 import nl.tudelft.sem.genericservicepost.repositories.GenericPostRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -62,10 +63,33 @@ public class EditGenericPostServiceTest {
     }
 
     @Test
-    void editGenericPostExceptionTest() {
-        GenericPost tmp = new GenericPost();
-        tmp.setId(10L);
-        assertThatThrownBy(() -> moreService.editGenericPost(tmp, tmp.getId().toString()))
-                .isInstanceOf(GenericPostNotFoundException.class);
+    void editGenericPostNaN() {
+        assertThatThrownBy(() -> moreService.editGenericPost(null, "AH"));
+    }
+
+    @Test
+    void editNonExistentPost() {
+        GenericPost toEdit = new GenericPost();
+        //toEdit.setId(realId + 100L); // set id to something different from existing post
+
+        assertThatThrownBy(() -> moreService.editGenericPost(toEdit, "999999")).isInstanceOf(
+                GenericPostNotFoundException.class);
+        postRepository.delete(toEdit);
+
+    }
+
+    @Test
+    void editPostFailingNetId() {
+        GenericPost tmp = genericPostService.createGenericPost(genericPost);
+
+        GenericPost toEdit = new GenericPost();
+        toEdit.setId(tmp.getId());
+
+        toEdit.setAuthor("Jeff");
+
+
+        assertThatThrownBy(() -> moreService.editGenericPost(toEdit, "1")).isInstanceOf(
+                GenericPostNotFoundException.class);
+
     }
 }
