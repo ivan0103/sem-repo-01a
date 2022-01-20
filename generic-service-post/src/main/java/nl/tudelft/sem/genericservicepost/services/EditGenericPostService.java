@@ -27,10 +27,7 @@ public class EditGenericPostService {
             id = Long.parseLong(postId);
             if (genericPostRepository.existsById(id)) {
                 GenericPost toEdit = genericPostRepository.getGenericPostById(id);
-
-                // this only checks that NetID is same
                 if (toEdit.getAuthor().equals(post.getAuthor())) {
-                    post.setId(toEdit.getId());
                     return genericPostRepository.save(post);
                 } else {
                     throw new GenericPostNotFoundException();

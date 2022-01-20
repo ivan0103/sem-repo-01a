@@ -10,6 +10,7 @@ import nl.tudelft.sem.genericservicepost.exceptions.InvalidEditException;
 import nl.tudelft.sem.genericservicepost.repositories.GenericPostRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -87,9 +88,9 @@ public class EditGenericPostServiceTest {
 
         toEdit.setAuthor("Jeff");
 
-
         assertThatThrownBy(() -> moreService.editGenericPost(toEdit, "1")).isInstanceOf(
                 GenericPostNotFoundException.class);
 
     }
+
 }
