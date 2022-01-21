@@ -25,12 +25,12 @@ public class EditGenericPostService {
         long id;
         try {
             id = Long.parseLong(postId);
-            if (genericPostRepository.existsById(id)) {
+            if (!genericPostRepository.findById(id).isEmpty()) {
                 GenericPost toEdit = genericPostRepository.getGenericPostById(id);
                 if (toEdit.getAuthor().equals(post.getAuthor())) {
                     return genericPostRepository.save(post);
                 } else {
-                    throw new GenericPostNotFoundException();
+                    throw new InvalidEditException();
                 }
             } else {
                 throw new GenericPostNotFoundException();
