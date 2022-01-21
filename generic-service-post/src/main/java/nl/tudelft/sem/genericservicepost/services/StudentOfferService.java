@@ -72,48 +72,4 @@ public class StudentOfferService {
             throw new GenericPostNotFoundException();
         }
     }
-
-    /**
-     * Issue #6
-     * Companies Access to Student Info
-     * Companies can view all the Students and their Data,
-     * that have applied for one of their Job posts.
-     *
-     * @param genericPost the Post to collect the students from
-     * @return a Set of all Students
-     * @throws GenericPostNotFoundException if id of the generic post was not found / doesn't exist.
-     */
-    public Set<UserImpl> retrieveStudentsInPost(GenericPost genericPost) {
-        if (genericPostRepository.existsById(genericPost.getId())) {
-            return genericPost.getStudentSet();
-        } else {
-            throw new GenericPostNotFoundException();
-        }
-    }
-
-    /**
-     * Issue #16
-     * Company can choose a student from StudentOffer
-     * After viewing all their parameters in the above method
-     * Method receives the selected student and assignes it to the posts paramter.
-     *
-     * @param student the selected student.
-     * @param post    the post from which the student was selected and to which it will be assigned
-     * @return the student.
-     * @throws StudentNotFoundException if the Student Offer was not found in the generic post.
-     * @throws GenericPostNotFoundException  if the post does not exist or not found.
-     */
-
-    public UserImpl setSelectedStudent(UserImpl student, GenericPost post) {
-        if (genericPostRepository.existsById(post.getId())) {
-            if (post.getStudentSet().contains(student)) {
-                post.setSelectedStudent(student);
-                return student;
-            } else {
-                throw new StudentNotFoundException();
-            }
-        } else {
-            throw new GenericPostNotFoundException();
-        }
-    }
 }

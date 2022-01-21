@@ -1,7 +1,6 @@
 package nl.tudelft.sem.users.controllers;
 
 import java.util.List;
-import javassist.NotFoundException;
 import nl.tudelft.sem.users.entities.Feedback;
 import nl.tudelft.sem.users.entities.User;
 import nl.tudelft.sem.users.services.UserService;
@@ -54,7 +53,9 @@ public class UserController {
      */
 
     @GetMapping(path = "{" + valueId + "}")
-    public User getOneUser(@PathVariable(value = valueId) String netID) throws NotFoundException {
+    public User getOneUser(@PathVariable(value = valueId) String netID)
+                           throws NullPointerException {
+
         return userService.getOneUser(netID);
     }
 
@@ -92,7 +93,7 @@ public class UserController {
                                 @PathVariable(value = "text") String text,
                                 @PathVariable(value = "rating") Integer rating,
                                 @PathVariable(value = "toNetID") String toNetID)
-                                throws NotFoundException {
+                                throws NullPointerException {
 
         return userService.addFeedback(netID, text, rating, toNetID);
     }
@@ -105,7 +106,9 @@ public class UserController {
      */
 
     @DeleteMapping(path = "{" + valueId + "}")
-    public User deleteUser(@PathVariable(value = valueId) String netID) throws NotFoundException {
+    public User deleteUser(@PathVariable(value = valueId) String netID)
+                           throws NullPointerException {
+
         return userService.deleteUser(netID);
     }
 
@@ -120,7 +123,8 @@ public class UserController {
     @PutMapping(path = "{" + valueId + "}/{" + valueName + "}")
 
     public User updateUser(@PathVariable(value = "netID") String netID,
-                              @PathVariable(value = "name") String name) throws NotFoundException {
+                           @PathVariable(value = "name") String name)
+                           throws NullPointerException {
 
         return userService.updateUser(netID, name);
     }
@@ -142,7 +146,7 @@ public class UserController {
                                  @PathVariable(value = "rating", required = false) Integer rating,
                                  @PathVariable(value = "feedbackId") Long feedbackId,
                                  @PathVariable(value = "toNetID") String toNetID)
-                                 throws NotFoundException {
+                                 throws NullPointerException {
 
         return userService.editFeedback(netID, text, rating, feedbackId, toNetID);
     }
@@ -160,7 +164,7 @@ public class UserController {
     public Feedback deleteFeedback(@PathVariable(value = valueId) String netID,
                                    @PathVariable(value = "feedbackId") Long feedbackId,
                                    @PathVariable(value = receiverId) String toNetID)
-                                   throws NotFoundException {
+                                   throws NullPointerException {
 
         return userService.deleteFeedback(netID, feedbackId, toNetID);
     }

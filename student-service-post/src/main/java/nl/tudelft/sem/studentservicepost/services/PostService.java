@@ -69,7 +69,6 @@ public class PostService {
         }
 
         Post returned = postRepository.save(post);
-        System.out.println(returned);
         return returned;
     }
 
@@ -96,7 +95,7 @@ public class PostService {
 
                 // this only checks that NetID is same
                 if (toEdit.getAuthor().equals(post.getAuthor())) {
-                    post.setId(toEdit.getId());
+                    //post.setId(toEdit.getId());
                     return postRepository.save(post);
                 } else {
                     throw new InvalidEditException();

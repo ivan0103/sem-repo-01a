@@ -6,21 +6,25 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import nl.tudelft.sem.genericservicepost.entities.Expertise;
 import nl.tudelft.sem.genericservicepost.entities.GenericPost;
 import nl.tudelft.sem.genericservicepost.exceptions.GenericPostNotFoundException;
+import nl.tudelft.sem.genericservicepost.exceptions.InvalidEditException;
 import nl.tudelft.sem.genericservicepost.repositories.GenericPostRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 public class EditGenericPostServiceTest {
-    transient GenericPost genericPost;
-    transient GenericPost genericPost1;
 
-    @Autowired
+    transient GenericPost genericPost;
+
+    @Mock
     transient GenericPostRepository postRepository;
 
-    @Autowired
+    @InjectMocks
     transient EditGenericPostService moreService;
 
     @Autowired
@@ -29,28 +33,25 @@ public class EditGenericPostServiceTest {
     @BeforeEach
     void setup() {
         genericPost = new GenericPost();
-        genericPost1 = new GenericPost();
 
         genericPost.setId(0L);
-        genericPost1.setId(1L);
 
         genericPost.setAuthor("The Rock");
-        genericPost1.setAuthor("The Wok");
 
         genericPost.setHoursPerWeek(15);
-        genericPost1.setHoursPerWeek(3);
 
         genericPost.setDuration(5);
-        genericPost1.setDuration(1);
 
         genericPost.getExpertiseSet().add(new Expertise("ABC"));
-        genericPost1.getExpertiseSet().add(new Expertise("ABC"));
     }
 
     @Test
     void editGenericPostTest() {
-        GenericPost tmp = genericPostService.createGenericPost(genericPost);
 
+        GenericPost tmp = genericPostService.createGenericPost(genericPost);
+        Mockito.when(postRepository.findById(tmp.getId())).thenReturn(java.util.Optional.of(tmp));
+        Mockito.when(postRepository.getGenericPostById(tmp.getId())).thenReturn(tmp);
+        Mockito.when(postRepository.save(tmp)).thenReturn(tmp);
         tmp.setDuration(3);
 
         GenericPost edited = moreService.editGenericPost(tmp, tmp.getId().toString());
@@ -62,10 +63,38 @@ public class EditGenericPostServiceTest {
     }
 
     @Test
-    void editGenericPostExceptionTest() {
-        GenericPost tmp = new GenericPost();
-        tmp.setId(10L);
-        assertThatThrownBy(() -> moreService.editGenericPost(tmp, tmp.getId().toString()))
-                .isInstanceOf(GenericPostNotFoundException.class);
+    void editGenericPostNaN() {
+        assertThatThrownBy(() -> moreService.editGenericPost(null, "AH"));
     }
+
+    @Test
+    void editNonExistentPost() {
+        GenericPost toEdit = new GenericPost();
+
+        assertThatThrownBy(() -> moreService.editGenericPost(toEdit, "999999")).isInstanceOf(
+                GenericPostNotFoundException.class);
+        postRepository.delete(toEdit);
+
+    }
+
+    @Test
+    void editPostFailingNetId() {
+        GenericPost tmp = genericPostService.createGenericPost(genericPost);
+
+
+        GenericPost toEdit = new GenericPost();
+        toEdit.setId(tmp.getId());
+
+        toEdit.setAuthor("Jeff");
+
+        Mockito.when(postRepository.findById(toEdit.getId()))
+                .thenReturn(java.util.Optional.of(tmp));
+        Mockito.when(postRepository.getGenericPostById(toEdit.getId())).thenReturn(tmp);
+
+        assertThatThrownBy(() -> moreService
+                .editGenericPost(toEdit, toEdit.getId().toString())).isInstanceOf(
+                InvalidEditException.class);
+
+    }
+
 }

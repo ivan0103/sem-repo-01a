@@ -47,6 +47,42 @@ public class Contract {
         this.contractParties =
             new ContractParties(freelancerId, companyId, freelancerName, companyName);
         this.contractTimes = new ContractTimes(hoursPerWeek, startDate, endDate, LocalDate.now());
+        this.payPerWeek = payPerWeek;
+    }
+
+    /**
+     * Instantiates a new Contract with dependency injection for testing.
+     *
+     * @param freelancerId    the freelancer id
+     * @param companyId       the company id
+     * @param freelancerName  the freelancer name
+     * @param companyName     the company name
+     * @param hoursPerWeek    the hours per week
+     * @param payPerWeek      the pay per week
+     * @param startDate       the start date
+     * @param endDate         the end date
+     * @param contractParties the contract parties
+     * @param contractTimes   the contract times
+     * @param agreementDate   the agreement date
+     */
+    protected Contract(String freelancerId, String companyId, String freelancerName,
+                       String companyName, LocalTime hoursPerWeek, float payPerWeek,
+                       LocalDate startDate, LocalDate endDate, ContractParties contractParties,
+                       ContractTimes contractTimes, LocalDate agreementDate) {
+
+        this.contractParties = contractParties;
+        this.contractTimes = contractTimes;
+        this.payPerWeek = payPerWeek;
+
+        this.contractParties.setFreelancerId(freelancerId);
+        this.contractParties.setCompanyId(companyId);
+        this.contractParties.setFreelancerName(freelancerName);
+        this.contractParties.setCompanyName(companyName);
+
+        this.contractTimes.setHoursPerWeek(hoursPerWeek);
+        this.contractTimes.setStartDate(startDate);
+        this.contractTimes.setEndDate(endDate);
+        this.contractTimes.setAgreementDate(agreementDate);
     }
 
     /**

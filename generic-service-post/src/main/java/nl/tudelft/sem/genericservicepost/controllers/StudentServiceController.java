@@ -8,6 +8,7 @@ import nl.tudelft.sem.genericservicepost.services.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +21,7 @@ public class StudentServiceController {
     @Autowired
     private transient StudentService genericPostService;
 
-    @PostMapping("/getStudentsByPost")
+    @GetMapping("/getStudentsByPost")
     public ResponseEntity<Set<UserImpl>> getStudentsByPost(
             @Valid @RequestBody GenericPost post) {
         Set<UserImpl> result = genericPostService.retrieveStudentsInPost(post);
