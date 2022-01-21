@@ -68,4 +68,16 @@ public class StudentServiceControllerTest {
         assertThat(result).isEqualTo(test);
     }
 
+    @Test
+    void setSelectedStudentTest() {
+        when(studentService.setSelectedStudent(eq(user), eq(genericPost)))
+                .thenReturn(user);
+
+        ResponseEntity<UserImpl> result = studentServiceController
+                .setSelectedStudent(user, genericPost);
+        ResponseEntity<UserImpl> test = new ResponseEntity<>(
+                user, HttpStatus.CREATED);
+        assertThat(result).isEqualTo(test);
+    }
+
 }
