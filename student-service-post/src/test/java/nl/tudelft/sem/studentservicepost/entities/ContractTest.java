@@ -206,7 +206,7 @@ class ContractTest {
 
         companyOffer.setCompanyId(companyId2);
         companyOffer.setWeeklyHours(hoursPerWeek2.getHour());
-        companyOffer.setPricePerHour(new BigDecimal(pay2));
+        companyOffer.setPricePerHour(new BigDecimal(Double.toString(pay2)));
 
         Contract returned = Contract.buildFromOffer(companyOffer, start2, end2);
 
