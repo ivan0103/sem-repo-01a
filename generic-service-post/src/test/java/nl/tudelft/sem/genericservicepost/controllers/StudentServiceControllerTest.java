@@ -58,10 +58,13 @@ public class StudentServiceControllerTest {
 
     @Test
     void getStudentsByPostTest() {
-        when(studentService.retrieveStudentsInPost(eq(genericPost))).thenReturn(new HashSet<>(List.of(user)));
+        when(studentService.retrieveStudentsInPost(eq(genericPost)))
+                .thenReturn(new HashSet<>(List.of(user)));
 
-        ResponseEntity<Set<UserImpl>> result = studentServiceController.getStudentsByPost(genericPost);
-        ResponseEntity<Set<UserImpl>> test = new ResponseEntity<>(new HashSet<>(List.of(user)), HttpStatus.FOUND);
+        ResponseEntity<Set<UserImpl>> result = studentServiceController
+                .getStudentsByPost(genericPost);
+        ResponseEntity<Set<UserImpl>> test = new ResponseEntity<>(
+                new HashSet<>(List.of(user)), HttpStatus.FOUND);
         assertThat(result).isEqualTo(test);
     }
 
