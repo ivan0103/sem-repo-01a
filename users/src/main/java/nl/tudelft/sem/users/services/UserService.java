@@ -2,7 +2,6 @@ package nl.tudelft.sem.users.services;
 
 import java.util.ArrayList;
 import java.util.List;
-import javassist.NotFoundException;
 import nl.tudelft.sem.users.entities.Feedback;
 import nl.tudelft.sem.users.entities.User;
 import nl.tudelft.sem.users.entities.UserFactory;
@@ -50,9 +49,9 @@ public class UserService {
      * @return the user
      */
 
-    public User getOneUser(String netID) throws NotFoundException {
+    public User getOneUser(String netID) throws NullPointerException {
         if (userRepository.findById(netID).isEmpty()) {
-            throw new NotFoundException(userNotFound);
+            throw new NullPointerException(userNotFound);
         }
 
         return userRepository.findById(netID).get();
@@ -92,25 +91,33 @@ public class UserService {
      */
 
     public Feedback addFeedback(String netID, String text, Integer rating, String toNetID)
-                                throws NotFoundException {
+                                throws NullPointerException {
 
         if (userRepository.findById(netID).isEmpty()) {
-            throw new NotFoundException(userNotFound);
+            throw new NullPointerException(userNotFound);
         }
 
         if (userRepository.findById(toNetID).isEmpty()) {
-            throw new NotFoundException(userNotFound);
+            throw new NullPointerException(userNotFound);
         }
 
         User user = userRepository.findById(netID).get();
         Feedback feedback = new Feedback(text, rating, user);
+        feedbackRepository.save(feedback);
+        Feedback feedbackFromRepo = feedbackRepository.findTopByOrderByIdDesc();
         User toUser = userRepository.findById(toNetID).get();
-        toUser.getFeedbacks().add(feedback);
-        toUser.setRating((toUser.getRating() * (toUser.getFeedbacks().size() - 1)
-                + feedback.getRating()) / (toUser.getFeedbacks().size()));
+        List<Feedback> toUserFeedbacks = new ArrayList<>(toUser.getFeedbacks());
+        toUserFeedbacks.add(feedbackFromRepo);
+        toUser.setFeedbacks(toUserFeedbacks);
+        float newRating = 0.0f;
+        for (Feedback feedback1 : toUserFeedbacks) {
+            newRating += feedback1.getRating();
+        }
+        newRating /= toUserFeedbacks.size();
+        toUser.setRating(newRating);
         userRepository.save(toUser);
 
-        return feedbackRepository.findTopByOrderByIdDesc();
+        return feedbackFromRepo;
     }
 
     /**
@@ -120,9 +127,9 @@ public class UserService {
      * @return the user that was deleted
      */
 
-    public User deleteUser(String netID) throws NotFoundException {
+    public User deleteUser(String netID) throws NullPointerException {
         if (userRepository.findById(netID).isEmpty()) {
-            throw new NotFoundException(userNotFound);
+            throw new NullPointerException(userNotFound);
         }
 
         User userToBeDeleted = userRepository.findById(netID).get();
@@ -157,9 +164,9 @@ public class UserService {
      * @return an updated user
      */
 
-    public User updateUser(String netID, String name) throws NotFoundException {
+    public User updateUser(String netID, String name) throws NullPointerException {
         if (userRepository.findById(netID).isEmpty()) {
-            throw new NotFoundException(userNotFound);
+            throw new NullPointerException(userNotFound);
         }
 
         User user = userRepository.findById(netID).get();
@@ -181,18 +188,18 @@ public class UserService {
 
     public Feedback editFeedback(String netID, String text,
                                  Integer rating, Long feedbackId, String toNetID)
-                                 throws NotFoundException {
+                                 throws NullPointerException {
 
         if (userRepository.findById(netID).isEmpty()) {
-            throw new NotFoundException(userNotFound);
+            throw new NullPointerException(userNotFound);
         }
 
         if (userRepository.findById(toNetID).isEmpty()) {
-            throw new NotFoundException(userNotFound);
+            throw new NullPointerException(userNotFound);
         }
 
         if (feedbackRepository.findById(feedbackId).isEmpty()) {
-            throw new NotFoundException(feedbackNotFound);
+            throw new NullPointerException(feedbackNotFound);
         }
 
         Feedback feedback = feedbackRepository.findById(feedbackId).get();
@@ -203,7 +210,8 @@ public class UserService {
             return null;
         }
 
-        receiver.getFeedbacks().remove(feedback);
+        List<Feedback> receiverFeedbacks = new ArrayList<>(receiver.getFeedbacks());
+        receiverFeedbacks.remove(feedback);
 
         if (text != null) {
             feedback.setText(text);
@@ -214,9 +222,14 @@ public class UserService {
         }
 
         feedbackRepository.save(feedback);
-        receiver.getFeedbacks().add(feedback);
-        receiver.setRating((receiver.getRating() * (receiver.getFeedbacks().size() - 1)
-                + feedback.getRating()) / (receiver.getFeedbacks().size()));
+        receiverFeedbacks.add(feedback);
+        receiver.setFeedbacks(receiverFeedbacks);
+        float newRating = 0.0f;
+        for (Feedback feedback1 : receiverFeedbacks) {
+            newRating += feedback1.getRating();
+        }
+        newRating /= receiverFeedbacks.size();
+        receiver.setRating(newRating);
         userRepository.save(receiver);
 
         return feedback;
@@ -232,18 +245,18 @@ public class UserService {
      */
 
     public Feedback deleteFeedback(String netID, Long feedbackId, String toNetID)
-                                   throws NotFoundException {
+            throws NullPointerException {
 
         if (userRepository.findById(netID).isEmpty()) {
-            throw new NotFoundException(userNotFound);
+            throw new NullPointerException(userNotFound);
         }
 
         if (userRepository.findById(toNetID).isEmpty()) {
-            throw new NotFoundException(userNotFound);
+            throw new NullPointerException(userNotFound);
         }
 
         if (feedbackRepository.findById(feedbackId).isEmpty()) {
-            throw new NotFoundException(feedbackNotFound);
+            throw new NullPointerException(feedbackNotFound);
         }
 
         User user = userRepository.findById(netID).get();
@@ -254,19 +267,21 @@ public class UserService {
             return null;
         }
 
-        if (receiver.getFeedbacks().size() - 1 <= 0) {
-            receiver.setRating(0.0f);
-        } else {
-            receiver.setRating(((float) (receiver.getRating() * (receiver.getFeedbacks().size())
-                    - ((float) feedback.getRating())))
-                    / (((float) receiver.getFeedbacks().size() - 1)));
+        List<Feedback> receiverFeedbacks = new ArrayList<>(receiver.getFeedbacks());
+        receiverFeedbacks.remove(feedback);
+        receiver.setFeedbacks(receiverFeedbacks);
+        float newRating = 0.0f;
+        for (Feedback feedback1 : receiverFeedbacks) {
+            newRating += feedback1.getRating();
         }
-
-        receiver.getFeedbacks().remove(feedback);
+        if (receiverFeedbacks.size() > 0) {
+            newRating /= receiverFeedbacks.size();
+        }
+        receiver.setRating(newRating);
         feedbackRepository.delete(feedback);
         userRepository.save(receiver);
 
         return feedback;
     }
-
 }
+
