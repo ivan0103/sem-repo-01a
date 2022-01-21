@@ -1,5 +1,6 @@
 package nl.tudelft.sem.genericservicepost.services;
 
+import java.util.Optional;
 import nl.tudelft.sem.genericservicepost.entities.GenericPost;
 import nl.tudelft.sem.genericservicepost.exceptions.GenericPostNotFoundException;
 import nl.tudelft.sem.genericservicepost.exceptions.InvalidEditException;
@@ -13,6 +14,18 @@ public class EditGenericPostService {
     @Autowired
     transient GenericPostRepository genericPostRepository;
 
+    public Optional<GenericPost> exists(Long id) {
+        return genericPostRepository.findById(id);
+    }
+
+    public GenericPost save(GenericPost post) {
+        return genericPostRepository.save(post);
+    }
+
+    public GenericPost getPostById(Long id) {
+        return genericPostRepository.getGenericPostById(id);
+    }
+
     /**
      * Edit generic post and save it.
      *
@@ -25,10 +38,10 @@ public class EditGenericPostService {
         long id;
         try {
             id = Long.parseLong(postId);
-            if (!genericPostRepository.findById(id).isEmpty()) {
-                GenericPost toEdit = genericPostRepository.getGenericPostById(id);
+            if (!exists(id).isEmpty()) {
+                GenericPost toEdit = getPostById(id);
                 if (toEdit.getAuthor().equals(post.getAuthor())) {
-                    return genericPostRepository.save(post);
+                    return save(post);
                 } else {
                     throw new InvalidEditException();
                 }
