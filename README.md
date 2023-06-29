@@ -1,5 +1,9 @@
 # CSE2115 - Project
 
+### Description
+Second Year Group Software Project in TUD CSE Bachelor Degree.
+Develop a Miscroservice Software project that allows students to sign up for work, and company's publush  job offers and select candidate students.
+
 ### Running 
 `gradle :microservice_name:bootRun`
 
