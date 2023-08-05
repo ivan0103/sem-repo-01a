@@ -7,7 +7,7 @@ Develop a Miscroservice Software project that allows students to sign up for wor
 ### Technologies
 - Java
 - Java Spring
-- Maven
+- Gradle
 - JaCoCo
 
 ### Running 
